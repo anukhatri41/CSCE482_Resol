@@ -42,3 +42,6 @@ To Read
 - Margin Trading
 - Algorithmic Trading - Ernie Chan
 - A Random Walk Down Wall Street - Burton Malkeel
+
+
+Set up a Paper Wallet

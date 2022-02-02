@@ -12,6 +12,7 @@ Formulated an early version of the steps required:
 4. Function to envoke transaction function  
 5. Front end to show analytics 
 6. Test  
+  
 Came up with early verstion of tech stack:  
 - C++ for market monitor   
 - JS (Electron) for front end  

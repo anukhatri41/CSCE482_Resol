@@ -1,0 +1,44 @@
+Meeting - 2/2/2022
+Finalizing Idea / Discussing more specifics 
+
+Crypto Arbitrage
+Maybe find some existing examples for the arbitrage and improve on it/go from there
+
+Will be a program that executes on the Solana network, doesn't matter the currency
+
+Offchain - decides the opportunity of selling
+Onchain/Online - the platform to create transactions?
+
+Search Solana Arbitrage projects
+Search Google/GitHub - solana amm list (Serum, Mango, etc.)
+Mango is likely open-source
+How to create arbitrager on Solana
+
+
+Market is a smart contract
+Market maker - have formula to calculate price between tokens
+
+Interaction with markets 
+Usually is manual, but arbitrage is auto
+
+Not between brokerages for this project
+
+Deck = place to exchange crypto
+
+Tech Stack - 
+Arbitrager - Real-time monitoring of markets of < 1ms
+- Python script for reading?
+- Maybe C++ for speedier 
+Send transactions to onchain program - do as single transaction for all buy/sell so the prices don't change in between transactions
+Want atomic transactions - all or nothing - don't want to buy/sell but then lose
+
+
+Single Transaction
+- 1 = buy
+- 2 = sell
+- buy 1, see if still profit, if not give back and eat the fee, otherwise go through with 2nd transaction to finish
+
+To Read
+- Margin Trading
+- Algorithmic Trading - Ernie Chan
+- A Random Walk Down Wall Street - Burton Malkeel

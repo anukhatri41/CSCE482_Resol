@@ -24,3 +24,16 @@ When working on our project proposal, we started to think:
 - How are we going to handle hosting our monitoring software?
 
 We had team bonding time as well after we firmed up some of the details about our project.
+
+<h4>2/9/22</h4>
+
+Today we met with the professor, discussed what our focus should be, and narrowed down what our first milestone should be.
+
+We decided to have aim for 2/28/22 for our first milestone. Our first milestone consists of creating a basic version of our planned monitoring software.
+
+Our plans for our monitoring software include:
+- Multiple threads utilized to monitor currency pair pricing
+- Use Raydium and Mango (both Solana AMM's) to monitor first
+- Monitor SOL/USDC price
+
+This is our minimal viable product, and we decided to aim to complete this by 2/28/22, that way we have a couple cushion days before we meet with Dr. Huang and Laren.

@@ -18,7 +18,13 @@ Came up with early verstion of tech stack:
 - JS (Electron) for front end  
 - C++ for transaction function  
 
-# 2/08/22  
+# 2/07/22  
 Worked on project proposal  
 Set up paper wallet on Solana  
 Added a balance to paper wallet  
+  
+# 2/09/22  
+Meeting with Dr.Huang and Laren  
+Came up with first milestones:  
+- Hello world with Solana  
+- Monitor between two DEX (Raydium and Mango) for one coin pair (SOL/USDC)  

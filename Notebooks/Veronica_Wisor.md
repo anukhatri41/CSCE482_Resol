@@ -9,5 +9,6 @@
 
 **Februrary 7, 2022**
 - started on project proposal
+  - began Pert chart
 - created list of tasks needed for design of project
 - helped brainstorm agenda for Wednesday meeting

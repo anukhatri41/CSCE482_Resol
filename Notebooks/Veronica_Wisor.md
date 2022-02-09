@@ -12,3 +12,10 @@
   - began Pert chart
 - created list of tasks needed for design of project
 - helped brainstorm agenda for Wednesday meeting
+
+**February 9, 2022**
+- met with instructor and TA
+  - decided on milestone as team: create monitoring module that check exchange rates on Mango and Raydium
+  - expected day to accomplish milestone: February 28, 2022
+- went through steps of running and interacting with onchain Solana helloworld program
+![image](https://media.github.tamu.edu/user/13075/files/f6d24b80-89ac-11ec-9221-f19d40684a2c)

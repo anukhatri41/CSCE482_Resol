@@ -1,0 +1,28 @@
+Meeting Notes - 02/09/2021
+
+Starting doing the Paper Wallet/Solana programmatically
+
+All In on Money
+- Yes and No
+- Probably could tho because of small scale
+- There are formulas to determine how much to buy/sell
+
+Change Organization Name
+Get domain for name
+Host on Heroku for now
+
+First step in MVP
+- Either make a transaction or module to monitor the AMMs
+- Computer runs the software, multiple threads reading the real-time price data from an onchain program to determine a profit
+-- Start with 2 onchain to difference between them
+-- 2 exchanges, 1 currency pair
+
+Do more research to understand onchain programs
+Look at existing arbitrage products to see how they work, duplicate some function they may provide, will help set a clearer goal for milestone
+
+How do you get price? How do you determine price? Basically with how something compares to another currency/token
+See how they calculate prices
+
+May need a better machine/faster internet to get accurate prices
+
+Mango and Radium

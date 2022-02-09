@@ -10,3 +10,13 @@ Individual Notebook - Anu Khatri
 - Outlined basic process of the arbitrage
 - Researched what to use for frontend/backend
     - Potential - Electronjs for frontend, C++ backend
+
+2/5/2022
+- Did some reading/research on blockchain and Solana
+
+2/7/2022
+- Started Project Proposal
+    - Made bullet points of what each section needed to cover
+    - Made steps for PERT/Gantt charts
+- Finished and turned in the Weekly Report/Agenda
+- Researched similar arbitrage projects

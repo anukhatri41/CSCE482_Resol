@@ -17,3 +17,8 @@ Came up with early verstion of tech stack:
 - C++ for market monitor   
 - JS (Electron) for front end  
 - C++ for transaction function  
+
+# 2/08/22  
+Worked on project proposal  
+Set up paper wallet on Solana  
+Added a balance to paper wallet  

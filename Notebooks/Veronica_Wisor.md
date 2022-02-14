@@ -19,3 +19,14 @@
   - expected day to accomplish milestone: February 28, 2022
 - went through steps of running and interacting with onchain Solana helloworld program
 ![image](https://media.github.tamu.edu/user/13075/files/f6d24b80-89ac-11ec-9221-f19d40684a2c)
+
+**February 12, 2022**
+- worked on project proposal  
+  - completed Pert chart
+  - worked on design specifications
+
+**February 13, 2022**
+- completed project proposal with team  
+
+**February 14, 2022**
+- practiced project proposal presentation with team

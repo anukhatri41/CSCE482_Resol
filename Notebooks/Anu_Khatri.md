@@ -20,3 +20,8 @@ Individual Notebook - Anu Khatri
     - Made steps for PERT/Gantt charts
 - Finished and turned in the Weekly Report/Agenda
 - Researched similar arbitrage projects
+
+2/9/2022
+- Had team meeting with professor and TA, took meeting notes
+- Updated project proposal
+- Researched arbitrage bots

@@ -37,3 +37,16 @@ Our plans for our monitoring software include:
 - Monitor SOL/USDC price
 
 This is our minimal viable product, and we decided to aim to complete this by 2/28/22, that way we have a couple cushion days before we meet with Dr. Huang and Laren.
+
+<h4>2/14/22</h4>
+
+Today we gave our presentation.
+
+Additionally, we did a lot of research and began experimenting with actually using Solana, so we can get an idea of what is happening.
+
+I have a little bit of SOL in my coinbase account, so as a group, we moved the SOL into a chrome based wallet, and connected it
+with one of the AMM's we are planning to use, Raydium. We did not make any purchases, but we moved the SOL between coinbase and the chrome wallet, connected the
+wallet, and viewed things such as the how pricing flucuates, the speed of a SOL transaction, etc.
+
+We also began exploring serum and anchor. We now understand, at least in theory, how we are supposed to go about interacting with the blockchain,
+and have been looking over tutorials about how to send instructions in blockchain transactions. We also have been utilizing solscan to see the addresses that things like Raydium use to make transactions.

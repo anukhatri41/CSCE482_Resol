@@ -40,6 +40,7 @@ Found that it is difficult to interact with Raydium
 Searching for alternative DEX to use:
 - Mango  
 - Saber  
+  
 Both of these have APIs that will allow us to make small testing transactions  
-Discussed onchain vs local AMM monitoring
+Discussed onchain vs local AMM monitoring  
 Learning basic Rust and Smart Contracts  

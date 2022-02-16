@@ -1,0 +1,11 @@
+2_16_2022 - Meeting Notes
+
+On Chain / Off Chain Monitoring
+- 
+
+Look at Raydium documentation to see if there's API to access
+- Contact if needed
+
+Find an on chain program and look at the specific instructions to build your own to talk to them
+
+May need to move away from Raydium due to to lack of documentation

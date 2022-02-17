@@ -50,3 +50,13 @@ wallet, and viewed things such as the how pricing flucuates, the speed of a SOL 
 
 We also began exploring serum and anchor. We now understand, at least in theory, how we are supposed to go about interacting with the blockchain,
 and have been looking over tutorials about how to send instructions in blockchain transactions. We also have been utilizing solscan to see the addresses that things like Raydium use to make transactions.
+
+<h4>2/16/22</h4>
+
+Today we had our weekly meeting with Dr.Huang. We also learned that Raydium does not have the best documentation, so we decided to use Sabre for now, we are still exploring our options. We are definitely going to use Mango, and have been looking at what our options are when doing this project. 
+
+One thing I have been doing, is trying to figure out how I can ping Mangos pools. It is one of our short term goals to simply be able to buy and sell 
+some SOL just through code and API's/Blockchain commands.
+
+It was productive, and I was able to learn a little more about the hello world, as well as see my devnet on the Solana explorer. I was redoing the helloworld
+because I want to get a better understanding of the code and what it is doing.

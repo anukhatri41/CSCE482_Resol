@@ -30,3 +30,8 @@
 
 **February 14, 2022**
 - practiced project proposal presentation with team
+- presented presentation
+- researched getting on chain amm to return exchange rate
+
+**February 16, 2022**
+- met with instructor and TA

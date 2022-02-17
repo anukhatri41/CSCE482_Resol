@@ -28,3 +28,19 @@ Meeting with Dr.Huang and Laren
 Came up with first milestones:  
 - Hello world with Solana  
 - Monitor between two DEX (Raydium and Mango) for one coin pair (SOL/USDC)  
+  
+# 2/14/22  
+Presenetation  
+Working on connecting and interfacing with different DEX  
+  
+# 2/16/22  
+Meeting with Laren and Dr. Huang  
+Try to connect with Raydium during meeting  
+Found that it is difficult to interact with Raydium  
+Searching for alternative DEX to use:
+- Mango  
+- Saber  
+  
+Both of these have APIs that will allow us to make small testing transactions  
+Discussed onchain vs local AMM monitoring  
+Learning basic Rust and Smart Contracts  

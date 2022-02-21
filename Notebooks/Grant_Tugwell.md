@@ -60,3 +60,11 @@ some SOL just through code and API's/Blockchain commands.
 
 It was productive, and I was able to learn a little more about the hello world, as well as see my devnet on the Solana explorer. I was redoing the helloworld
 because I want to get a better understanding of the code and what it is doing.
+
+<h4>2/20/22</h4>
+
+Attempted to figure out how to deploy a program.
+
+Followed an online tutorial, and now have pricing data avaliable, however it is not exchange specific.
+
+Working towards getting exchange specific data, hopefully can have this done before class tomorrow.

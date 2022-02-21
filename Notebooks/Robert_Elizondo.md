@@ -44,3 +44,7 @@ Searching for alternative DEX to use:
 Both of these have APIs that will allow us to make small testing transactions  
 Discussed onchain vs local AMM monitoring  
 Learning basic Rust and Smart Contracts  
+  
+# 2/21/22  
+Taking a step back and trying to fully understand the Hello World program becasuse I feel that is will be more beneficial to actually understand how the code is working  
+Trying to figure out how the client is acessing the data from the server(counter) and trying to send a message instead of number but having erros with the borsh serializer  

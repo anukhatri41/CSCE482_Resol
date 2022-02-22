@@ -68,3 +68,12 @@ Attempted to figure out how to deploy a program.
 Followed an online tutorial, and now have pricing data avaliable, however it is not exchange specific.
 
 Working towards getting exchange specific data, hopefully can have this done before class tomorrow.
+
+<h4>2/21/22</h4>
+
+Today we continued to work on trying to get specific exchange data, while also splitting into smaller groups to begin working on different parts of our code so we can hopefully have something to show Dr.Huang.
+
+I have currently been working on modifying the hello world code given by solana based on various tutorials to be able to get a transaction to go through.
+
+Unfortunatly at this point I still have been unable to get the code fully working, however I am hoping that by either the end of today or tomorrow I can
+have more progress to report.

@@ -37,3 +37,14 @@ Individual Notebook - Anu Khatri
 - Did team proposal presentation
 - Researched more about AMM
 - Created 2nd week's report and turned it in to repository
+
+2/16/2022
+- Had team meeting with professor and TA, took meeting notes
+- Followed a tutorial on how to set up Solana
+
+2/21/2022
+- Researched ways to set up the project with Rust, TypeScript, and React
+
+2/22/2022
+- Created 2rd week's report and turned it in to repository
+- Started mockups for application

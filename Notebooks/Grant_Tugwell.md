@@ -77,3 +77,24 @@ I have currently been working on modifying the hello world code given by solana 
 
 Unfortunatly at this point I still have been unable to get the code fully working, however I am hoping that by either the end of today or tomorrow I can
 have more progress to report.
+
+<h4>2/23/22</h4>
+
+After our meeting with Dr. Huang and Laren, we contiued to dive deep into what we needed to do. Between today and Monday I had done a lot of work trying to fully grasp what it is that we need to do. I think after my research and our meeting today, we at least fully understand what we need.
+
+We have been trying extremely hard to get what Dr. Huang wanted us to do to work, which was modify some basic code to just send some transaction to an AMM. However, we are really struggling to find the exact instruction set we need to send to the correct solana address.
+We think we may have found soemthing due from serum that will allow us to actually see the backend of an AMM, because many of the AMM's (if not all of them), use serum, or at least thats what we have seen.
+
+After today, we are going to continue working, we are feeling pretty discouraged because we have been trying extremely hard to get this stuff to work, but we just can't seem to find our footing, hopefully something changes so we get a little confidence boost.
+
+<h4>2/25/22</h4>
+
+I dedicated pretty much my entire day to just sitting down and trying to figure out what we need to do. On one hand, I have gotten a much better understanding of the client side of things. I modified the hello world program to allow me to send some text instead of just that incrementing thing.
+
+While this may sound basic, I think these are important steps that will allow us to push forward when we have a bigger break through. We are still trying to get the code working that just allows us to interact with an AMM, but I think we are definitely getting much closer. 
+
+In addition to working most of the day today, I also have cleared off my schedule on Sunday, 2/27/22, to focus as much as I can on that. We are planning to meet as a group as well to try to get some work done.
+
+<h4>2/27/22</h4>
+
+Today we met up at one. Veronica has made some good progess on the price monitoring side of things, she has found a good api from coingecko.com that allows for us to see the different prices of currency pairs on different AMM's. I continued working on trying to be able to send a transaction. I have set up an SPL wallet through Sollet that I believe will allow me to access the wallet credentials I need to send actual SOL, not just paper money.

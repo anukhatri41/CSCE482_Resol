@@ -7,7 +7,7 @@
   "author": "",
   "license": "MIT",
   "scripts": {
-    "start": "ts-node src/client/main.ts",
+    "start": "ts-node client/transaction.ts",
     "start-with-test-validator": "start-server-and-test 'solana-test-validator --reset --quiet' http://localhost:8899/health start",
     "lint": "eslint --ext .ts src/client/* && prettier --check \"src/client/**/*.ts\"",
     "lint:fix": "eslint --ext .ts src/client/* --fix && prettier --write \"src/client/**/*.ts\"",
@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.1",
+    "@types/bs58": "^4.0.1",
     "@types/eslint": "^8.2.2",
     "@types/eslint-plugin-prettier": "^3.1.0",
     "@types/mz": "^2.7.2",

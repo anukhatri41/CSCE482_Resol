@@ -41,5 +41,13 @@ const amount = 0.01;
 	console.log("To: ", reciever.toString());
     console.log("Amount Sent: %d SOL", amount)
 	// Transaction Code
-
+    const transaction = new Transaction().add(
+        SystemProgram.transfer({
+          fromPubkey: sender.publicKey,
+          lamports: (LAMPORTS_PER_SOL / 100) * amount,
+          toPubkey: reciever 
+        }),
+      );
+      const signature: string = await sendAndConfirmTransaction(connection, transaction, [sender]);
+      console.log("tx: ", signature);
 })();

@@ -22,6 +22,7 @@
     "pretty": "prettier --write '{,src/**/}*.ts'"
   },
   "dependencies": {
+    "@project-serum/serum": "^0.13.61",
     "@solana/web3.js": "^1.33.0",
     "borsh": "^0.7.0",
     "dotenv": "^16.0.0",

@@ -104,3 +104,13 @@ Update: Some time has passed since our meeting, and fortunantely I have been abl
 I have been sending money between a Sollet and Phantom account. The Sollet account acts as the sender account, as it allows me easy access to the private secret key neccessary to send the SOL. The Phantom account I believe allows access to private key stuff as well, but Sollet seems to update much quicker than Phantom. Also Sollet has a nice UI for devnet stuff, but it doesn't show previous transactions.
  
  Anyways, point is, we finally got somewhere! Yay! Hopefully we can keep that progress up.
+
+ <h4>2/28/22</h4>
+
+ Today we got a lot of work done. We sifted through a lot of the repositories and documentation, and I think we found some documentation that will be useful in showing us how we can connect to the markets using js.
+
+ I accidently uploaded my secret key to one of my Solana wallets, but I did that this morning before class, so I was able to go back and fix all of that before class started.
+
+ Veronica has made a lot of progress with the price monitoring side of things, and hopefully once I get this market part figured out, we can work on integrating it.
+
+ We are very hopeful and are planning to have something we can actually show Laren & Dr.Huang. I have set aside a lot of time today and tomorrow to hopefully get that to work.

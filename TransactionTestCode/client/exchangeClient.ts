@@ -16,12 +16,13 @@ require('dotenv').config()
 const details = {
     secret: process.env.SENDER_SECRET as string,
 	reciever: process.env.DEFAULT_RECEIVER_PUBKEY as string,
-    RAYDIUM_SOL_USDC: process.env.SOL_USDC_RAYDIUM_ADDRESS as string
+    RAYDIUM_SOL_USDC: process.env.SOL_USDC_RAYDIUM_ADDRESS as string,
+    SERUM_PROGRAM_ID: process.env.SERUM_PROGRAM_ID as string
 };
 
 // Creating Keypair object from secret key & reciever pubkey in .env
 const sender = web3.Keypair.fromSecretKey(base58.decode(details.secret))
-const reciever = new web3.PublicKey(details.reciever);
+const reciever = new web3.PublicKey(details.RAYDIUM_SOL_USDC);
 const devnet = 'https://api.devnet.solana.com';
 const mainnet = 'https://api.mainnet-beta.solana.com';
 
@@ -42,13 +43,22 @@ const amount = 0.01;
 	console.log("To: ", reciever.toString());
     console.log("Amount Sent: %d SOL", amount)
 	// Transaction Code
-    const transaction = new Transaction().add(
-        SystemProgram.transfer({
-          fromPubkey: sender.publicKey,
-          lamports: (LAMPORTS_PER_SOL / 100) * amount,
-          toPubkey: reciever 
-        }),
-      );
-      const signature: string = await sendAndConfirmTransaction(connection, transaction, [sender]);
+    // const transaction = new Transaction().add(
+    //     SystemProgram.transfer({
+    //       fromPubkey: sender.publicKey,
+    //       lamports: (LAMPORTS_PER_SOL / 100) * amount,
+    //       toPubkey: reciever 
+    //     }),
+    //   );
+    const instruction = new TransactionInstruction({
+        keys: [{pubkey: greetedPubkey, isSigner: false, isWritable: true}],
+        programId,
+        data: Buffer.from(borsh.serialize(GreetingSchema, messageAccount)), // All instructions are hellos
+    });
+    const signature: string = await sendAndConfirmTransaction(
+        connection,
+        new Transaction().add(instruction),
+        [sender],
+    );
       console.log("tx: ", signature);
 })();

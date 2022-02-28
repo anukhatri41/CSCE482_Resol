@@ -14,9 +14,14 @@ import base58 from 'bs58';
 // Fetching credentials from .env
 require('dotenv').config()
 const details = {
+    sender_keypair: process.env.SENDER_KEY as string,
     secret: process.env.SENDER_SECRET as string,
 	reciever: process.env.DEFAULT_RECEIVER_PUBKEY as string,
 };
+
+// Code to  create secret key from Keypair array. Just stick the keypair in here.
+// const key: Uint8Array = Uint8Array.from();
+// console.log(base58.encode(key))
 
 // Creating Keypair object from secret key & reciever pubkey in .env
 const sender = web3.Keypair.fromSecretKey(base58.decode(details.secret))
@@ -34,7 +39,6 @@ const amount = 0.01;
     // Establishing connection, generating necessary Keypair info
 	console.log("Connecting to cluster: ", ChosenCluster)
 	const connection = new web3.Connection(ChosenCluster, 'confirmed');
-	const keypair = web3.Keypair.fromSecretKey(base58.decode(details.secret));
 	console.log("Connected...")
 
 	// Creating transaction

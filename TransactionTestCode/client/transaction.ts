@@ -11,3 +11,35 @@ import {
 } from '@solana/web3.js';
 import base58 from 'bs58';
 
+// Fetching credentials from .env
+require('dotenv').config()
+const details = {
+    secret: process.env.SENDER_SECRET as string,
+	reciever: process.env.DEFAULT_RECEIVER_PUBKEY as string,
+};
+
+// Creating Keypair object from secret key & reciever pubkey in .env
+const sender = web3.Keypair.fromSecretKey(base58.decode(details.secret))
+const reciever = new web3.PublicKey(details.reciever);
+const devnet = 'https://api.devnet.solana.com';
+const mainnet = 'https://api.mainnet-beta.solana.com';
+
+// Choosing with cluster to use.
+const ChosenCluster = mainnet;
+const amount = 0.01;
+
+(async () => {
+    // Establishing connection, generating necessary Keypair info
+	console.log("Connecting to cluster: ", ChosenCluster)
+	const connection = new web3.Connection(ChosenCluster, 'confirmed');
+	const keypair = web3.Keypair.fromSecretKey(base58.decode(details.secret));
+	console.log("Connected...")
+
+	// Creating transaction
+	console.log("Creating Transaction:");
+    console.log("From: ", sender.publicKey.toString())
+	console.log("To: ", reciever.toString());
+    console.log("Amount Sent: %d SOL", amount)
+	// Transaction Code
+
+})();

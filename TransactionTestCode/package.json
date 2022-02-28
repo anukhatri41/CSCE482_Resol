@@ -2,8 +2,7 @@
   "name": "transaction_test_code",
   "version": "0.0.1",
   "description": "",
-  "repository": {
-  },
+  "repository": {},
   "keywords": [],
   "author": "",
   "license": "MIT",
@@ -23,6 +22,7 @@
   "dependencies": {
     "@solana/web3.js": "^1.33.0",
     "borsh": "^0.7.0",
+    "dotenv": "^16.0.0",
     "mz": "^2.7.0",
     "yaml": "^1.10.2"
   },

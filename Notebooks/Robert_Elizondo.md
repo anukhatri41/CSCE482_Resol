@@ -48,3 +48,17 @@ Learning basic Rust and Smart Contracts
 # 2/21/22  
 Taking a step back and trying to fully understand the Hello World program becasuse I feel that is will be more beneficial to actually understand how the code is working  
 Trying to figure out how the client is acessing the data from the server(counter) and trying to send a message instead of number but having erros with the borsh serializer  
+  
+
+# 2/23/22  
+Meeting with Laren and Dr. Huang  
+Learned more about making a custom transaction  
+Followed guide: https://discord.com/channels/941045996035649587/941045996564119554/947596296825503774  
+Now succesfully sent custom transaction that will do certain things based on the transaction data  
+  
+# 2/28/22  
+Meet with group on Sunday to discuss next steps and what to focus on  
+Updated progress with group from the weekend  
+Can successfully send SOL to a Phantom Wallet  
+Working on using Borsh to send and recieve data  
+

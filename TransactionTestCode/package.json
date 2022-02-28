@@ -7,6 +7,8 @@
   "author": "",
   "license": "MIT",
   "scripts": {
+    "transaction": "ts-node client/transaction.ts",
+    "exchange": "ts-node client/exchangeClient.ts",
     "start": "ts-node client/transaction.ts",
     "start-with-test-validator": "start-server-and-test 'solana-test-validator --reset --quiet' http://localhost:8899/health start",
     "lint": "eslint --ext .ts src/client/* && prettier --check \"src/client/**/*.ts\"",

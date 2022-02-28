@@ -98,3 +98,9 @@ In addition to working most of the day today, I also have cleared off my schedul
 <h4>2/27/22</h4>
 
 Today we met up at one. Veronica has made some good progess on the price monitoring side of things, she has found a good api from coingecko.com that allows for us to see the different prices of currency pairs on different AMM's. I continued working on trying to be able to send a transaction. I have set up an SPL wallet through Sollet that I believe will allow me to access the wallet credentials I need to send actual SOL, not just paper money.
+
+Update: Some time has passed since our meeting, and fortunantely I have been able to send actual real SOL on the mainnet-beta network between accounts. This is unbelievebly exciting for us! This is definitely the confidence boost we needed!
+
+I have been sending money between a Sollet and Phantom account. The Sollet account acts as the sender account, as it allows me easy access to the private secret key neccessary to send the SOL. The Phantom account I believe allows access to private key stuff as well, but Sollet seems to update much quicker than Phantom. Also Sollet has a nice UI for devnet stuff, but it doesn't show previous transactions.
+ 
+ Anyways, point is, we finally got somewhere! Yay! Hopefully we can keep that progress up.

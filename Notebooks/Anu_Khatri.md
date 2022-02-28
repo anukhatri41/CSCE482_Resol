@@ -48,3 +48,6 @@ Individual Notebook - Anu Khatri
 2/22/2022
 - Created 2rd week's report and turned it in to repository
 - Started mockups for application
+
+2/23/2022
+- Aided in

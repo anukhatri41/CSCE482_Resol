@@ -16,6 +16,7 @@ require('dotenv').config()
 const details = {
     secret: process.env.SENDER_SECRET as string,
 	reciever: process.env.DEFAULT_RECEIVER_PUBKEY as string,
+    RAYDIUM_SOL_USDC: process.env.SOL_USDC_RAYDIUM_ADDRESS as string
 };
 
 // Creating Keypair object from secret key & reciever pubkey in .env

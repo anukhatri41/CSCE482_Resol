@@ -27,6 +27,8 @@ const mainnet = 'https://api.mainnet-beta.solana.com';
 // Choosing with cluster to use.
 const ChosenCluster = mainnet;
 const amount = 0.01;
+// For anyone who might need this later, 0.000005 is the fee to send a transaction
+//const amount = 0.245942938 - 0.000005; // Exact amount sending from compromised account minus fee amount
 
 (async () => {
     // Establishing connection, generating necessary Keypair info
@@ -44,7 +46,7 @@ const amount = 0.01;
     const transaction = new Transaction().add(
         SystemProgram.transfer({
           fromPubkey: sender.publicKey,
-          lamports: (LAMPORTS_PER_SOL / 100) * amount,
+          lamports: (LAMPORTS_PER_SOL) * amount,
           toPubkey: reciever 
         }),
       );

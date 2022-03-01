@@ -25,6 +25,7 @@ const details = {
 
 // Creating Keypair object from secret key & reciever pubkey in .env
 const sender = web3.Keypair.fromSecretKey(base58.decode(details.secret))
+const owner = sender;
 //const reciever = new web3.PublicKey(details.RAYDIUM_SOL_USDC);
 const devnet = 'https://api.devnet.solana.com';
 const mainnet = 'https://api.mainnet-beta.solana.com';
@@ -33,6 +34,7 @@ const mainnet = 'https://api.mainnet-beta.solana.com';
 const programId = new web3.PublicKey(details.SERUM_PROGRAM_ID);
 
 // Choosing with cluster to use.
+// For the market we set up, this MUST be running on mainnet; Raydium does not have a market set up on devnet
 const ChosenCluster = mainnet;
 const amount = 0.01;
 
@@ -48,35 +50,64 @@ const amount = 0.01;
     // Establishing connection, generating necessary Keypair info
 	//const connection = new web3.Connection(ChosenCluster, 'confirmed');
 	const keypair = web3.Keypair.fromSecretKey(base58.decode(details.secret));
+
     // Fetching orderbooks
     let bids = await market.loadBids(connection);
     let asks = await market.loadAsks(connection);
     // L2 orderbook data
-    for (let [price, size] of bids.getL2(20)) {
-    console.log(price, size);
+    console.log("Bids: ");
+    for (let [price, size] of bids.getL2(5)) {
+        console.log(price, size);
     }
-    // Full orderbook data
-    for (let order of asks) {
-    console.log(
-        order.orderId,
-        order.price,
-        order.size,
-        order.side, // 'buy' or 'sell'
-    );
+    console.log("Asks: ");
+    for (let [price, size] of asks.getL2(5)) {
+        console.log(price, size);
     }
 
-    let account = new Account(sender.publicKey);
+    // SHOWS FULL ORDER INFO - TESTING
+    // Full orderbook data
+    // for (let order of asks) {
+    //     console.log(
+    //         order.orderId,
+    //         order.price,
+    //         order.size,
+    //         order.side, // 'buy' or 'sell'
+    //     );
+    // }
+
+    //let account = new Account();
     let owner = sender; //new Keypair(sender.publicKey);
-    let payer = new PublicKey('...'); // spl-token account
+    let payer = sender.publicKey // spl-token account
     await market.placeOrder(connection, {
-    owner,
-    payer,
-    side: 'buy', // 'buy' or 'sell'
-    price: 123.45,
-    size: 17.0,
-    orderType: 'limit', // 'limit', 'ioc', 'postOnly'
+        owner,
+        payer,
+        side: 'buy', // 'buy' or 'sell'
+        price: 123.45,
+        size: 17.0,
+        orderType: 'limit', // 'limit', 'ioc', 'postOnly'
     });
 
+    let myOrders = await market.loadOrdersForOwner(connection, sender.publicKey);
+    console.log("My Orders: ", myOrders);
+
+    for (let openOrders of await market.findOpenOrdersAccountsForOwner(
+        connection,
+        owner.publicKey,
+      )) {
+        if (openOrders.baseTokenFree > 0 || openOrders.quoteTokenFree > 0) {
+          // spl-token accounts to which to send the proceeds from trades
+          let baseTokenAccount = new PublicKey('...');
+          let quoteTokenAccount = new PublicKey('...');
+      
+          await market.settleFunds(
+            connection,
+            owner,
+            openOrders,
+            baseTokenAccount,
+            quoteTokenAccount,
+          );
+        }
+      }
 	// Creating transaction
 	// console.log("Creating Transaction:");
     // console.log("From: ", sender.publicKey.toString())

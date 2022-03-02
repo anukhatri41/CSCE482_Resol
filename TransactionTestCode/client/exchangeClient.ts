@@ -3,6 +3,7 @@ import base58 from 'bs58';
 import * as borsh from 'borsh';
 import * as serum from '@project-serum/serum';
 import * as ray from '@raydium-io/raydium-sdk';
+import SerumSource, { SOL, TokenAccount } from '@raydium-io/raydium-sdk';
 
 // Fetching credentials from .env
 require('dotenv').config()
@@ -33,32 +34,69 @@ const amount = 0.01;
     // Establishing Market Connect
     console.log("Connecting to cluster: ", ChosenCluster)
     let connection = new web3.Connection(ChosenCluster);
-    let marketAddressPub = new web3.PublicKey(details.RAYDIUM_SOL_USDC);
-    let programAddressPub = new web3.PublicKey(details.SERUM_PROGRAM_ID);
+    let marketAddress = new web3.PublicKey(details.RAYDIUM_SOL_USDC);
+    let programAddress = new web3.PublicKey(details.SERUM_PROGRAM_ID);
 
-    let programPubkey = ray.publicKey;
-
+    // Using Raydium methods to create publicKey data.
+    //let programPubkey = ray.publicKey(details.SERUM_PROGRAM_ID);
+    //let marketPubkey = ray.publicKey(details.RAYDIUM_SOL_USDC);
 
     let market = new ray.Market();
-    market = ray.Market.getAssociatedAuthority({
-        programAddress: programPubkey,
-        marketAddress
+    market = await ray.Market.getAssociatedAuthority({
+        programId: programAddress,
+        marketId: marketAddress
     });
+    console.log("Market Connecting to: ", market);
     //let market = await Market.load(connection, marketAddress, {}, programAddress);
-    console.log("Connected...")
+    console.log("Connected...");
 
     // Establishing connection, generating necessary Keypair info
 	//const connection = new web3.Connection(ChosenCluster, 'confirmed');
 	const keypair = web3.Keypair.fromSecretKey(base58.decode(details.secret));
 
     let RouteInfo = ["amm", "serum", "route"];
-    let sol = new ray.CurrencyAmount(SOL, 1);
+    console.log("Established Route Info");
+    let solToken = new ray.Token('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', 1);
+    let solTokenAmount = await new ray.TokenAmount(solToken, 1);
+    console.log("Established sol");
+    //let sol = ray.Token.SOL;
     let per = new ray.Percent(1,2);
-    ray.Trade.getBestAmountIn({ 
-        market: marketAddress,
-        amountOut: sol, // Maybe SOL as well???
-        currencyIn: ray.Token.SOL, // SOL
-        slippage: per // 50% slippage?
+    console.log("Declared per");
+    //console.log("POOL INFO", ray.MAINNET_OFFICIAL_LIQUIDITY_POOLS)
+    //let amm = ray.AmmSource ()
+    // Code works up to here...
+    
+    console.log("Creating serum source");
+    // ray.Trade.getBestAmountIn({
+    //     //markets: SerumSource({
+    //     //     marketKeys: [marketAddress],
+    //     //     bids: [],
+    //     //     asks: []
+    //     // }),
+    //     // pools: ray.MAINNET_OFFICIAL_LIQUIDITY_POOLS[0], 
+    //     // amountOut: solTokenAmount,
+    //     // currencyIn: ray.Token.SOL,
+    //     // slippage: per
+    //     // markets: market,
+    //     // amountOut: sol, // Maybe SOL as well???
+    //     // currencyIn: ray.Token.SOL, // SOL
+    //     // slippage: per // 50% slippage?
+    // });
+
+    let solTokenAccount:TokenAccount[];
+    solTokenAccount.push([solToken]);
+
+    ray.Trade.makeTradeTransaction({
+        connection: connection,
+        routes: RouteInfo[0],
+        routeType: RouteType,
+        userKeys: {
+            tokenAccounts: solTokenAccount,
+            owner: sender.publicKey
+        },
+        amountIn: solTokenAmount,
+        amountOut: solTokenAmount,
+        fixedSide: "in"
     });
 
     // let buy = new Trade();

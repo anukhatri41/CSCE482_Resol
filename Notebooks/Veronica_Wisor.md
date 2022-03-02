@@ -35,3 +35,14 @@
 
 **February 16, 2022**
 - met with instructor and TA
+
+**February 27, 2022**:
+Its been a while since the last update but heres a summary of the past 1.5 weeks:
+- we created a chainlink price monitoring module last week but after meeting with TA/Prof, we decided that wasn't a good route to take
+- I continued looking into a way to get good data for prices and after some research I have found coin gecko
+https://blog.chain.link/levels-of-data-aggregation-in-chainlink-price-feeds/
+- the above link gives a good explanation of how coin gecko and chainlink differ
+- I will discuss this with the professor/ta tomorrow in class, but from my research I think some data aggregation is necessary (coin gecko) but not too much (chainlink)
+- I have created a small program that returns the values of some prices of MANGO, ORCA, and RAYDIUM against USD using the coin gecko API that I plan to demo in class tomorrow for the TA/Prof
+- hopefully this is a promising first start to the price monitoring module
+  - (we will find out tomorrow)

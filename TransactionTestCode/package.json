@@ -9,6 +9,7 @@
   "scripts": {
     "transaction": "ts-node client/transaction.ts",
     "exchange": "ts-node client/exchangeClient.ts",
+    "serum": "ts-node client/serumData.ts",
     "start": "ts-node client/transaction.ts",
     "start-with-test-validator": "start-server-and-test 'solana-test-validator --reset --quiet' http://localhost:8899/health start",
     "lint": "eslint --ext .ts src/client/* && prettier --check \"src/client/**/*.ts\"",
@@ -23,6 +24,7 @@
   },
   "dependencies": {
     "@project-serum/serum": "^0.13.61",
+    "@raydium-io/raydium-sdk": "^1.0.1-beta.37",
     "@solana/web3.js": "^1.33.0",
     "borsh": "^0.7.0",
     "dotenv": "^16.0.0",

@@ -1,18 +1,8 @@
 import * as web3 from '@solana/web3.js';
-import {
-    Account,
-    Keypair,
-    Connection,
-    PublicKey,
-    LAMPORTS_PER_SOL,
-    SystemProgram,
-    TransactionInstruction,
-    Transaction,
-    sendAndConfirmTransaction,
-} from '@solana/web3.js';
 import base58 from 'bs58';
 import * as borsh from 'borsh';
-import { Market } from '@project-serum/serum';
+import * as serum from '@project-serum/serum';
+import * as ray from '@raydium-io/raydium-sdk';
 
 // Fetching credentials from .env
 require('dotenv').config()
@@ -25,10 +15,11 @@ const details = {
 
 // Creating Keypair object from secret key & reciever pubkey in .env
 const sender = web3.Keypair.fromSecretKey(base58.decode(details.secret))
-const owner = sender;
+//const owner = sender;
 //const reciever = new web3.PublicKey(details.RAYDIUM_SOL_USDC);
 const devnet = 'https://api.devnet.solana.com';
 const mainnet = 'https://api.mainnet-beta.solana.com';
+const serumAPI = 'https://solana-api.projectserum.com';
 
 // Creating program ID object
 const programId = new web3.PublicKey(details.SERUM_PROGRAM_ID);
@@ -41,108 +32,50 @@ const amount = 0.01;
 (async () => {
     // Establishing Market Connect
     console.log("Connecting to cluster: ", ChosenCluster)
-    let connection = new Connection(ChosenCluster);
-    let marketAddress = new PublicKey(details.RAYDIUM_SOL_USDC);
-    let programAddress = new PublicKey(details.SERUM_PROGRAM_ID);
-    let market = await Market.load(connection, marketAddress, {}, programAddress);
+    let connection = new web3.Connection(ChosenCluster);
+    let marketAddressPub = new web3.PublicKey(details.RAYDIUM_SOL_USDC);
+    let programAddressPub = new web3.PublicKey(details.SERUM_PROGRAM_ID);
+
+    let programPubkey = ray.publicKey;
+
+
+    let market = new ray.Market();
+    market = ray.Market.getAssociatedAuthority({
+        programAddress: programPubkey,
+        marketAddress
+    });
+    //let market = await Market.load(connection, marketAddress, {}, programAddress);
     console.log("Connected...")
 
     // Establishing connection, generating necessary Keypair info
 	//const connection = new web3.Connection(ChosenCluster, 'confirmed');
 	const keypair = web3.Keypair.fromSecretKey(base58.decode(details.secret));
 
-    // Fetching orderbooks
-    let bids = await market.loadBids(connection);
-    let asks = await market.loadAsks(connection);
-    // L2 orderbook data
-    console.log("Bids: ");
-    for (let [price, size] of bids.getL2(5)) {
-        console.log(price, size);
-    }
-    console.log("Asks: ");
-    for (let [price, size] of asks.getL2(5)) {
-        console.log(price, size);
-    }
-
-    // SHOWS FULL ORDER INFO - TESTING
-    // Full orderbook data
-    // for (let order of asks) {
-    //     console.log(
-    //         order.orderId,
-    //         order.price,
-    //         order.size,
-    //         order.side, // 'buy' or 'sell'
-    //     );
-    // }
-
-    //let account = new Account();
-    let owner = sender; //new Keypair(sender.publicKey);
-    let payer = sender.publicKey // spl-token account
-    await market.placeOrder(connection, {
-        owner,
-        payer,
-        side: 'buy', // 'buy' or 'sell'
-        price: 123.45,
-        size: 17.0,
-        orderType: 'limit', // 'limit', 'ioc', 'postOnly'
+    let RouteInfo = ["amm", "serum", "route"];
+    let sol = new ray.CurrencyAmount(SOL, 1);
+    let per = new ray.Percent(1,2);
+    ray.Trade.getBestAmountIn({ 
+        market: marketAddress,
+        amountOut: sol, // Maybe SOL as well???
+        currencyIn: ray.Token.SOL, // SOL
+        slippage: per // 50% slippage?
     });
 
-    let myOrders = await market.loadOrdersForOwner(connection, sender.publicKey);
-    console.log("My Orders: ", myOrders);
-
-    for (let openOrders of await market.findOpenOrdersAccountsForOwner(
-        connection,
-        owner.publicKey,
-      )) {
-        if (openOrders.baseTokenFree > 0 || openOrders.quoteTokenFree > 0) {
-          // spl-token accounts to which to send the proceeds from trades
-          let baseTokenAccount = new PublicKey('...');
-          let quoteTokenAccount = new PublicKey('...');
-      
-          await market.settleFunds(
-            connection,
-            owner,
-            openOrders,
-            baseTokenAccount,
-            quoteTokenAccount,
-          );
-        }
-      }
-	// Creating transaction
-	// console.log("Creating Transaction:");
-    // console.log("From: ", sender.publicKey.toString())
-	// console.log("To: ", reciever.toString());
-    // console.log("Amount Sent: %d SOL", amount)
-	// Transaction Code
-    // const transaction = new Transaction().add(
-    //     SystemProgram.transfer({
-    //       fromPubkey: sender.publicKey,
-    //       lamports: (LAMPORTS_PER_SOL / 100) * amount,
-    //       toPubkey: reciever 
-    //     }),
-    //   );
-    // class GreetingAccount {
-    //     txt: String = '';
-    //     constructor(fields: {txt: string} | undefined = undefined) {
-    //       if (fields) {
-    //         this.txt = fields.txt;
-    //       }
-    //     }
-    //   }
-
-    // const GreetingSchema = new Map([
-    //     [GreetingAccount, {kind: 'struct', fields: [['txt', 'String']]}],
-    //   ]);
-
-    // const instruction = new TransactionInstruction({
-    //     keys: [{pubkey: sender.publicKey, isSigner: false, isWritable: true}],
-    //     programId,
-    //     data: Buffer.from(borsh.serialize(GreetingSchema,''))//Buffer.from(borsh.serialize(GreetingSchema, messageAccount)), // All instructions are hellos
-    // });
-    // const signature: string = await sendAndConfirmTransaction(
+    // let buy = new Trade();
+    // buy = ray.Trade.makeTradeTransaction({
     //     connection,
-    //     new Transaction().add(instruction),
-    //     [sender],
+    //     routes: RouteInfo[],
+    //     routeType: RouteType,
+    //     userKeys: {
+    //       tokenAccounts: TokenAccount[],
+    //       owner: PublicKey,
+    //       payer?: PublicKey,
+    //     },
+    //     amountIn: CurrencyAmount | TokenAmount,
+    //     amountOut: CurrencyAmount | TokenAmount,
+    //     fixedSide: SwapSide,
+    //     config?: {
+    //       bypassAssociatedCheck?: boolean,
+    //     }
     // );
-    //   console.log("tx: ", signature);
 })();

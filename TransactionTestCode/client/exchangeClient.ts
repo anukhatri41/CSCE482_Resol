@@ -4,12 +4,13 @@ import * as borsh from 'borsh';
 import * as serum from '@project-serum/serum';
 import * as ray from '@raydium-io/raydium-sdk';
 import SerumSource, { SOL, TokenAccount } from '@raydium-io/raydium-sdk';
-// import {
-//     encodeInstruction
-// } from '@project-serum/serum';
+import {
+    encodeInstruction
+} from '@project-serum/serum/lib/instructions';
 const { AMM_INFO_LAYOUT_V4, ACCOUNT_LAYOUT, MARKET_STATE_LAYOUT_V3 } = require('./ray_layouts');
 const { Token, TOKEN_PROGRAM_ID } = require('@solana/spl-token')
 const sleep = require('./sleep');
+const throwIfNull = require('./throwIfNull');
 
 // Fetching credentials from .env
 require('dotenv').config()
@@ -41,14 +42,29 @@ const USDC_DECIMALS = 6;
     // Establishing Market Connect
     console.log("Connecting to cluster: ", ChosenCluster)
     let connection = new web3.Connection(ChosenCluster, 'confirmed');
-    let marketAddress = new web3.PublicKey(details.RAYDIUM_SOL_USDC);
+    // let marketAddress = new web3.PublicKey(details.RAYDIUM_SOL_USDC);
+    let marketAddress = new web3.PublicKey("9wFFyRfZBsuAha4YcuxcXLKwMxJR43S7fPfQLusDBzvT");
     let programAddress = new web3.PublicKey(details.SERUM_PROGRAM_ID);
-    const { owner, data } = await connection.getAccountInfo(marketAddress);
+    // const { owner, data } = await connection.getAccountInfo(marketAddress);
 
-    const decoded = serum.Market.getLayout(programId).decode(data);
-    const market = new serum.Market(decoded, 9, USDC_DECIMALS, {}, programId); // 9 is the amount of decimals
-    console.log("Market Connecting to: ", marketAddress);
-    console.log("Connected...");
+    // const { owner, data } = throwIfNull(
+    //     await connection.getAccountInfo(marketAddress),
+    //     'Market not found',
+    //   );
+    
+    //   if (!owner.equals(programId)) { throw new Error(`Address not owned by program: ${owner.toBase58()}`); }
+    //   const decoded = Market.getLayout(programId).decode(data);
+    //   if (
+    //     !decoded.accountFlags.initialized
+    //     || !decoded.accountFlags.market
+    //     || !decoded.ownAddress.equals(serumV3Market)
+    //   ) {
+    //     throw new Error('Invalid market');
+    //   }
+    // const decoded = serum.Market.getLayout(programId).decode(data);
+    // const market = new serum.Market(decoded, 9, USDC_DECIMALS, {}, programId); // 9 is the amount of decimals
+    // console.log("Market Connecting to: ", marketAddress);
+    // console.log("Connected...");
 
     // Establishing connection, generating necessary Keypair info
 	//const connection = new web3.Connection(ChosenCluster, 'confirmed');
@@ -69,8 +85,11 @@ const USDC_DECIMALS = 6;
     console.log("Creating serum source");
     const ammInfoRes = await connection.getAccountInfo(new web3.PublicKey("58oQChx4yWmvKdwLLZzBi4ChoCc2fqCUWBkwMihLYQo2"));
     await sleep();
-    const ammInfo = MARKET_STATE_LAYOUT_V3.decode(ammInfoRes.data);
+    try {
+        const ammInfo = await MARKET_STATE_LAYOUT_V3.decode(ammInfoRes.data);
+
     const { serumProgramId } = ammInfo;
+    
     const publicKeys = [
         ammInfo.poolCoinTokenAccount,
         ammInfo.poolPcTokenAccount,
@@ -104,12 +123,17 @@ const USDC_DECIMALS = 6;
         { pubkey: web3.SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false },
       ];
 
+    const side = 'buy';
+    const limitPrice = 0.01;
+    const maxQuantity = 1;
+    const orderType = 'limit';
+
     const instruction = new web3.TransactionInstruction({
         keys,
         programId,
         data: encodeInstruction({
-          newOrder: clientId
-            ? { side, limitPrice, maxQuantity, orderType, clientId }
+          newOrder: sender
+            ? { side, limitPrice, maxQuantity, orderType, sender }
             : { side, limitPrice, maxQuantity, orderType },
         }),
     });
@@ -164,4 +188,10 @@ const USDC_DECIMALS = 6;
     //       bypassAssociatedCheck?: boolean,
     //     }
     // );
+
+}
+catch (error)
+{
+    console.log("oop");
+}
 })();

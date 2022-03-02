@@ -86,7 +86,7 @@ const USDC_DECIMALS = 6;
     const ammInfoRes = await connection.getAccountInfo(new web3.PublicKey("58oQChx4yWmvKdwLLZzBi4ChoCc2fqCUWBkwMihLYQo2"));
     await sleep();
     try {
-        const ammInfo = await MARKET_STATE_LAYOUT_V3.decode(ammInfoRes.data);
+        const ammInfo = await MARKET_STATE_LAYOUT_V3.decode(ammInfoRes);
 
     const { serumProgramId } = ammInfo;
     
@@ -100,8 +100,8 @@ const USDC_DECIMALS = 6;
         poolPcTokenAccountRes,
         ammOpenOrdersRes,
     ] = await connection.getMultipleAccountsInfo(publicKeys);
-    const poolCoinTokenAccount = ACCOUNT_LAYOUT.decode(poolCoinTokenAccountRes.data);
-    const poolPcTokenAccount = ACCOUNT_LAYOUT.decode(poolPcTokenAccountRes.data);
+    const poolCoinTokenAccount = ACCOUNT_LAYOUT.decode(poolCoinTokenAccountRes);
+    const poolPcTokenAccount = ACCOUNT_LAYOUT.decode(poolPcTokenAccountRes);
     let rentSysvar = new web3.PublicKey(
         'SysvarRent111111111111111111111111111111111',
       );
@@ -116,7 +116,7 @@ const USDC_DECIMALS = 6;
         { pubkey: ammInfo.ammOpenOrders, isSigner: false, isWritable: true },
         { pubkey: null, isSigner: false, isWritable: true }, // previously was requestQueue instead of null
         { pubkey: sender, isSigner: false, isWritable: true },
-        { pubkey: owner, isSigner: true, isWritable: false },
+        { pubkey: ammInfo.ownAddress, isSigner: true, isWritable: false },
         { pubkey: ammInfo.baseVault, isSigner: false, isWritable: true },
         { pubkey: ammInfo.quoteVault, isSigner: false, isWritable: true },
         { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },

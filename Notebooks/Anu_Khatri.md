@@ -46,8 +46,15 @@ Individual Notebook - Anu Khatri
 - Researched ways to set up the project with Rust, TypeScript, and React
 
 2/22/2022
-- Created 2rd week's report and turned it in to repository
+- Created 3rd week's report and turned it in to repository
 - Started mockups for application
 
 2/23/2022
-- Aided in
+- Aided in research for monitoring the markets, as well as connecting wallet
+
+2/28/2022
+- Research how to modify the instruction for buying/selling
+
+3/1/2022
+- Created 4th week's report and turned it in to repository
+- Created Kanban board on JIRA

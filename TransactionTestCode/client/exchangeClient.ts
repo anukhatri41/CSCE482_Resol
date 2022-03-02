@@ -4,9 +4,9 @@ import * as borsh from 'borsh';
 import * as serum from '@project-serum/serum';
 import * as ray from '@raydium-io/raydium-sdk';
 import SerumSource, { SOL, TokenAccount } from '@raydium-io/raydium-sdk';
-// import {
-//     encodeInstruction
-// } from '@project-serum/serum';
+import {
+    encodeInstruction
+} from '@project-serum/serum/lib/instructions';
 const { AMM_INFO_LAYOUT_V4, ACCOUNT_LAYOUT, MARKET_STATE_LAYOUT_V3 } = require('./ray_layouts');
 const { Token, TOKEN_PROGRAM_ID } = require('@solana/spl-token')
 const sleep = require('./sleep');
@@ -43,7 +43,8 @@ const USDC_DECIMALS = 6;
     let connection = new web3.Connection(ChosenCluster, 'confirmed');
     let marketAddress = new web3.PublicKey(details.RAYDIUM_SOL_USDC);
     let programAddress = new web3.PublicKey(details.SERUM_PROGRAM_ID);
-    const { owner, data } = await connection.getAccountInfo(marketAddress);
+
+    const { owner, data } = await connection.getAccountInfo(new web3.PublicKey("9wFFyRfZBsuAha4YcuxcXLKwMxJR43S7fPfQLusDBzvT"));
 
     const decoded = serum.Market.getLayout(programId).decode(data);
     const market = new serum.Market(decoded, 9, USDC_DECIMALS, {}, programId); // 9 is the amount of decimals
@@ -70,27 +71,28 @@ const USDC_DECIMALS = 6;
     const ammInfoRes = await connection.getAccountInfo(new web3.PublicKey("58oQChx4yWmvKdwLLZzBi4ChoCc2fqCUWBkwMihLYQo2"));
     await sleep();
     const ammInfo = MARKET_STATE_LAYOUT_V3.decode(ammInfoRes.data);
-    const { serumProgramId } = ammInfo;
+    //const { serumProgramId } = ammInfo;
     const publicKeys = [
         ammInfo.poolCoinTokenAccount,
         ammInfo.poolPcTokenAccount,
         ammInfo.ammOpenOrders,
     ];
-    const [
-        poolCoinTokenAccountRes,
-        poolPcTokenAccountRes,
-        ammOpenOrdersRes,
-    ] = await connection.getMultipleAccountsInfo(publicKeys);
-    const poolCoinTokenAccount = ACCOUNT_LAYOUT.decode(poolCoinTokenAccountRes.data);
-    const poolPcTokenAccount = ACCOUNT_LAYOUT.decode(poolPcTokenAccountRes.data);
-    let rentSysvar = new web3.PublicKey(
-        'SysvarRent111111111111111111111111111111111',
-      );
+    // const [
+    //     poolCoinTokenAccountRes,
+    //     poolPcTokenAccountRes,
+    //     ammOpenOrdersRes,
+    // ] = await connection.getMultipleAccountsInfo(publicKeys);
 
+    // const poolCoinTokenAccount = ACCOUNT_LAYOUT.decode(poolCoinTokenAccountRes.data);
+    // const poolPcTokenAccount = ACCOUNT_LAYOUT.decode(poolPcTokenAccountRes.data);
     // const ammOpenOrders = OpenOrders.getLayout(serumProgramId).decode(ammOpenOrdersRes.data);
     // const { baseTokenTotal, quoteTokenTotal } = ammOpenOrders;
     // coinAmountWei.plus(new BigNumber(baseTokenTotal.toString()));
     // pcAmountWei.plus(new BigNumber(quoteTokenTotal.toString()));
+    const side = 'buy';
+    const limitPrice = 0.01;
+    const maxQuantity = 1;
+    const orderType = 'limit';
 
     const keys = [
         { pubkey: marketAddress, isSigner: false, isWritable: true },
@@ -108,11 +110,10 @@ const USDC_DECIMALS = 6;
         keys,
         programId,
         data: encodeInstruction({
-          newOrder: clientId
-            ? { side, limitPrice, maxQuantity, orderType, clientId }
-            : { side, limitPrice, maxQuantity, orderType },
+          newOrder: sender ? { side, limitPrice, maxQuantity, orderType, sender } : { side, limitPrice, maxQuantity, orderType },
         }),
     });
+
     const signature: string = await web3.sendAndConfirmTransaction(
         connection,
         new web3.Transaction().add(instruction),

@@ -114,3 +114,11 @@ I have been sending money between a Sollet and Phantom account. The Sollet accou
  Veronica has made a lot of progress with the price monitoring side of things, and hopefully once I get this market part figured out, we can work on integrating it.
 
  We are very hopeful and are planning to have something we can actually show Laren & Dr.Huang. I have set aside a lot of time today and tomorrow to hopefully get that to work.
+
+ <h4>3/1/22</h4>
+
+ Today I have spent a lot of time working on the buying side of the project. I have begun to use raydium SDK, instead of the serum SDK. Unfortunantly as of right now, I cannot get it to work. Due to issues from the poor raydium documentation along with my lack of understanding of typescript, I cannot seem to understand how to make this work.
+
+ I will of course continue this work, however I am slightly disappointed as we had hoped to have something on the buy side to be able to show to Laren and Dr. Huang. I know Veronica has made some excellent progress on the price fetching side.
+
+ Perhaps I will ask Dr. Huang how he goes about reading this documentation and maybe pick his brain to ask him what some of these properties mean when working with the Raydium SDK.

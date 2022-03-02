@@ -104,3 +104,21 @@ Update: Some time has passed since our meeting, and fortunantely I have been abl
 I have been sending money between a Sollet and Phantom account. The Sollet account acts as the sender account, as it allows me easy access to the private secret key neccessary to send the SOL. The Phantom account I believe allows access to private key stuff as well, but Sollet seems to update much quicker than Phantom. Also Sollet has a nice UI for devnet stuff, but it doesn't show previous transactions.
  
  Anyways, point is, we finally got somewhere! Yay! Hopefully we can keep that progress up.
+
+ <h4>2/28/22</h4>
+
+ Today we got a lot of work done. We sifted through a lot of the repositories and documentation, and I think we found some documentation that will be useful in showing us how we can connect to the markets using js.
+
+ I accidently uploaded my secret key to one of my Solana wallets, but I did that this morning before class, so I was able to go back and fix all of that before class started.
+
+ Veronica has made a lot of progress with the price monitoring side of things, and hopefully once I get this market part figured out, we can work on integrating it.
+
+ We are very hopeful and are planning to have something we can actually show Laren & Dr.Huang. I have set aside a lot of time today and tomorrow to hopefully get that to work.
+
+ <h4>3/1/22</h4>
+
+ Today I have spent a lot of time working on the buying side of the project. I have begun to use raydium SDK, instead of the serum SDK. Unfortunantly as of right now, I cannot get it to work. Due to issues from the poor raydium documentation along with my lack of understanding of typescript, I cannot seem to understand how to make this work.
+
+ I will of course continue this work, however I am slightly disappointed as we had hoped to have something on the buy side to be able to show to Laren and Dr. Huang. I know Veronica has made some excellent progress on the price fetching side.
+
+ Perhaps I will ask Dr. Huang how he goes about reading this documentation and maybe pick his brain to ask him what some of these properties mean when working with the Raydium SDK.

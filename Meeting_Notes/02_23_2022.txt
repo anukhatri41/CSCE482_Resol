@@ -1,0 +1,15 @@
+02_23_2022
+
+Able to pull prices from chainlinks but not markets
+- Chainlink prices are aggregated, so may not be accurate enough in realtime
+- Won't be trading with this, so shouldn't really use
+
+Can't trade because of regulations/rules
+- May need to use VPN 
+
+Issues with connecting Phantom wallet to use
+Program needs to have private key of wallet
+
+There is understanding now of client using blockchain
+
+Modify HelloWorld to add the Mango address to see if works

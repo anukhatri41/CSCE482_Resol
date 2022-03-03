@@ -46,3 +46,18 @@ https://blog.chain.link/levels-of-data-aggregation-in-chainlink-price-feeds/
 - I have created a small program that returns the values of some prices of MANGO, ORCA, and RAYDIUM against USD using the coin gecko API that I plan to demo in class tomorrow for the TA/Prof
 - hopefully this is a promising first start to the price monitoring module
   - (we will find out tomorrow)
+  
+**March 1, 2022**  
+- Looked into other methods for price monitoring due to CoinGecko taking so long for price returns
+- Created a program based off a github (https://github.com/sonarwatch/serum-price-api) that calls Raydium and Serum Amms directly to get prices
+- This program collects data from recents transactions to get the price
+- I feel like this is promising
+
+**March 2, 2022**
+- completed peer eval
+- met with prof/ta today
+- worked with Grant all class trying to send a transaction to raydium
+- spent the rest of the day trying to create and place an order with little luck
+- hoping for some more luck tomorrow
+
+

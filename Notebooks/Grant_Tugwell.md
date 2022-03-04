@@ -122,3 +122,23 @@ I have been sending money between a Sollet and Phantom account. The Sollet accou
  I will of course continue this work, however I am slightly disappointed as we had hoped to have something on the buy side to be able to show to Laren and Dr. Huang. I know Veronica has made some excellent progress on the price fetching side.
 
  Perhaps I will ask Dr. Huang how he goes about reading this documentation and maybe pick his brain to ask him what some of these properties mean when working with the Raydium SDK.
+
+ <h4>3/2/22</h4>
+
+ Today we met with Dr. Huang and we spoke to him about our struggles finding an exchange with proper documentation. We had a demonstration to show him of our price monitoring module, but we never ended up showing it to him.
+
+ After our meeting with Dr. Huang and Laren, we began to work on some of the example code. We split into two different teams, me and Veronica, and Anu and Robert. Me and Veronica were trying to send an instruction over the Solana network instead of through an exchanges API. Anu and Robert were working on getting the mango example code to run.
+
+ We are confident we are on the right track, we are just having so many stuggles finding the proper documentation to get us there.
+
+ <h4>3/4/22<h4>
+
+ Today me and Veronica met up to work on the project. 
+
+ We finally made some more meaningful progress! We were able to do a transaction with the Orca exchange!
+
+ Veronica was specifically working on trying to get pricing from the Orca and Mango exchange, which I believe she succeeded in doing.
+
+ I was trying to get us to be able to purchase something, which I was able to do through Orca's API. Our next step is to try to do it through Solana instructions.
+
+ I will continue working on this more this weekend.

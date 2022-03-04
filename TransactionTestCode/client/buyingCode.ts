@@ -30,7 +30,7 @@ const main = async () => {
     const solToken = orcaSolPool.getTokenA();
     const usdcToken = orcaSolPool.getTokenB();
     
-    for (let i = 0; i < 5; i++) {
+    for (let i = 1; i < 6; i++) {
         console.log("Making transaction #", i);
 
         const quote = await orcaSolPool.getQuote(solToken, solAmount);

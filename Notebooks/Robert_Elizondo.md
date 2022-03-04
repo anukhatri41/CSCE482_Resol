@@ -61,4 +61,10 @@ Meet with group on Sunday to discuss next steps and what to focus on
 Updated progress with group from the weekend  
 Can successfully send SOL to a Phantom Wallet  
 Working on using Borsh to send and recieve data  
+    
+# 3/02/22  
+Meeting with Laren and Dr. Huang  
+Found out how to send custom instrction data  
+Team is working on making transaction  
+Starting to look into orca and using examples  
 

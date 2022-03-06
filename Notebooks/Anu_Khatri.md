@@ -58,3 +58,9 @@ Individual Notebook - Anu Khatri
 3/1/2022
 - Created 4th week's report and turned it in to repository
 - Created Kanban board on JIRA
+
+3/2/2022
+- Had meeting with professor and TA, took meeting notes
+- Aided in helping resolve errors for using instructions through Raydium SDK
+- Set up transaction in Orca using their setup instructions
+- Had successful transactions through Orca

@@ -8,8 +8,8 @@ import {
   MangoClient,
   ZERO_BN
 } from '@blockworks-foundation/mango-client/lib/src';
-import { Account, Commitment, Connection } from '@solana/web3.js';
-import configFile from '@blockworks-foundation/mango-client/lib/src/ids.json';
+import { Account, Commitment, Connection, Keypair } from '@solana/web3.js';
+import configFile from '@blockworks-foundation/mango-client/lib/src';
 import { Market } from '@project-serum/serum';
 
 function readKeypair() {

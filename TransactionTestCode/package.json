@@ -12,6 +12,7 @@
     "serum": "ts-node client/serumData.ts",
     "mango": "ts-node client/mangoPractice.ts",
     "orca": "ts-node client/orcaPractice.ts",
+    "jupiter": "ts-node client/jupiterPractice.ts",
     "buyingExample": "ts-node client/buyingCode.ts",
     "start": "ts-node client/transaction.ts",
     "start-with-test-validator": "start-server-and-test 'solana-test-validator --reset --quiet' http://localhost:8899/health start",
@@ -27,6 +28,7 @@
   },
   "dependencies": {
     "@blockworks-foundation/mango-client": "^3.3.17",
+    "@jup-ag/core": "^1.0.0-beta.17",
     "@orca-so/sdk": "^1.2.23",
     "@project-serum/serum": "^0.13.61",
     "@raydium-io/raydium-sdk": "^1.0.1-beta.37",
@@ -35,6 +37,7 @@
     "bs58": "^5.0.0",
     "decimal.js": "^10.3.1",
     "dotenv": "^16.0.0",
+    "isomorphic-fetch": "^3.0.0",
     "mz": "^2.7.0",
     "yaml": "^1.10.2"
   },
@@ -43,7 +46,9 @@
     "@types/bs58": "^4.0.1",
     "@types/eslint": "^8.2.2",
     "@types/eslint-plugin-prettier": "^3.1.0",
+    "@types/isomorphic-fetch": "^0.0.35",
     "@types/mz": "^2.7.2",
+    "@types/node-fetch": "^2.6.1",
     "@types/prettier": "^2.1.5",
     "@types/yaml": "^1.9.7",
     "@typescript-eslint/eslint-plugin": "^4.6.0",

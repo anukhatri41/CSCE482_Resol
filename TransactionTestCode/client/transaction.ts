@@ -24,7 +24,7 @@ const details = {
 // console.log(base58.encode(key))
 
 // Creating Keypair object from secret key & reciever pubkey in .env
-const sender = web3.Keypair.fromSecretKey(base58.decode(details.secret))
+const sender = web3.Keypair.fromSecretKey(base58.decode(details.secret));
 const reciever = new web3.PublicKey(details.reciever);
 const devnet = 'https://api.devnet.solana.com';
 const mainnet = 'https://api.mainnet-beta.solana.com';

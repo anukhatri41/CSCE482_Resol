@@ -8,6 +8,7 @@
   "license": "MIT",
   "scripts": {
     "transaction": "ts-node client/transaction.ts",
+    "orcaTransaction": "ts-node client/sendTransaction.ts",
     "exchange": "ts-node client/exchangeClient.ts",
     "serum": "ts-node client/serumData.ts",
     "mango": "ts-node client/mangoPractice.ts",

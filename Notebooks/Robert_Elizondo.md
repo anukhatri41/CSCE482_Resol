@@ -67,4 +67,9 @@ Meeting with Laren and Dr. Huang
 Found out how to send custom instrction data  
 Team is working on making transaction  
 Starting to look into orca and using examples  
-
+  
+# 3/07/22  
+Meet with group on Sunday to discuss next steps and what to focus on and figuring out which DEX to use
+Able to purchase SOL through Orca  
+Working on making Jupiter or Mango to succesfully send a transaction  
+Workin on getting transaction on chain

@@ -142,3 +142,20 @@ I have been sending money between a Sollet and Phantom account. The Sollet accou
  I was trying to get us to be able to purchase something, which I was able to do through Orca's API. Our next step is to try to do it through Solana instructions.
 
  I will continue working on this more this weekend.
+
+ <h4>3/6/22</h4>
+
+Today, we met up and began working on our swapping program. We were able to contrust a transaction and send it through solana using the orca exchange!
+
+This is super exciting for us, we have been trying to get this to work for the longest time. From here, we want to try to find one more exchange we can do a transaction with. Currently we have been trying to use Jupiter, but we are having getting it to do a transaction with anything that isn't USDC to USDT.
+
+ <h4>3/7/22</h4>
+
+ Today, we continued working with Jupiter, and we are having trouble verifying transactions right now because apparently, according to Jupiter at least, the Solana network is experiencing some issues at the moment. We will continue to work on this later.
+
+ On the bright side, now that we have orca working with the Solana commands instead of just through their API, we are now trying to figure out how to replicate a similar transaction through any other exchange. 
+
+ Once we get that working, we believe it will be pretty straight forward to connect with our monitoring program that Veronica has been working on.
+
+ Moving forward the main things we need are to be able to do a transaction with one more exchange, integrate our price monitoring and client side programs, and then
+ we have our MVP. Exciting!

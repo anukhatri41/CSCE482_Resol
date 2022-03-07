@@ -177,66 +177,135 @@
 // main();
 
 
-import { 
-    Keypair,
-    Connection,
-    Cluster
- } from '@solana/web3.js';
-import { Wallet } from '@project-serum/anchor';
-import bs58 from "bs58";
-import { Jupiter, RouteInfo, TOKEN_LIST_URL } from "@jup-ag/core";
+// import { 
+//     Keypair,
+//     Connection,
+//     Cluster
+//  } from '@solana/web3.js';
+// import { Wallet } from '@project-serum/anchor';
+// import bs58 from "bs58";
+// import { Jupiter, RouteInfo, TOKEN_LIST_URL } from "@jup-ag/core";
 
+// require('dotenv').config()
+// const details = {
+//     sender_keypair: process.env.SENDER_KEY as string,
+//     secret: process.env.SENDER_SECRET as string,
+// 	reciever: process.env.DEFAULT_RECEIVER_PUBKEY as string,
+// };
+// const mainnet = 'https://api.mainnet-beta.solana.com';
+
+// // Creating Wallet
+// const wallet = new Wallet(Keypair.fromSecretKey(bs58.decode(details.secret)));
+
+// (async () => {
+//     console.log("Connecting to Jupiter");
+//     const connection = new Connection(mainnet);
+//     const ENV: Cluster = "mainnet-beta";
+//     const jupiter = await Jupiter.load({
+//             connection,
+//             cluster: ENV,
+//             user: wallet.publicKey, // or public key
+//             });
+//     console.log("Connected to Jupiter");
+
+//     // Prepare execute exchange
+//     const { transactions } = await jupiter.exchange({
+//         routes.routesInfos[0],
+//       });
+    
+//     // Both `setupTransaction` and `cleanupTransaction` can be undefined if
+//     // both transactions are not needed. `swapTransaction` will always be
+//     // defined.
+//     //
+//     // `setupTransaction`: This is usually the required actions before a token
+//     // swap is executed. For example, setting a token account, wrapping up the
+//     // SOL into wSOL.
+//     // `swapTransaction`: The actual swapping transaction.
+//     // `cleanupTransaction`: This is the cleanup transaction, for example,
+//     // unwrapping the wSOL token account.
+
+//     const { setupTransaction, swapTransaction, cleanupTransaction } = transactions;
+
+//     // Execute the transactions
+// for (let serializedTransaction of [setupTransaction, swapTransaction, cleanupTransaction].filter(Boolean)) {
+//     // get transaction object from serialized transaction
+//     const transaction = Transaction.from(Buffer.from(serializedTransaction, 'base64'))
+//     // perform the swap
+//     const txid = await connection.sendTransaction(transaction, [wallet.payer], {
+//       skipPreflight: true
+//     })
+//     await connection.confirmTransaction(txid)
+//     console.log(`https://solscan.io/tx/${txid}`)
+//   }
+// })();
+  
+import { Connection, Keypair, Transaction, sendAndConfirmTransaction } from '@solana/web3.js'
+import fetch from 'cross-fetch'
+import { Wallet } from '@project-serum/anchor'
+import bs58 from 'bs58'
+
+const connection = new Connection('https://mercurial.rpcpool.com')
 require('dotenv').config()
 const details = {
     sender_keypair: process.env.SENDER_KEY as string,
     secret: process.env.SENDER_SECRET as string,
 	reciever: process.env.DEFAULT_RECEIVER_PUBKEY as string,
 };
-const mainnet = 'https://api.mainnet-beta.solana.com';
 
-// Creating Wallet
 const wallet = new Wallet(Keypair.fromSecretKey(bs58.decode(details.secret)));
 
 (async () => {
-    console.log("Connecting to Jupiter");
-    const connection = new Connection(mainnet);
-    const ENV: Cluster = "mainnet-beta";
-    const jupiter = await Jupiter.load({
-            connection,
-            cluster: ENV,
-            user: wallet.publicKey, // or public key
-            });
-    console.log("Connected to Jupiter");
+    const routeMap = await (await fetch('https://quote-api.jup.ag/v1/route-map')).json()
 
-    // Prepare execute exchange
-    const { transactions } = await jupiter.exchange({
-        routes.routesInfos[0],
-      });
+    // list all possible input tokens by mint Address
+    const allInputMints = Object.keys(routeMap)
+
+    // list tokens can swap by mint addressfor SOL
+    const swappableOutputForSol = routeMap['So11111111111111111111111111111111111111112']
+    console.log({ allInputMints, swappableOutputForSol })
+
+    // swapping SOL to USDC with input 0.01 SOL and 0.5% slippage
+    const { data } = await (
+        await fetch(
+        'https://quote-api.jup.ag/v1/quote?inputMint=So11111111111111111111111111111111111111112&outputMint=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v&amount=10000000&slippage=0.5&feeBps=4'
+        )
+    ).json()
+    const routes = data
+    console.log(routes)
+
+    // get serialized transactions for the swap
+    const transactions = await (
+        await fetch('https://quote-api.jup.ag/v1/swap', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            // route from /quote api
+            route: routes[0],
+            // user public key to be used for the swap
+            userPublicKey: wallet.publicKey.toString(),
+            // auto wrap and unwrap SOL. default is true
+            wrapUnwrapSOL: true
+            // feeAccount is optional. Use if you want to charge a fee.  feeBps must have been passed in /quote API.
+            // This is the ATA account for the output token where the fee will be sent to. If you are swapping from SOL->USDC then this would be the USDC ATA you want to collect the fee.
+        })
+        })
+    ).json()
     
-    // Both `setupTransaction` and `cleanupTransaction` can be undefined if
-    // both transactions are not needed. `swapTransaction` will always be
-    // defined.
-    //
-    // `setupTransaction`: This is usually the required actions before a token
-    // swap is executed. For example, setting a token account, wrapping up the
-    // SOL into wSOL.
-    // `swapTransaction`: The actual swapping transaction.
-    // `cleanupTransaction`: This is the cleanup transaction, for example,
-    // unwrapping the wSOL token account.
-
-    const { setupTransaction, swapTransaction, cleanupTransaction } = transactions;
+    const { setupTransaction, swapTransaction, cleanupTransaction } = transactions
 
     // Execute the transactions
-for (let serializedTransaction of [setupTransaction, swapTransaction, cleanupTransaction].filter(Boolean)) {
-    // get transaction object from serialized transaction
-    const transaction = Transaction.from(Buffer.from(serializedTransaction, 'base64'))
-    // perform the swap
-    const txid = await connection.sendTransaction(transaction, [wallet.payer], {
-      skipPreflight: true
-    })
-    await connection.confirmTransaction(txid)
-    console.log(`https://solscan.io/tx/${txid}`)
-  }
+    for (let serializedTransaction of [setupTransaction, swapTransaction, cleanupTransaction].filter(Boolean)) {
+        // get transaction object from serialized transaction
+        const transaction = Transaction.from(Buffer.from(serializedTransaction, 'base64'))
+        // perform the swap
+        const tx = await sendAndConfirmTransaction(connection, transaction, [wallet.payer]);
+        // const txid = await connection.sendTransaction(transaction, [wallet.payer], {
+        // skipPreflight: true
+        // })
+        // await connection.confirmTransaction(txid)
+        // console.log(`https://solscan.io/tx/${txid}`)
+        console.log("Tx: ", tx);
+    }
 })();
-  
-

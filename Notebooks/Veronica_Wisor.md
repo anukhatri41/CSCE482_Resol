@@ -60,4 +60,16 @@ https://blog.chain.link/levels-of-data-aggregation-in-chainlink-price-feeds/
 - spent the rest of the day trying to create and place an order with little luck
 - hoping for some more luck tomorrow
 
+**March 4, 2022**
+- met with Grant for about 3 hours and for about 3 more hours later Friday night
+  - set up some basic logic for the price monitoring module between Serum and Orca
+  - worked on trying to set up transactions through serum
+  - started looking into Anchor for on chain programs
+
+**March 6, 2022**
+- met with Grant and Anu for about 4 hours and for a couple more later Sunday night
+  - Able to get orca transactions to send with a Solana instruction and Jupiter working
+- continued to look into Anchor more, following some of their tutorials
+  - aim is to get small on chain program that can send a transaction
+  - another aim is to get price monitoring module to notify the on chain program
 

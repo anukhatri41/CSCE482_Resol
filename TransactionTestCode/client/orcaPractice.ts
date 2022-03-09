@@ -42,7 +42,7 @@ const main = async () => {
     const orcaSolPool = orca.getPool(OrcaPoolConfig.SOL_USDC);
     const solToken = orcaSolPool.getTokenA();
     const usdcToken = orcaSolPool.getTokenB();
-    const solAmount = new Decimal(0.001);
+    const solAmount = new Decimal(0.01);
     const quote = await orcaSolPool.getQuote(solToken, solAmount);
     const usdcAmount = quote.getMinOutputAmount();
     console.log('QUOTE.getminOutputAmount: ');

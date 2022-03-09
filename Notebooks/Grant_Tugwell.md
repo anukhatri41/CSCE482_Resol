@@ -149,13 +149,24 @@ Today, we met up and began working on our swapping program. We were able to cont
 
 This is super exciting for us, we have been trying to get this to work for the longest time. From here, we want to try to find one more exchange we can do a transaction with. Currently we have been trying to use Jupiter, but we are having getting it to do a transaction with anything that isn't USDC to USDT.
 
- <h4>3/7/22</h4>
+<h4>3/7/22</h4>
 
- Today, we continued working with Jupiter, and we are having trouble verifying transactions right now because apparently, according to Jupiter at least, the Solana network is experiencing some issues at the moment. We will continue to work on this later.
+Today, we continued working with Jupiter, and we are having trouble verifying transactions right now because apparently, according to Jupiter at least, the Solana network is experiencing some issues at the moment. We will continue to work on this later.
 
- On the bright side, now that we have orca working with the Solana commands instead of just through their API, we are now trying to figure out how to replicate a similar transaction through any other exchange. 
+On the bright side, now that we have orca working with the Solana commands instead of just through their API, we are now trying to figure out how to replicate a similar transaction through any other exchange. 
 
- Once we get that working, we believe it will be pretty straight forward to connect with our monitoring program that Veronica has been working on.
+Once we get that working, we believe it will be pretty straight forward to connect with our monitoring program that Veronica has been working on.
 
- Moving forward the main things we need are to be able to do a transaction with one more exchange, integrate our price monitoring and client side programs, and then
- we have our MVP. Exciting!
+Moving forward the main things we need are to be able to do a transaction with one more exchange, integrate our price monitoring and client side programs, and then
+we have our MVP. Exciting!
+
+<h4>3/8/22</h4>
+
+Today I was working on trying to get serum to work because we found some people on discord mentioning that it should work, but to no avail. Ill try again tomorrow in class.
+
+
+<h4>3/9/22</h4>
+
+Today we met with Dr. Huang and Laren. We showed them what we have so far, which is only Orca running, and they basically told us that we are on the right track. We are slightly disappointed in ourselves because we really do wish we had more at this point, but it has just been insanely difficult to get anything working. We strongly feel like the amount of work we have to show is not representative of the hours we have put in.
+
+After our meeting, me and Veronica did a lot of work trying to get raydium to work because we found some more information on liquidity pools. Hopefully, we can use this to really get something going, however by the end of class, we still dont have anything working. I will continue working more on this tomorrow and have allocated basically most of my spring break to work on this project.

@@ -73,3 +73,12 @@ https://blog.chain.link/levels-of-data-aggregation-in-chainlink-price-feeds/
   - aim is to get small on chain program that can send a transaction
   - another aim is to get price monitoring module to notify the on chain program
 
+**March 7, 2022**
+- in class managed to set up basic on chain program using Anchor
+  - price monitoring module is able to call function in on chain program 
+  - on chain function just prints a message
+
+**March 9, 2022**
+- met with Prof and TA and discussed expectations for CDR after spring break
+- spent time with Grant trying to get serum swap instruction working in order to include Raydium in our transaction module
+

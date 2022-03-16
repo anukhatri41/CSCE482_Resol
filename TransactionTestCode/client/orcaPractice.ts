@@ -39,17 +39,20 @@ const main = async () => {
     // console.log("Swapped:", swapTxId, "\n");
     
     // Modifying code to swap SOL for USDC
-    const orcaSolPool = orca.getPool(OrcaPoolConfig.SOL_USDC);
-    const solToken = orcaSolPool.getTokenA();
-    const usdcToken = orcaSolPool.getTokenB();
+    // const orcaSolPool = orca.getPool(OrcaPoolConfig.SOL_USDC);
+    // const solToken = orcaSolPool.getTokenA();
+    // const usdcToken = orcaSolPool.getTokenB();
+    const orcaSolPool = orca.getPool(OrcaPoolConfig.OXY_SOL);
+    const oxyToken = orcaSolPool.getTokenA();
+    const solToken = orcaSolPool.getTokenB();
     const solAmount = new Decimal(0.01);
     const quote = await orcaSolPool.getQuote(solToken, solAmount);
-    const usdcAmount = quote.getMinOutputAmount();
+    const outAmount = quote.getMinOutputAmount();
     console.log('QUOTE.getminOutputAmount: ');
-    console.log(usdcAmount);
+    console.log(outAmount);
 
-    console.log(`Swap ${solAmount.toString()} SOL for at least ${usdcAmount.toNumber()} USDC`);
-    const swapPayload = await orcaSolPool.swap(owner, solToken, solAmount, usdcAmount);
+    console.log(`Swap ${solAmount.toString()} SOL for at least ${outAmount.toNumber()} OXY`);
+    const swapPayload = await orcaSolPool.swap(owner, solToken, solAmount, outAmount);
     console.log('orcaSolPool.swap: ');
     console.log(swapPayload.transaction);
 

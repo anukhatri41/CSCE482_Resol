@@ -42,6 +42,8 @@ const main = async () => {
     // const orcaSolPool = orca.getPool(OrcaPoolConfig.SOL_USDC);
     // const solToken = orcaSolPool.getTokenA();
     // const usdcToken = orcaSolPool.getTokenB();
+    
+    // New Oxygen Sol Pool
     const orcaSolPool = orca.getPool(OrcaPoolConfig.OXY_SOL);
     const oxyToken = orcaSolPool.getTokenA();
     const solToken = orcaSolPool.getTokenB();

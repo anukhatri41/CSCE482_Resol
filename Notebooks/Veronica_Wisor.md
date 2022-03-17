@@ -82,3 +82,6 @@ https://blog.chain.link/levels-of-data-aggregation-in-chainlink-price-feeds/
 - met with Prof and TA and discussed expectations for CDR after spring break
 - spent time with Grant trying to get serum swap instruction working in order to include Raydium in our transaction module
 
+**March 16, 2022**
+- met with team this evening to plan out tasks for the next couple days regarding CDR
+- tried to understand as a team why Jupiter executeSwap function wasnt completing

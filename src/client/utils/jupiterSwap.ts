@@ -1,5 +1,6 @@
 import { Jupiter, RouteInfo, TOKEN_LIST_URL } from "@jup-ag/core";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import fetch from "isomorphic-fetch";
 import {
   ENV,
   INPUT_MINT_ADDRESS,
@@ -103,14 +104,20 @@ import {
   };
 
 export const executeJupiterSwap = async ({
+    connection,
     owner,
-    RPC
+    tokenIn,
+    tokenOut,
+    inAmount
   }: {
+    connection: Connection;
     owner: Keypair;
-    RPC: string;
+    tokenIn: string;
+    tokenOut: string;
+    inAmount: number;
   }) => {
     try {
-        const connection = new Connection(RPC); // Setup Solana RPC. RPC is our custome RPC from .env file.
+        //const connection = new Connection(RPC); // Setup Solana RPC. RPC is our custome RPC from .env file.
         const tokens: Token[] = await (await fetch(TOKEN_LIST_URL[ENV])).json(); // Fetch token list from Jupiter API
         console.log("Established connection.")
         //  Load Jupiter
@@ -121,42 +128,53 @@ export const executeJupiterSwap = async ({
         });
         console.log("Jupiter Loaded")
     
-        //  Get routeMap, which maps each tokenMint and their respective tokenMints that are swappable
-        const routeMap = jupiter.getRouteMap();
-    
         // If you know which input/output pair you want
-        const inputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS); // USDC Mint Info
-        const outputToken = tokens.find((t) => t.address == OXY_MINT_ADDRESS); // USDT Mint Info
-        console.log("Established trade in & out (SOL -> OXY)");
-        // Alternatively, find all possible outputToken based on your inputToken
-        // const possiblePairsTokenInfo = await getPossiblePairsTokenInfo({
-        //   tokens,
-        //   routeMap,
-        //   inputToken,
-        // });
-        console.log("Getting routes.")
-        const routes = await getRoutes({
-          jupiter,
-          inputToken,
-          outputToken,
-          inputAmount: 0.01, // 1 unit in UI
-          slippage: 1, // 1% slippage
-        });
-        console.log("Got routes, running executeSwap.");
-        // Routes are sorted based on outputAmount, so ideally the first route is the best.
-        const routeInfo: RouteInfo = routes!.routesInfos[0];
-        const result = await executeSwap({ jupiter, routeInfo });
-    
-        console.log(result);
-        // const { transactions } = await jupiter.exchange({
-        //   route: routes.routesInfos[0],
-        // });
-    
-        // const { setupTransaction, swapTransaction, cleanupTransaction } = transactions
-    
-        // // Sends it through the Solana command.
-        // const signature: string = await sendAndConfirmTransaction(connection, transactions, signers);
-        // console.log("tx: ", signature);
+    const inputToken = tokens.find((t) => t.address == OXY_MINT_ADDRESS); // USDC Mint Info
+    //const inputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS); // USDC Mint Info
+    const outputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS); // USDT Mint Info
+    console.log("Established trade in & out (OXY -> SOL)");
+
+    let found = false
+    let route = 0
+    while (!found) {
+      const routes = await getRoutes({
+        jupiter,
+        inputToken,
+        outputToken,
+        inputAmount: 1, // 1 unit in UI
+        slippage: 1, // 1% slippage
+      });
+
+      if (outputToken && routes) {
+        for (let i = 0; i < routes!.routesInfos.length; i++)
+        {
+          if (routes!.routesInfos[i].marketInfos.length > 1)
+          {
+            if (routes!.routesInfos[i].marketInfos[0].marketMeta.amm.label != 'Orca' && routes!.routesInfos[i].marketInfos[1].marketMeta.amm.label != 'Orca')
+            {
+              console.log(routes!.routesInfos[i].marketInfos[0].marketMeta)
+              console.log(routes!.routesInfos[i].marketInfos[1].marketMeta)
+              found = true;
+              route = i
+              console.log("Chosen route:",i)
+              console.log(
+                "Quote: ",
+                routes.routesInfos[i].outAmount / 10 ** outputToken.decimals,
+                `(${outputToken.symbol})`
+              );
+              break;
+            }
+          }
+        }
+      
+        if (found) {
+          console.log("Got routes, running executeSwap.");
+          const result = await executeSwap({ jupiter, routeInfo: routes!.routesInfos[route] });
+          console.log(result);
+        }
+
+      }
+    }
     
       } catch (error) {
         console.log({ error });

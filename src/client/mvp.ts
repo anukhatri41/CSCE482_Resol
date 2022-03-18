@@ -25,14 +25,22 @@ const main = async () => {
     const serumAPI = 'https://solana-api.projectserum.com';
   
     // 2. Initialzie Orca object with mainnet connection
-    const connection = new Connection(mainnet, "singleGossip");
+    const connection = new Connection(RPC);
 
     // Execute swap on orca
-    executeOrcaSwap({connection, owner});
 
-    console.log("ORCA SWAP EXECUTED");
+    // We will now swap back and forth, between SOL and OXY to try and generate profit.
+    const tokenIn = 'OXY';
+    const tokenOut = 'SOL';
+    const inAmount = 2;
 
-    //executeJupiterSwap({owner, RPC});
+    // HOW executeOrcaSwap WORKS: pass in connection, owner is your public key, tokenIn: either SOL or OXY, tokenOut: either SOL or OXY
+    // inAmount: needs to be a number small enough to actually be traded out of your account.
+    await executeOrcaSwap({connection, owner, tokenIn, tokenOut, inAmount});
+
+    console.log("ORCA SWAP FINISHED.");
+
+    //executeJupiterSwap({connection, owner, in, out, inAmount});
 
     console.log("Jupiter Swap EXECUTED")
     

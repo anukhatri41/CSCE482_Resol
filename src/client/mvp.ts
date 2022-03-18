@@ -1,5 +1,5 @@
 import { readFile } from "mz/fs";
-import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { executeOrcaSwap } from "./utils/orcaSwap"
 import { executeJupiterSwap } from "./utils/jupiterSwap"
 
@@ -26,13 +26,17 @@ const main = async () => {
   
     // 2. Initialzie Orca object with mainnet connection
     const connection = new Connection(RPC);
+    const initBalance = await connection.getBalance(owner.publicKey);
+    console.log("Initial Balance: ", initBalance/LAMPORTS_PER_SOL);
+    console.log("First Swap 2 OXY for SOL.");
 
     // Execute swap on orca
 
     // We will now swap back and forth, between SOL and OXY to try and generate profit.
-    const tokenIn = 'OXY';
-    const tokenOut = 'SOL';
-    const inAmount = 2;
+    // Info for Orca
+    let tokenIn = 'OXY';
+    let tokenOut = 'SOL';
+    let inAmount = 2;
 
     // HOW executeOrcaSwap WORKS: pass in connection, owner is your public key, tokenIn: either SOL or OXY, tokenOut: either SOL or OXY
     // inAmount: needs to be a number small enough to actually be traded out of your account.
@@ -40,9 +44,23 @@ const main = async () => {
 
     console.log("ORCA SWAP FINISHED.");
 
-    //executeJupiterSwap({connection, owner, in, out, inAmount});
+    const midBalance = await connection.getBalance(owner.publicKey);
+    console.log("Amount of SOL recieved: ", (midBalance - initBalance)/LAMPORTS_PER_SOL);
+    // Info for Jupiter
+    tokenIn = 'SOL';
+    tokenOut = 'OXY';
+    inAmount = (midBalance - initBalance) / LAMPORTS_PER_SOL; // Should only trade what we got in exchange for our intial Oxy
+
+    // HOW executeJupiterSwap WORKS: pass in connection, owner is your public key, tokenIn: either SOL or OXY, tokenOut: either SOL or OXY
+    // inAmount: needs to be a number small enough to actually be traded out of your account.
+    await executeJupiterSwap({connection, owner, tokenIn, tokenOut, inAmount});
 
     console.log("Jupiter Swap EXECUTED")
+
+    const finalBalance = await connection.getBalance(owner.publicKey);
+    let profit = (finalBalance - initBalance)/LAMPORTS_PER_SOL;
+    console.log("Final Balance: ", finalBalance/LAMPORTS_PER_SOL);
+    console.log("Profit Made: ", profit)
     
   };
   

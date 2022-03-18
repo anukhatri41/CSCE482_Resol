@@ -48,12 +48,12 @@ import {
           : null;
   
       if (routes && routes.routesInfos) {
-        console.log("Possible number of routes:", routes.routesInfos.length);
-        console.log(
-          "Best quote: ",
-          routes.routesInfos[0].outAmount / 10 ** outputToken.decimals,
-          `(${outputToken.symbol})`
-        );
+        // console.log("Possible number of routes:", routes.routesInfos.length);
+        // console.log(
+        //   "Best quote: ",
+        //   routes.routesInfos[0].outAmount / 10 ** outputToken.decimals,
+        //   `(${outputToken.symbol})`
+        // );
         return routes;
       } else {
         return null;
@@ -80,7 +80,7 @@ import {
       });
   
       console.log("EXECUTE DEFINED");
-      console.log(execute);
+      // console.log(execute);
       // Execute swap
       console.log("EXECUTING SWAP");
       const swapResult: any = await execute(); // Force any to ignore TS misidentifying SwapResult type
@@ -89,14 +89,14 @@ import {
       if (swapResult.error) {
         console.log(swapResult.error);
       } else {
-        console.log(`https://explorer.solana.com/tx/${swapResult.txid}`);
-        console.log(
-          `inputAddress=${swapResult.inputAddress.toString()} outputAddress=${swapResult.outputAddress.toString()}`
-        );
-        console.log(
-          `inputAmount=${swapResult.inputAmount} outputAmount=${swapResult.outputAmount}`
-        );
-        console.log()
+        // console.log(`https://explorer.solana.com/tx/${swapResult.txid}`);
+        // console.log(
+        //   `inputAddress=${swapResult.inputAddress.toString()} outputAddress=${swapResult.outputAddress.toString()}`
+        // );
+        // console.log(
+        //   `inputAmount=${swapResult.inputAmount} outputAmount=${swapResult.outputAmount}`
+        // );
+        // console.log()
       }
     } catch (error) {
       throw error;
@@ -117,66 +117,76 @@ export const executeJupiterSwap = async ({
     inAmount: number;
   }) => {
     try {
-        //const connection = new Connection(RPC); // Setup Solana RPC. RPC is our custome RPC from .env file.
-        const tokens: Token[] = await (await fetch(TOKEN_LIST_URL[ENV])).json(); // Fetch token list from Jupiter API
-        console.log("Established connection.")
-        //  Load Jupiter
-        const jupiter = await Jupiter.load({
-          connection,
-          cluster: ENV,
-          user: owner, // or public key
-        });
-        console.log("Jupiter Loaded")
-    
-        // If you know which input/output pair you want
-    const inputToken = tokens.find((t) => t.address == OXY_MINT_ADDRESS); // USDC Mint Info
-    //const inputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS); // USDC Mint Info
-    const outputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS); // USDT Mint Info
-    console.log("Established trade in & out (OXY -> SOL)");
-
-    let found = false
-    let route = 0
-    while (!found) {
-      const routes = await getRoutes({
-        jupiter,
-        inputToken,
-        outputToken,
-        inputAmount: 1, // 1 unit in UI
-        slippage: 1, // 1% slippage
+      //const connection = new Connection(RPC); // Setup Solana RPC. RPC is our custome RPC from .env file.
+      const tokens: Token[] = await (await fetch(TOKEN_LIST_URL[ENV])).json(); // Fetch token list from Jupiter API
+      console.log("Established connection.")
+      //  Load Jupiter
+      const jupiter = await Jupiter.load({
+        connection,
+        cluster: ENV,
+        user: owner, // or public key
       });
+      console.log("Jupiter Loaded")
+  
+      // If you know which input/output pair you want
+      let inputToken;
+      let outputToken;
+      if ( tokenIn == 'SOL' && tokenOut == 'OXY') {
+        inputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS); // USDC Mint Info
+        outputToken = tokens.find((t) => t.address == OXY_MINT_ADDRESS); // USDT Mint Info
+      } else if ( tokenIn == 'OXY' && tokenOut == 'SOL'){
+        inputToken = tokens.find((t) => t.address == OXY_MINT_ADDRESS); // USDC Mint Info
+        outputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS); // USDT Mint Info
+      } else {
+        throw("This token pair is not configured.")
+      }
+      // const inputToken = tokens.find((t) => t.address == OXY_MINT_ADDRESS); // USDC Mint Info
+      // const outputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS); // USDT Mint Info
+      // console.log("Established trade in & out (OXY -> SOL)");
 
-      if (outputToken && routes) {
-        for (let i = 0; i < routes!.routesInfos.length; i++)
-        {
-          if (routes!.routesInfos[i].marketInfos.length > 1)
+      let found = false
+      let route = 0
+      while (!found) {
+        const routes = await getRoutes({
+          jupiter,
+          inputToken,
+          outputToken,
+          inputAmount: inAmount, // 1 unit in UI
+          slippage: 1, // 1% slippage
+        });
+
+        if (outputToken && routes) {
+          for (let i = 0; i < routes!.routesInfos.length; i++)
           {
-            if (routes!.routesInfos[i].marketInfos[0].marketMeta.amm.label != 'Orca' && routes!.routesInfos[i].marketInfos[1].marketMeta.amm.label != 'Orca')
+            if (routes!.routesInfos[i].marketInfos.length > 1)
             {
-              console.log(routes!.routesInfos[i].marketInfos[0].marketMeta)
-              console.log(routes!.routesInfos[i].marketInfos[1].marketMeta)
-              found = true;
-              route = i
-              console.log("Chosen route:",i)
-              console.log(
-                "Quote: ",
-                routes.routesInfos[i].outAmount / 10 ** outputToken.decimals,
-                `(${outputToken.symbol})`
-              );
-              break;
+              if (routes!.routesInfos[i].marketInfos[0].marketMeta.amm.label != 'Orca' && routes!.routesInfos[i].marketInfos[1].marketMeta.amm.label != 'Orca')
+              {
+                // console.log(routes!.routesInfos[i].marketInfos[0].marketMeta)
+                // console.log(routes!.routesInfos[i].marketInfos[1].marketMeta)
+                found = true;
+                route = i
+                // console.log("Chosen route:",i)
+                // console.log(
+                //   "Quote: ",
+                //   routes.routesInfos[i].outAmount / 10 ** outputToken.decimals,
+                //   `(${outputToken.symbol})`
+                // );
+                break;
+              }
             }
           }
-        }
-      
-        if (found) {
-          console.log("Got routes, running executeSwap.");
-          const result = await executeSwap({ jupiter, routeInfo: routes!.routesInfos[route] });
-          console.log(result);
-        }
+        
+          if (found) {
+            // console.log("Got routes, running executeSwap.");
+            const result = await executeSwap({ jupiter, routeInfo: routes!.routesInfos[route] });
+            console.log(result);
+          }
 
+        }
       }
+  
+    } catch (error) {
+      console.log({ error });
     }
-    
-      } catch (error) {
-        console.log({ error });
-      }
 };

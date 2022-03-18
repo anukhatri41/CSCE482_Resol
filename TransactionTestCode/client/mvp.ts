@@ -13,8 +13,7 @@ import {
   SOL_MINT_ADDRESS,
   OXY_MINT_ADDRESS,
   Token,
-  USDC_MINT_ADDRESS,
-  USER_KEYPAIR,
+  USDC_MINT_ADDRESS
 } from "./constants";
 
 const executeOrcaSwap = async ({
@@ -158,7 +157,7 @@ const executeJupiterSwap = async ({
         const jupiter = await Jupiter.load({
           connection,
           cluster: ENV,
-          user: USER_KEYPAIR, // or public key
+          user: owner, // or public key
         });
         console.log("Jupiter Loaded")
     

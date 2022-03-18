@@ -170,3 +170,19 @@ Today I was working on trying to get serum to work because we found some people 
 Today we met with Dr. Huang and Laren. We showed them what we have so far, which is only Orca running, and they basically told us that we are on the right track. We are slightly disappointed in ourselves because we really do wish we had more at this point, but it has just been insanely difficult to get anything working. We strongly feel like the amount of work we have to show is not representative of the hours we have put in.
 
 After our meeting, me and Veronica did a lot of work trying to get raydium to work because we found some more information on liquidity pools. Hopefully, we can use this to really get something going, however by the end of class, we still dont have anything working. I will continue working more on this tomorrow and have allocated basically most of my spring break to work on this project.
+
+
+<h4>3/18/22 - Friday of Spring Break</h4>
+
+Over spring break week I have been putting in a lot of work trying to get Jupiter to run again. We finally figured out the issue and I believe
+we shouldn't have any more issues with Jupiter. We got Jupiter to work multiple times last Friday, 3/11/22, which was the Friday before spring break. I had
+to leave that day to go on a trip so once I verified Jupiter was working, I couldn't do more work. I let the team know and we were super optimistic because
+now that we have Jupiter working, we can perform swaps between two different exchanges! This was BIG for us, we were super duper excited!!
+
+When I came back from my trip this past Monday, 3/14/22, it was super late so I couldn't work on it. The next day, I tried Jupiter and what do you know, it 
+broke again. The transactions would sit there for litterally hours and nothing was happening. We couldn't figure it out. Tried this again on Wednesday, nothing. Again on Thursday, no clue. I came back to College Station on Thursday because I know I need to focus on this, so hopefully I can put all my effort into this. Then our breakthrough came on Thursday night. We had reached out to the Jupiter developers on Discord, and they hadn't offered too much help because I guess they are on different time zones, so they responded at like 3-4 am. Then I got on discord Thursday night around 10 pm because Veronica told me she had managed to get Jupiter to work for her. Of course it was still broken for me. Then one of the Jupiter developers told us its likely our code was totally fine, it sounded like an RPC issue. Hm, so we did some research and got our own RPC node, and IT WORKED!
+
+So at this point hopefully Jupiter will stay working, now that we have our own RPC node to direct all our transactions through. Things are looking positive for us to get an MVP by Monday! Yayyayayayayyyaayay!
+
+My goal is to have all the functions laid out today so that depending on the transaction parameters, we can do transactions in different directions. :)
+

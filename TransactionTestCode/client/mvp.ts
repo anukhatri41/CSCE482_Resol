@@ -105,15 +105,18 @@ const getRoutes = async ({
 
   const executeSwap = async ({
     jupiter,
-    route,
+    routeInfo
   }: {
     jupiter: Jupiter;
-    route: RouteInfo;
+    routeInfo: RouteInfo;
   }) => {
     try {
       // Prepare execute exchange
+      // const { execute } = await jupiter.exchange({
+      //   route
+      // });
       const { execute } = await jupiter.exchange({
-        route,
+        routeInfo,
       });
   
       console.log("EXECUTE DEFINED");
@@ -141,14 +144,14 @@ const getRoutes = async ({
   };
 
 const executeJupiterSwap = async ({
-    connection,
-    owner
+    owner,
+    RPC
   }: {
-    connection: Connection;
     owner: Keypair;
+    RPC: string;
   }) => {
     try {
-        const connection = new Connection(SOLANA_RPC_ENDPOINT); // Setup Solana RPC connection
+        const connection = new Connection(RPC); // Setup Solana RPC. RPC is our custome RPC from .env file.
         const tokens: Token[] = await (await fetch(TOKEN_LIST_URL[ENV])).json(); // Fetch token list from Jupiter API
         console.log("Established connection.")
         //  Load Jupiter
@@ -178,11 +181,12 @@ const executeJupiterSwap = async ({
           inputToken,
           outputToken,
           inputAmount: 0.01, // 1 unit in UI
-          slippage: 5, // 1% slippage
+          slippage: 1, // 1% slippage
         });
         console.log("Got routes, running executeSwap.");
         // Routes are sorted based on outputAmount, so ideally the first route is the best.
-        const result = await executeSwap({ jupiter, route: routes!.routesInfos[0] });
+        const routeInfo: RouteInfo = routes!.routesInfos[0];
+        const result = await executeSwap({ jupiter, routeInfo });
     
         console.log(result);
         // const { transactions } = await jupiter.exchange({
@@ -208,7 +212,15 @@ const main = async () => {
     });
     const secretKey = Uint8Array.from(JSON.parse(secretKeyString));
     const owner = Keypair.fromSecretKey(secretKey);
-  
+    require('dotenv').config()
+    const details = {
+        sender_keypair: process.env.SENDER_KEY as string,
+        secret: process.env.SENDER_SECRET as string,
+        reciever: process.env.DEFAULT_RECEIVER_PUBKEY as string,
+        _RPC: process.env.RPC_ENDPOINT as string, // named _RPC because functions were throwing a fit when passing in details.RPC
+    };
+    
+    const RPC = details._RPC;
     const devnet = 'https://api.devnet.solana.com';
     const mainnet = 'https://api.mainnet-beta.solana.com';
     const serumAPI = 'https://solana-api.projectserum.com';
@@ -221,7 +233,7 @@ const main = async () => {
 
     console.log("ORCA SWAP EXECUTED");
 
-    // executeJupiterSwap({connection, owner});
+    //executeJupiterSwap({owner, RPC});
 
     console.log("Jupiter Swap EXECUTED")
     

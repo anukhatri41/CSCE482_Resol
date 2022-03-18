@@ -51,7 +51,8 @@ const executeOrcaSwap = async ({
       console.warn(err);
     }
   };
-  const getRoutes = async ({
+
+const getRoutes = async ({
     jupiter,
     inputToken,
     outputToken,
@@ -220,7 +221,7 @@ const main = async () => {
 
     console.log("ORCA SWAP EXECUTED");
 
-    executeJupiterSwap({connection, owner});
+    // executeJupiterSwap({connection, owner});
 
     console.log("Jupiter Swap EXECUTED")
     

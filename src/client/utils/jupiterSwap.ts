@@ -84,7 +84,7 @@ import {
       // Execute swap
       console.log("EXECUTING SWAP");
       const swapResult: any = await execute(); // Force any to ignore TS misidentifying SwapResult type
-      console.log("Swapped");
+      // console.log("Swapped");
   
       if (swapResult.error) {
         console.log(swapResult.error);
@@ -180,7 +180,7 @@ export const executeJupiterSwap = async ({
           if (found) {
             // console.log("Got routes, running executeSwap.");
             const result = await executeSwap({ jupiter, routeInfo: routes!.routesInfos[route] });
-            console.log(result);
+            // console.log(result);
           }
 
         }
@@ -188,5 +188,6 @@ export const executeJupiterSwap = async ({
   
     } catch (error) {
       console.log({ error });
+      return -1
     }
 };

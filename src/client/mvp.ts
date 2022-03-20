@@ -1,16 +1,21 @@
-import { readFile } from "mz/fs";
-import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
+// import { readFile } from "mz/fs";
+import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey, TokenAccountsFilter } from "@solana/web3.js";
 import { executeOrcaSwap } from "./utils/orcaSwap"
 import { executeJupiterSwap } from "./utils/jupiterSwap"
+import bs58 from "bs58"
+import {
+  OXY_MINT_ADDRESS,
+} from "./constants";
 
 const main = async () => {
     /*** Setup ***/
     // 1. Read secret key file to get owner keypair
-    const secretKeyString = await readFile("/Users/gtugwell/.config/solana/id.json", {
-      encoding: "utf8",
-    });
-    const secretKey = Uint8Array.from(JSON.parse(secretKeyString));
-    const owner = Keypair.fromSecretKey(secretKey);
+    // const secretKeyString = await readFile("/Users/gtugwell/.config/solana/id.json", {
+    //   encoding: "utf8",
+    // });
+    // const secretKey = Uint8Array.from(JSON.parse(secretKeyString));
+    // const owner = Keypair.fromSecretKey(secretKey);
+
     require('dotenv').config()
     const details = {
         sender_keypair: process.env.SENDER_KEY as string,
@@ -18,17 +23,28 @@ const main = async () => {
         reciever: process.env.DEFAULT_RECEIVER_PUBKEY as string,
         _RPC: process.env.RPC_ENDPOINT as string, // named _RPC because functions were throwing a fit when passing in details.RPC
     };
-    
+
+    // if secret key is in .env:
+    const WALLET_PRIVATE_KEY = details.secret
+    const USER_PRIVATE_KEY = bs58.decode(WALLET_PRIVATE_KEY);
+    const owner = Keypair.fromSecretKey(USER_PRIVATE_KEY);
+
     const RPC = details._RPC;
     const devnet = 'https://api.devnet.solana.com';
     const mainnet = 'https://api.mainnet-beta.solana.com';
     const serumAPI = 'https://solana-api.projectserum.com';
   
-    // 2. Initialzie Orca object with mainnet connection
+    // 2. Initialize Orca object with mainnet connection
     const connection = new Connection(RPC);
-    const initBalance = await connection.getBalance(owner.publicKey);
-    console.log("Initial Balance: ", initBalance/LAMPORTS_PER_SOL);
-    console.log("First Swap 2 OXY for SOL.");
+
+    // get initial SOL and OXY balances in wallet
+    const initSOLBalance = await connection.getBalance(owner.publicKey);
+    let tokenAccountsFilter: TokenAccountsFilter = {mint: new PublicKey(OXY_MINT_ADDRESS)}
+    const initOXYBalance = await connection.getParsedTokenAccountsByOwner(owner.publicKey,tokenAccountsFilter);
+    console.log("Initial SOL Balance: ", initSOLBalance/LAMPORTS_PER_SOL);
+    console.log("Initial OXY Balance: ", initOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount)
+   
+    
 
     // Execute swap on orca
 
@@ -36,31 +52,57 @@ const main = async () => {
     // Info for Orca
     let tokenIn = 'OXY';
     let tokenOut = 'SOL';
-    let inAmount = 2;
-
+    let inAmount = 1;
+    
+    console.log("First Swap", inAmount,"OXY for SOL.");
     // HOW executeOrcaSwap WORKS: pass in connection, owner is your public key, tokenIn: either SOL or OXY, tokenOut: either SOL or OXY
     // inAmount: needs to be a number small enough to actually be traded out of your account.
-    await executeOrcaSwap({connection, owner, tokenIn, tokenOut, inAmount});
+    const resOrca = await executeOrcaSwap({connection, owner, tokenIn, tokenOut, inAmount});
 
-    console.log("ORCA SWAP FINISHED.");
+    const midSOLBalance = await connection.getBalance(owner.publicKey);
+    const midOXYBalance = await connection.getParsedTokenAccountsByOwner(owner.publicKey,tokenAccountsFilter);
 
-    const midBalance = await connection.getBalance(owner.publicKey);
-    console.log("Amount of SOL recieved: ", (midBalance - initBalance)/LAMPORTS_PER_SOL);
-    // Info for Jupiter
+    // error checking for Orca Swap
+    // if resOrca is defined, then executeOrcaSwap returned value from an error catch
+    // also checks if sol balance to trade with jupiter (inAmount) is <= 0 
+    if (resOrca || (midSOLBalance - initSOLBalance)/LAMPORTS_PER_SOL <= 0) {
+      console.log("Error with Orca swap.")
+      // break // (for when a while loop is placed around everything)
+      return
+    }
+    else {
+      console.log("ORCA SWAP FINISHED.");
+    }
+    
+
+    console.log("Amount of SOL recieved: ", (midSOLBalance - initSOLBalance)/LAMPORTS_PER_SOL);
+    console.log("Amount of OXY traded: ", (initOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount 
+                                            - midOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount))
+    
+
+    // // Info for Jupiter
     tokenIn = 'SOL';
     tokenOut = 'OXY';
-    inAmount = (midBalance - initBalance) / LAMPORTS_PER_SOL; // Should only trade what we got in exchange for our intial Oxy
+    inAmount = (midSOLBalance - initSOLBalance) / LAMPORTS_PER_SOL; // Should only trade what we got in exchange for our intial Oxy
 
     // HOW executeJupiterSwap WORKS: pass in connection, owner is your public key, tokenIn: either SOL or OXY, tokenOut: either SOL or OXY
     // inAmount: needs to be a number small enough to actually be traded out of your account.
-    await executeJupiterSwap({connection, owner, tokenIn, tokenOut, inAmount});
+    const resJup = await executeJupiterSwap({connection, owner, tokenIn, tokenOut, inAmount});
+    if (resJup) {
+      console.log("Error with Jupiter swap.")
+      // break // (for when a while loop is placed around everything)
+      return
+    }
 
-    console.log("Jupiter Swap EXECUTED")
+    console.log("JUPITER SWAP FINISHED")
 
-    const finalBalance = await connection.getBalance(owner.publicKey);
-    let profit = (finalBalance - initBalance)/LAMPORTS_PER_SOL;
-    console.log("Final Balance: ", finalBalance/LAMPORTS_PER_SOL);
-    console.log("Profit Made: ", profit)
+    const finalSOLBalance = await connection.getBalance(owner.publicKey);
+    const finalOXYBalance = await connection.getParsedTokenAccountsByOwner(owner.publicKey,tokenAccountsFilter);
+    console.log("Final SOL Balance: ", finalSOLBalance/LAMPORTS_PER_SOL);
+    console.log("Final OXY Balance: ", finalOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount)
+
+    let profit = (finalSOLBalance - initSOLBalance)/LAMPORTS_PER_SOL;
+    console.log("SOL Profit Made: ", profit)
     
   };
   

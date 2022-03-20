@@ -61,5 +61,6 @@ export const executeOrcaSwap = async ({
   
     } catch (err) {
       console.warn(err);
+      return -1
     }
   };

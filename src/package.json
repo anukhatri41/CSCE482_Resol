@@ -55,6 +55,7 @@
     "@types/mz": "^2.7.2",
     "@types/node-fetch": "^2.6.1",
     "@types/prettier": "^2.1.5",
+    "@types/sleep": "^0.0.8",
     "@types/yaml": "^1.9.7",
     "@typescript-eslint/eslint-plugin": "^4.6.0",
     "@typescript-eslint/parser": "^4.6.0",

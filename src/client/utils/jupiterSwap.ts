@@ -79,17 +79,17 @@ import {
         routeInfo,
       });
   
-      console.log("EXECUTE DEFINED");
+      //console.log("EXECUTE DEFINED");
       // console.log(execute);
       // Execute swap
-      console.log("EXECUTING SWAP");
+      //console.log("EXECUTING SWAP");
       const swapResult: any = await execute(); // Force any to ignore TS misidentifying SwapResult type
       // console.log("Swapped");
   
       if (swapResult.error) {
         console.log(swapResult.error);
       } else {
-        // console.log(`https://explorer.solana.com/tx/${swapResult.txid}`);
+        console.log(swapResult.txid);
         // console.log(
         //   `inputAddress=${swapResult.inputAddress.toString()} outputAddress=${swapResult.outputAddress.toString()}`
         // );

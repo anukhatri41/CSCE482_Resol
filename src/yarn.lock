@@ -767,6 +767,11 @@
   "resolved" "https://registry.npmjs.org/@types/retry/-/retry-0.12.1.tgz"
   "version" "0.12.1"
 
+"@types/sleep@^0.0.8":
+  "integrity" "sha512-uRyqhrKEq3bFlnKq72c6oaJgxPkVCf9hgPV7GI+z0N92ZybzlOF77RCEZHfXgihX0g/vEquVAtGTZZ9I+itXtA=="
+  "resolved" "https://registry.npmjs.org/@types/sleep/-/sleep-0.0.8.tgz"
+  "version" "0.0.8"
+
 "@types/ws@^7.4.4":
   "integrity" "sha512-JQbbmxZTZehdc2iszGKs5oC3NFnjeay7mtAWrdt7qNtAVK0g19muApzAy4bm9byz79xa2ZnO/BOBC2R8RC5Lww=="
   "resolved" "https://registry.npmjs.org/@types/ws/-/ws-7.4.7.tgz"

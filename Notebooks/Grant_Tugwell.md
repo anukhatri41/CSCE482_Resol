@@ -142,3 +142,54 @@ I have been sending money between a Sollet and Phantom account. The Sollet accou
  I was trying to get us to be able to purchase something, which I was able to do through Orca's API. Our next step is to try to do it through Solana instructions.
 
  I will continue working on this more this weekend.
+
+ <h4>3/6/22</h4>
+
+Today, we met up and began working on our swapping program. We were able to contrust a transaction and send it through solana using the orca exchange!
+
+This is super exciting for us, we have been trying to get this to work for the longest time. From here, we want to try to find one more exchange we can do a transaction with. Currently we have been trying to use Jupiter, but we are having getting it to do a transaction with anything that isn't USDC to USDT.
+
+<h4>3/7/22</h4>
+
+Today, we continued working with Jupiter, and we are having trouble verifying transactions right now because apparently, according to Jupiter at least, the Solana network is experiencing some issues at the moment. We will continue to work on this later.
+
+On the bright side, now that we have orca working with the Solana commands instead of just through their API, we are now trying to figure out how to replicate a similar transaction through any other exchange. 
+
+Once we get that working, we believe it will be pretty straight forward to connect with our monitoring program that Veronica has been working on.
+
+Moving forward the main things we need are to be able to do a transaction with one more exchange, integrate our price monitoring and client side programs, and then
+we have our MVP. Exciting!
+
+<h4>3/8/22</h4>
+
+Today I was working on trying to get serum to work because we found some people on discord mentioning that it should work, but to no avail. Ill try again tomorrow in class.
+
+
+<h4>3/9/22</h4>
+
+Today we met with Dr. Huang and Laren. We showed them what we have so far, which is only Orca running, and they basically told us that we are on the right track. We are slightly disappointed in ourselves because we really do wish we had more at this point, but it has just been insanely difficult to get anything working. We strongly feel like the amount of work we have to show is not representative of the hours we have put in.
+
+After our meeting, me and Veronica did a lot of work trying to get raydium to work because we found some more information on liquidity pools. Hopefully, we can use this to really get something going, however by the end of class, we still dont have anything working. I will continue working more on this tomorrow and have allocated basically most of my spring break to work on this project.
+
+
+<h4>3/18/22 - Friday of Spring Break</h4>
+
+Over spring break week I have been putting in a lot of work trying to get Jupiter to run again. We finally figured out the issue and I believe
+we shouldn't have any more issues with Jupiter. We got Jupiter to work multiple times last Friday, 3/11/22, which was the Friday before spring break. I had
+to leave that day to go on a trip so once I verified Jupiter was working, I couldn't do more work. I let the team know and we were super optimistic because
+now that we have Jupiter working, we can perform swaps between two different exchanges! This was BIG for us, we were super duper excited!!
+
+When I came back from my trip this past Monday, 3/14/22, it was super late so I couldn't work on it. The next day, I tried Jupiter and what do you know, it 
+broke again. The transactions would sit there for litterally hours and nothing was happening. We couldn't figure it out. Tried this again on Wednesday, nothing. Again on Thursday, no clue. I came back to College Station on Thursday because I know I need to focus on this, so hopefully I can put all my effort into this. Then our breakthrough came on Thursday night. We had reached out to the Jupiter developers on Discord, and they hadn't offered too much help because I guess they are on different time zones, so they responded at like 3-4 am. Then I got on discord Thursday night around 10 pm because Veronica told me she had managed to get Jupiter to work for her. Of course it was still broken for me. Then one of the Jupiter developers told us its likely our code was totally fine, it sounded like an RPC issue. Hm, so we did some research and got our own RPC node, and IT WORKED!
+
+So at this point hopefully Jupiter will stay working, now that we have our own RPC node to direct all our transactions through. Things are looking positive for us to get an MVP by Monday! Yayyayayayayyyaayay!
+
+My goal is to have all the functions laid out today so that depending on the transaction parameters, we can do transactions in different directions. :)
+
+<h4>3/21/22 - MVP Presentation/Demo Day</h4>
+
+Today we get to present what we have done so far. We were a little nervous leading up to the presentaiton, mainly because we were concerned that we were behind the other arbitrage project, however this is not the case! This is really good news for us because it kind of confirms that we aren't struggling because were are not as good or something like that, but it really is the truth that it is really difficult to get working code due to the poor documentation and often outdated examples.
+
+We felt that our presentation went well, and since we got our working MVP, we are very optimistic for the future!
+
+Moving forward we really need to start looking for what we are going to need to do to move our transaction code on chain. It is very exciting though!

@@ -64,3 +64,26 @@ Individual Notebook - Anu Khatri
 - Aided in helping resolve errors for using instructions through Raydium SDK
 - Set up transaction in Orca using their setup instructions
 - Had successful transactions through Orca
+
+3/6/2022
+- Set up Jupiter's core example to send transactions
+- Made my own phantom wallet to be able to buy/sell through Jupiter
+
+3/7/2022
+- Looked for on chain transactions on Rust's documentation, but unable to find anything
+- Met with professor and TA to discuss my contributions to the group and how I can improve as team leader and member
+
+3/8/2022
+- Met with Veronica and Grant to make clear what our progress has been and what our next steps should be to accomplish our goals for the CDR
+- Created 5th week's report anf turned it in to repository
+
+3/16/2022
+- Had meeting with team to discuss what needs to get accomplished for the CDR
+
+3/20/2022
+- Worked on the CDR Report, updated the charts necessary for it, and turned it in
+- Worked on the CDR Presentation
+
+3/21/2022
+- Met with team to rehearse CDR Presentation
+- Presented CDR to class

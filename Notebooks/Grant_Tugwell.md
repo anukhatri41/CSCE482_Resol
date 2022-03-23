@@ -186,3 +186,10 @@ So at this point hopefully Jupiter will stay working, now that we have our own R
 
 My goal is to have all the functions laid out today so that depending on the transaction parameters, we can do transactions in different directions. :)
 
+<h4>3/21/22 - MVP Presentation/Demo Day</h4>
+
+Today we get to present what we have done so far. We were a little nervous leading up to the presentaiton, mainly because we were concerned that we were behind the other arbitrage project, however this is not the case! This is really good news for us because it kind of confirms that we aren't struggling because were are not as good or something like that, but it really is the truth that it is really difficult to get working code due to the poor documentation and often outdated examples.
+
+We felt that our presentation went well, and since we got our working MVP, we are very optimistic for the future!
+
+Moving forward we really need to start looking for what we are going to need to do to move our transaction code on chain. It is very exciting though!

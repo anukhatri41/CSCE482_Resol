@@ -193,3 +193,11 @@ Today we get to present what we have done so far. We were a little nervous leadi
 We felt that our presentation went well, and since we got our working MVP, we are very optimistic for the future!
 
 Moving forward we really need to start looking for what we are going to need to do to move our transaction code on chain. It is very exciting though!
+
+<h4>3/23/22</h4>
+
+Today we met with Dr. Huang and Laren, and we got some good feedback with where we should be headed. We are planning to continue what we had currently planned and just try to move stuff on chain. In addtion to that, we are also starting to see if there are ways to get an actual profit. Anu has started working on a UI so we can start to imagine how our end product will look.
+
+We know that we need to start working a lot more at getting an on chain program running, so we will focus on that.
+
+Veronica currently has worked on getting the on chain stuff working, and I will start to look more at that in the near future.

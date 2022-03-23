@@ -1,7 +1,7 @@
 // import { readFile } from "mz/fs";
 import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey, TokenAccountsFilter } from "@solana/web3.js";
 //import { NATIVE_MINT, closeAccount, getAssociatedTokenAccount } from "@solana/spl-token";
-import { executeOrcaSwap } from "./utils/orcaSwap";
+import { executeOrcaSwap, getOrcaQuote } from "./utils/orcaSwap";
 import { executeJupiterSwap } from "./utils/jupiterSwap";
 import { fetchWalletBalance } from "./utils/shared";
 import bs58 from "bs58";
@@ -254,15 +254,44 @@ const solTOoxy = async () => {
     // 2. Initialize Orca object with mainnet connection
     const connection = new Connection(RPC);
 
+
+    // Get Quote Amount:
+    let tokenIn = 'SOL';
+    let tokenOut = 'OXY';
+    let inAmount = 0.05;
+    const quoteInfo = await getOrcaQuote({connection, tokenIn, tokenOut, inAmount})
+    console.log("QUOTE FOR AMT OF OXY FOR 0.01 SOL: ", quoteInfo);
+    // Try executing swap:
+    console.log("Defining doTheSwaps");
+    const doTheSwaps = async() => {
+      try{
+      tokenIn = 'SOL';
+      tokenOut = 'OXY';
+      const solTOoxy = executeJupiterSwap({connection, owner, tokenIn, tokenOut, inAmount});
+      tokenIn = 'OXY';
+      tokenOut = 'SOL';
+      inAmount = quoteInfo;
+      const oxyTOsol = executeJupiterSwap({connection, owner, tokenIn, tokenOut, inAmount});
+      } catch {
+        console.log("Some error.");
+      }
+    }
+
+    console.log("Running doTheSwaps");
+    await doTheSwaps();
     
   };
 const main = async () => {
   
   // OXY -> SOL -> OXY
-  await oxyTOsol();
+  //await oxyTOsol();
 
   // SOL -> OXY -> SOL
   //await solTOoxy();
+
+  // Top Bottom Trading Strat
+  await jupiterTopBottomTrading();
+
 };
   main()
     .then(() => {

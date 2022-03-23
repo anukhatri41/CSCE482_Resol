@@ -64,5 +64,43 @@ export const executeOrcaSwap = async ({
       return -1
     }
   };
-
   
+  export const getOrcaQuote = async ({
+    connection,
+    tokenIn,
+    tokenOut,
+    inAmount
+  }: {
+    connection: Connection;
+    tokenIn: string;
+    tokenOut: string;
+    inAmount: number;
+  }) => {
+    const orca = getOrca(connection);
+    let quoteInfo;
+
+    if (tokenIn == 'SOL' && tokenOut =='OXY'){
+      const orcaSolPool = orca.getPool(OrcaPoolConfig.OXY_SOL);
+      const OUT_TOKEN = orcaSolPool.getTokenA();
+      const IN_TOKEN = orcaSolPool.getTokenB();
+      const Amount = new Decimal(inAmount);
+      const quote = await orcaSolPool.getQuote(IN_TOKEN, Amount);
+      const outAmount = quote.getMinOutputAmount();
+      quoteInfo = outAmount;
+    } else if (tokenIn == 'OXY' && tokenOut == 'SOL'){
+      const orcaSolPool = orca.getPool(OrcaPoolConfig.OXY_SOL);
+      const IN_TOKEN = orcaSolPool.getTokenA();
+      const OUT_TOKEN = orcaSolPool.getTokenB();
+      const Amount = new Decimal(inAmount);
+      const quote = await orcaSolPool.getQuote(IN_TOKEN, Amount);
+      const outAmount = quote.getMinOutputAmount();
+      quoteInfo = outAmount;
+    } else {
+      // Means pair is not configured.
+      return 0;
+    }
+    return quoteInfo.toNumber();
+
+
+  };
+

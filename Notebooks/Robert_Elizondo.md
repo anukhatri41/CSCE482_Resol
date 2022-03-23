@@ -73,3 +73,12 @@ Meet with group on Sunday to discuss next steps and what to focus on and figurin
 Able to purchase SOL through Orca  
 Working on making Jupiter or Mango to succesfully send a transaction  
 Workin on getting transaction on chain
+
+# 3/09/22  
+Missed class due to family emergency  
+Got meeting notes from teammates
+
+# 3/23/22  
+Meeting with group on Sunday to work on CDR  
+Meeting with Dr.Huang and Laren  
+Working on logging transactions and testing enviroment

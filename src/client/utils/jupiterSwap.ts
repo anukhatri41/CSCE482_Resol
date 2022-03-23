@@ -77,6 +77,7 @@ import {
       // });
       const { execute } = await jupiter.exchange({
         routeInfo,
+        wrapUnwrapSOL: true,
       });
   
       //console.log("EXECUTE DEFINED");
@@ -185,9 +186,9 @@ export const executeJupiterSwap = async ({
 
         }
       }
-  
+      return "success";
     } catch (error) {
       console.log({ error });
-      return -1
+      return "failure";
     }
 };

@@ -265,22 +265,56 @@ const solTOoxy = async () => {
     console.log("Defining doTheSwaps");
     const doTheSwaps = async() => {
       try{
-      tokenIn = 'SOL';
-      tokenOut = 'OXY';
-      const solTOoxy = executeJupiterSwap({connection, owner, tokenIn, tokenOut, inAmount});
-      tokenIn = 'OXY';
-      tokenOut = 'SOL';
-      inAmount = quoteInfo;
-      const oxyTOsol = executeJupiterSwap({connection, owner, tokenIn, tokenOut, inAmount});
+        tryJupiter();
+        tryOrca();
       } catch {
         console.log("Some error.");
       }
+    }
+
+    const tryOrca = async() => {
+        tokenIn = 'OXY';
+        tokenOut = 'SOL';
+        inAmount = quoteInfo;
+        let retry = 'failure';
+        while (retry == 'failure') {
+          console.log("Trying oxyTOsol.")
+          const oxyTOsol = await executeOrcaSwap({connection, owner, tokenIn, tokenOut, inAmount});
+          retry = oxyTOsol.toString();
+          console.log("oxyTOsol: ", retry);
+        }
+    }
+
+    const tryJupiter = async() => {
+        tokenIn = 'SOL';
+        tokenOut = 'OXY';
+        let retry = 'failure';
+        while (retry == 'failure') {
+          console.log("Trying solTOoxy.")
+          const solTOoxy = await executeJupiterSwap({connection, owner, tokenIn, tokenOut, inAmount});
+          retry = solTOoxy.toString();
+          console.log("solTOoxy: ", retry);
+        }
     }
 
     console.log("Running doTheSwaps");
     await doTheSwaps();
     
   };
+
+const runTradingUntilStopped = async () => {
+
+  let cont = true;
+  let swapNum = 0;
+
+  while (cont) {
+    swapNum++;
+    console.log("Swap # ", swapNum);
+    await jupiterTopBottomTrading();
+  };
+
+};
+
 const main = async () => {
   
   // OXY -> SOL -> OXY

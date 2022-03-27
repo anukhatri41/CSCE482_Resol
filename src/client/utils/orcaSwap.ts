@@ -58,10 +58,11 @@ export const executeOrcaSwap = async ({
     } else {
       console.log("This token pair is not setup for transactions.")
     }
+    return "success";
   
     } catch (err) {
       console.warn(err);
-      return -1
+      return "failure";
     }
   };
   

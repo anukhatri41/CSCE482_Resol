@@ -10,6 +10,12 @@ import {
 } from "./constants";
 const sleep = require('./sleep');
 
+const { performance } = require('perf_hooks');
+
+var lgs = {
+  trans: []  as  any
+};
+
 // Swapping from OXY -> SOL -> OXY
 const oxyTOsol = async () => {
   /*** Setup ***/
@@ -46,7 +52,7 @@ const oxyTOsol = async () => {
   let tokenAccountsFilter: TokenAccountsFilter = {mint: new PublicKey(OXY_MINT_ADDRESS)}
   const initOXYBalance = await connection.getParsedTokenAccountsByOwner(owner.publicKey,tokenAccountsFilter);
   console.log("Initial SOL Balance: ", initSOLBalance/LAMPORTS_PER_SOL);
-  console.log("Initial OXY Balance: ", initOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount)
+  console.log("Initial OXY Balance: ", initOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount, "\n")
  
   
 
@@ -56,9 +62,9 @@ const oxyTOsol = async () => {
   // Info for Orca
   let tokenIn = 'OXY';
   let tokenOut = 'SOL';
-  let inAmount = 2;
+  let inAmount = .01;
   
-  console.log("First Swap", inAmount,"OXY for SOL.");
+  console.log("First Swap", inAmount,"OXY for SOL.\n");
   // HOW executeOrcaSwap WORKS: pass in connection, owner is your public key, tokenIn: either SOL or OXY, tokenOut: either SOL or OXY
   // inAmount: needs to be a number small enough to actually be traded out of your account.
   const resOrca = await executeOrcaSwap({connection, owner, tokenIn, tokenOut, inAmount});
@@ -70,31 +76,40 @@ const oxyTOsol = async () => {
   // if resOrca is defined, then executeOrcaSwap returned value from an error catch
   // also checks if sol balance to trade with jupiter (inAmount) is <= 0 
   if (resOrca || (midSOLBalance - initSOLBalance)/LAMPORTS_PER_SOL <= 0) {
-    console.log("Error with Orca swap.")
+    console.log("Error with Orca swap.\n")
+
+    console.log(resOrca)
+    console.log("EQ:", (midSOLBalance - initSOLBalance)/LAMPORTS_PER_SOL)
+
     // break // (for when a while loop is placed around everything)
     return
   }
   else {
-    console.log("ORCA SWAP FINISHED.");
+    console.log("\nORCA SWAP FINISHED.\n");
   }
   
 
   console.log("Amount of SOL recieved: ", (midSOLBalance - initSOLBalance)/LAMPORTS_PER_SOL);
   console.log("Amount of OXY traded: ", (initOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount 
-                                          - midOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount))
+                                          - midOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount), "\n")
   
 
   // // Info for Jupiter
   tokenIn = 'SOL';
   tokenOut = 'OXY';
   inAmount = (midSOLBalance - initSOLBalance) / LAMPORTS_PER_SOL; // Should only trade what we got in exchange for our intial Oxy
+  
+  console.log("NEW IN AMMOUNT:", inAmount)
 
   // HOW executeJupiterSwap WORKS: pass in connection, owner is your public key, tokenIn: either SOL or OXY, tokenOut: either SOL or OXY
   // inAmount: needs to be a number small enough to actually be traded out of your account.
   const resJup = await executeJupiterSwap({connection, owner, tokenIn, tokenOut, inAmount});
-  if (resJup) {
+  if (resJup == "failure") {
     console.log("Error with Jupiter swap.")
     // break // (for when a while loop is placed around everything)
+
+    console.log()
+    console.log(resJup)
     return
   }
 
@@ -128,6 +143,10 @@ const solTOoxy = async () => {
     // const secretKey = Uint8Array.from(JSON.parse(secretKeyString));
     // const owner = Keypair.fromSecretKey(secretKey);
 
+    var tx = {} as any
+
+    var startTime = performance.now()
+
     require('dotenv').config()
     const details = {
         sender_keypair: process.env.SENDER_KEY as string,
@@ -154,7 +173,7 @@ const solTOoxy = async () => {
     let tokenAccountsFilter: TokenAccountsFilter = {mint: new PublicKey(OXY_MINT_ADDRESS)}
     const initOXYBalance = await connection.getParsedTokenAccountsByOwner(owner.publicKey,tokenAccountsFilter);
     console.log("Initial SOL Balance: ", initSOLBalance/LAMPORTS_PER_SOL);
-    console.log("Initial OXY Balance: ", initOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount)
+    console.log("Initial OXY Balance: ", initOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount, "\n")
    
     
 
@@ -168,7 +187,7 @@ const solTOoxy = async () => {
 
     let tokenIn = 'SOL';
     let tokenOut = 'OXY';
-    let inAmount = 0.01;
+    let inAmount = 0.005;
     
     console.log("First Swap", inAmount,"SOL for OXY.");
     // HOW executeOrcaSwap WORKS: pass in connection, owner is your public key, tokenIn: either SOL or OXY, tokenOut: either SOL or OXY
@@ -210,13 +229,32 @@ const solTOoxy = async () => {
     // HOW executeJupiterSwap WORKS: pass in connection, owner is your public key, tokenIn: either SOL or OXY, tokenOut: either SOL or OXY
     // inAmount: needs to be a number small enough to actually be traded out of your account.
     const resJup = await executeJupiterSwap({connection, owner, tokenIn, tokenOut, inAmount});
-    if (resJup) {
+    if (resJup == "failure") {
+
       console.log("Error with Jupiter swap.")
       // break // (for when a while loop is placed around everything)
       return
     }
 
     console.log("JUPITER SWAP FINISHED");
+
+    var endTime = performance.now()
+
+    var dur = ((endTime - startTime) / 1000).toFixed(2);
+
+    console.log(`Transaction took: ${dur} Seconds`)
+
+  
+    tx['strat'] = 'S2O'
+    tx['init_sol'] =  initSOLBalance/LAMPORTS_PER_SOL
+    tx['init_oxy'] = initOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount
+    tx['sol_traded'] = (initSOLBalance - midSOLBalance)/LAMPORTS_PER_SOL
+    tx['oxy_recieved'] = (midOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount - initOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount)
+    tx['duration'] = dur;
+    
+
+    lgs.trans.push(tx);
+
 
       //console.log("Did we wait?");
       // const finalSOLBalance = await connection.getBalance(owner.publicKey);
@@ -259,10 +297,15 @@ const solTOoxy = async () => {
 const main = async () => {
   
   // OXY -> SOL -> OXY
-  await oxyTOsol();
+  // await oxyTOsol(); //timeout error happens more frequently
 
   // SOL -> OXY -> SOL
-  //await solTOoxy();
+  await solTOoxy(); //seems to be a better strat and losses less than other 
+  //gave radiyum once 
+  // lost $2.50 when it gave me radiyum
+
+  console.log(lgs)
+
 };
   main()
     .then(() => {

@@ -155,8 +155,6 @@ const solTOoxy = async () => {
     const initOXYBalance = await connection.getParsedTokenAccountsByOwner(owner.publicKey,tokenAccountsFilter);
     console.log("Initial SOL Balance: ", initSOLBalance/LAMPORTS_PER_SOL);
     console.log("Initial OXY Balance: ", initOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount)
-   
-    
 
     // Execute swap on orca
 
@@ -247,7 +245,7 @@ const solTOoxy = async () => {
     let tokenOut = 'OXY';
     let inAmount = 0.05;
     const quoteInfo = await getOrcaQuote({connection, tokenIn, tokenOut, inAmount})
-    console.log("QUOTE FOR AMT OF OXY FOR 0.01 SOL: ", quoteInfo);
+    console.log("QUOTE FOR AMT OF OXY FOR 0.05 SOL: ", quoteInfo);
     // Try executing swap:
     console.log("Defining doTheSwaps");
     const doTheSwaps = async() => {
@@ -334,8 +332,8 @@ const runTradingUntilStopped = async () => {
     swapNum++;
     console.log("###############################################################");
     console.log("Swap # ", swapNum);
-    ret = await jupiterTopBottomTrading({connection, owner});
-    console.log(await ret);
+    jupiterTopBottomTrading({connection, owner}).then(response => console.log(response));
+    //console.log(await ret);
     console.log("###############################################################");
     console.log("");
     console.log("");

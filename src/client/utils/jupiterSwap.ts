@@ -198,3 +198,53 @@ export const executeJupiterSwap = async ({
       return "failure";
     }
 };
+
+export const retrieveJupRoutes = async ({
+  connection,
+  inAmount,
+  owner,
+  slippage = 1,
+  tokenIn,
+  tokenOut
+}: {
+  connection: Connection;
+  inAmount: number;
+  owner: Keypair;
+  slippage?: number;
+  tokenIn: string;
+  tokenOut: string;
+}) => {
+
+  // Retrieve token list
+  const tokens: Token[] = await (await fetch(TOKEN_LIST_URL[ENV])).json();
+
+  //  Load Jupiter
+  const jupiter = await Jupiter.load({
+    connection,
+    cluster: ENV,
+    user: owner, // or public key
+  });
+
+  // Find token mint addresses
+  let inputToken;
+  let outputToken;
+  if ( tokenIn == 'SOL' && tokenOut == 'OXY') {
+    inputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS);
+    outputToken = tokens.find((t) => t.address == OXY_MINT_ADDRESS);
+  } else if ( tokenIn == 'OXY' && tokenOut == 'SOL'){
+    inputToken = tokens.find((t) => t.address == OXY_MINT_ADDRESS); 
+    outputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS); 
+  } else {
+    throw("This token pair is not configured.")
+  }
+
+  const routes = await getRoutes({
+    jupiter,
+    inputToken,
+    outputToken,
+    inputAmount: inAmount, // 1 unit in UI
+    slippage: slippage, // 1% slippage
+  });
+
+  return routes;
+}

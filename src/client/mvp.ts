@@ -218,11 +218,11 @@ const solTOoxy = async () => {
 
     console.log("JUPITER SWAP FINISHED");
 
-      //console.log("Did we wait?");
-      // const finalSOLBalance = await connection.getBalance(owner.publicKey);
-      // const finalOXYBalance = await connection.getParsedTokenAccountsByOwner(owner.publicKey,tokenAccountsFilter);
-      // console.log("Final SOL Balance: ", finalSOLBalance/LAMPORTS_PER_SOL);
-      // console.log("Final OXY Balance: ", finalOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount)
+    //console.log("Did we wait?");
+    // const finalSOLBalance = await connection.getBalance(owner.publicKey);
+    // const finalOXYBalance = await connection.getParsedTokenAccountsByOwner(owner.publicKey,tokenAccountsFilter);
+    // console.log("Final SOL Balance: ", finalSOLBalance/LAMPORTS_PER_SOL);
+    // console.log("Final OXY Balance: ", finalOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount)
     // const finalBalance = await fetchWalletBalance({connection, owner, tokenAccountsFilter});
 
     // let solProfit = (finalBalance[0] - initSOLBalance)/LAMPORTS_PER_SOL;
@@ -252,8 +252,9 @@ const solTOoxy = async () => {
     console.log("Defining doTheSwaps");
     const doTheSwaps = async() => {
       try{
-        tryJupiter();
-        tryOrca();
+        let jup = tryJupiter();
+        let orc = tryOrca();
+        return {jup, orc};
       } catch {
         console.log("Some error.");
       }
@@ -264,29 +265,33 @@ const solTOoxy = async () => {
         tokenOut = 'SOL';
         inAmount = quoteInfo;
         let retry = 'failure';
+        let oxyTOsol;
         while (retry == 'failure') {
           console.log("Trying oxyTOsol.")
-          const oxyTOsol = await executeOrcaSwap({connection, owner, tokenIn, tokenOut, inAmount});
+          oxyTOsol = await executeOrcaSwap({connection, owner, tokenIn, tokenOut, inAmount});
           retry = oxyTOsol.toString();
           console.log("oxyTOsol: ", retry);
         }
+        return oxyTOsol;
     }
 
     const tryJupiter = async() => {
         tokenIn = 'SOL';
         tokenOut = 'OXY';
         let retry = 'failure';
+        let solTOoxy;
         while (retry == 'failure') {
           console.log("Trying solTOoxy.")
-          const solTOoxy = await executeJupiterSwap({connection, owner, tokenIn, tokenOut, inAmount});
+          solTOoxy = await executeJupiterSwap({connection, owner, tokenIn, tokenOut, inAmount});
           retry = solTOoxy.toString();
           console.log("solTOoxy: ", retry);
         }
+        return solTOoxy;
     }
 
     console.log("Running doTheSwaps");
-    await doTheSwaps();
-    return "epic";
+    let ret = await doTheSwaps();
+    return ret;
     
   };
 
@@ -323,12 +328,14 @@ const runTradingUntilStopped = async () => {
 
   // Initialize loop stuff
   let swapNum = 0;
+  let ret;
 
-  while (swapNum < 3) {
+  while (swapNum < 1) {
     swapNum++;
     console.log("###############################################################");
     console.log("Swap # ", swapNum);
-    await jupiterTopBottomTrading({connection, owner});
+    ret = await jupiterTopBottomTrading({connection, owner});
+    console.log(await ret);
     console.log("###############################################################");
     console.log("");
     console.log("");

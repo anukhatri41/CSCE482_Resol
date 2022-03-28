@@ -201,3 +201,9 @@ Today we met with Dr. Huang and Laren, and we got some good feedback with where 
 We know that we need to start working a lot more at getting an on chain program running, so we will focus on that.
 
 Veronica currently has worked on getting the on chain stuff working, and I will start to look more at that in the near future.
+
+<h4>3/27/22</h4>
+
+Today I continued to work on the trading stratagey we spoke about as a group last class. Currently we have decided to try using the feature that Jupiter gives up, which is the multiple different routes, and then take that try to get a profitable trade out of it.
+
+Currently with the trading strategy I am using, my only issue I am running into is that I cannot seem to get my await/async functions to work as expected. But I think I am making good progress there. Hopefully I can get something working soon, its more of my lack of experience with javascript that is the issue as opposed to anything else.

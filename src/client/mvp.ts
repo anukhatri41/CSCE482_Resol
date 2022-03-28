@@ -328,8 +328,7 @@ const runTradingUntilStopped = async () => {
     swapNum++;
     console.log("###############################################################");
     console.log("Swap # ", swapNum);
-    const topBotTrade = await jupiterTopBottomTrading({connection, owner});
-    console.log(topBotTrade);
+    await jupiterTopBottomTrading({connection, owner});
     console.log("###############################################################");
     console.log("");
     console.log("");

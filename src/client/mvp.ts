@@ -232,28 +232,15 @@ const solTOoxy = async () => {
     
   };
 
-  const jupiterTopBottomTrading = async () => {
-    require('dotenv').config()
-    const details = {
-        sender_keypair: process.env.SENDER_KEY as string,
-        secret: process.env.SENDER_SECRET as string,
-        reciever: process.env.DEFAULT_RECEIVER_PUBKEY as string,
-        _RPC: process.env.RPC_ENDPOINT as string, // named _RPC because functions were throwing a fit when passing in details.RPC
-    };
-
-    // if secret key is in .env:
-    const WALLET_PRIVATE_KEY = details.secret
-    const USER_PRIVATE_KEY = bs58.decode(WALLET_PRIVATE_KEY);
-    const owner = Keypair.fromSecretKey(USER_PRIVATE_KEY);
-
-    const RPC = details._RPC;
-    const devnet = 'https://api.devnet.solana.com';
-    const mainnet = 'https://api.mainnet-beta.solana.com';
-    const serumAPI = 'https://solana-api.projectserum.com';
-  
-    // 2. Initialize Orca object with mainnet connection
-    const connection = new Connection(RPC);
-
+  const jupiterTopBottomTrading = async (
+    {
+      connection,
+      owner
+    }: {
+      connection: Connection;
+      owner: Keypair;
+    }
+  ) => {
 
     // Get Quote Amount:
     let tokenIn = 'SOL';
@@ -299,19 +286,62 @@ const solTOoxy = async () => {
 
     console.log("Running doTheSwaps");
     await doTheSwaps();
+    return "epic";
     
   };
 
 const runTradingUntilStopped = async () => {
 
-  let cont = true;
+  require('dotenv').config()
+  const details = {
+      sender_keypair: process.env.SENDER_KEY as string,
+      secret: process.env.SENDER_SECRET as string,
+      reciever: process.env.DEFAULT_RECEIVER_PUBKEY as string,
+      _RPC: process.env.RPC_ENDPOINT as string, // named _RPC because functions were throwing a fit when passing in details.RPC
+  };
+
+  // if secret key is in .env:
+  const WALLET_PRIVATE_KEY = details.secret
+  const USER_PRIVATE_KEY = bs58.decode(WALLET_PRIVATE_KEY);
+  const owner = Keypair.fromSecretKey(USER_PRIVATE_KEY);
+
+  const RPC = details._RPC;
+  const devnet = 'https://api.devnet.solana.com';
+  const mainnet = 'https://api.mainnet-beta.solana.com';
+  const serumAPI = 'https://solana-api.projectserum.com';
+
+  // 2. Initialize Orca object with mainnet connection
+  const connection = new Connection(RPC);
+
+  // Get Wallet Info:
+  let tokenAccountsFilter: TokenAccountsFilter = {mint: new PublicKey(OXY_MINT_ADDRESS)}
+  const initSOLBalance = await connection.getBalance(owner.publicKey);
+  const initOXYBalance = await connection.getParsedTokenAccountsByOwner(owner.publicKey,tokenAccountsFilter);
+  console.log("Initial SOL Balance: ", initSOLBalance/LAMPORTS_PER_SOL);
+  console.log("Initial OXY Balance: ", initOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount)
+
+
+  // Initialize loop stuff
   let swapNum = 0;
 
-  while (cont) {
+  while (swapNum < 3) {
     swapNum++;
+    console.log("###############################################################");
     console.log("Swap # ", swapNum);
-    await jupiterTopBottomTrading();
+    const topBotTrade = await jupiterTopBottomTrading({connection, owner});
+    console.log(topBotTrade);
+    console.log("###############################################################");
+    console.log("");
+    console.log("");
   };
+
+  const finalSOLBalance = await connection.getBalance(owner.publicKey);
+  const finalOXYBalance = await connection.getParsedTokenAccountsByOwner(owner.publicKey,tokenAccountsFilter);
+  console.log("Final SOL Balance: ", finalSOLBalance/LAMPORTS_PER_SOL);
+  console.log("Final OXY Balance: ", finalOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount);
+
+  console.log("SOL Profit: ", (finalSOLBalance - initSOLBalance)/LAMPORTS_PER_SOL);
+  console.log("OXY Profit: ", finalOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount - initOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount);
 
 };
 
@@ -324,7 +354,7 @@ const main = async () => {
   //await solTOoxy();
 
   // Top Bottom Trading Strat
-  await jupiterTopBottomTrading();
+  await runTradingUntilStopped();
 
 };
   main()

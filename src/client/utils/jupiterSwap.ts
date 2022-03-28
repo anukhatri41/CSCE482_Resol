@@ -89,6 +89,7 @@ import {
   
       if (swapResult.error) {
         console.log(swapResult.error);
+        return "failure";
       } else {
         console.log(swapResult.txid);
         // console.log(
@@ -98,6 +99,7 @@ import {
         //   `inputAmount=${swapResult.inputAmount} outputAmount=${swapResult.outputAmount}`
         // );
         // console.log()
+        return "success";
       }
     } catch (error) {
       throw error;
@@ -161,13 +163,14 @@ export const executeJupiterSwap = async ({
           {
             if (routes!.routesInfos[i].marketInfos.length > 1)
             {
-              if (routes!.routesInfos[i].marketInfos[0].marketMeta.amm.label != 'Orca' && routes!.routesInfos[i].marketInfos[1].marketMeta.amm.label != 'Orca')
+              // Changed to || so as long as the route isn't Orca x Orca
+              if (routes!.routesInfos[i].marketInfos[0].marketMeta.amm.label != 'Orca' || routes!.routesInfos[i].marketInfos[1].marketMeta.amm.label != 'Orca')
               {
                 // console.log(routes!.routesInfos[i].marketInfos[0].marketMeta)
                 // console.log(routes!.routesInfos[i].marketInfos[1].marketMeta)
                 found = true;
                 route = i
-                // console.log("Chosen route:",i)
+                console.log("Chosen route:", i)
                 // console.log(
                 //   "Quote: ",
                 //   routes.routesInfos[i].outAmount / 10 ** outputToken.decimals,
@@ -181,6 +184,9 @@ export const executeJupiterSwap = async ({
           if (found) {
             // console.log("Got routes, running executeSwap.");
             const result = await executeSwap({ jupiter, routeInfo: routes!.routesInfos[route] });
+            if (result.toString() == "failure"){
+              throw("failed in executeSwap");
+            }
             // console.log(result);
           }
 

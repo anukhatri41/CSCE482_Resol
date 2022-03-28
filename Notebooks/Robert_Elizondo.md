@@ -81,4 +81,9 @@ Got meeting notes from teammates
 # 3/23/22  
 Meeting with group on Sunday to work on CDR  
 Meeting with Dr.Huang and Laren  
-Working on logging transactions and testing enviroment
+Working on logging transactions and testing enviroment  
+  
+# 3/28/22
+Worked on testing during the weekend and figuring out which function works best (Sol->Oxy or Oxy->Sol)  
+Found that Sol->Oxy is a bit more consistent  
+Woring on gathering data to log and store transactions  

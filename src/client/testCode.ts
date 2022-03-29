@@ -39,7 +39,7 @@ const routeOutput = async () => {
   try {
   const route = await retrieveJupRoutes({connection, inAmount, owner, tokenIn, tokenOut});
 
-  console.log(route!.routesInfos[0].marketInfos[0].marketMeta);
+  console.log(route!.routesInfos[2].marketInfos[0].marketMeta);
 
   
   // const signature: string = await sendAndConfirmTransaction(connection, swapPayload.transaction, swapPayload.signers);

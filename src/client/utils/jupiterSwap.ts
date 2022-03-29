@@ -75,7 +75,7 @@ import {
       // const { execute } = await jupiter.exchange({
       //   route
       // });
-      const { execute } = await jupiter.exchange({
+      const { transactions, execute } = await jupiter.exchange({
         routeInfo,
         wrapUnwrapSOL: true,
       });

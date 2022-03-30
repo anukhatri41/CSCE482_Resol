@@ -249,7 +249,7 @@ export const retrieveJupRoutes = async ({
 
   //console.log("IN retrieveJupRoutes");
   let routeInfo: RouteInfo = routes!.routesInfos[0];
-  const { transactions, execute } = await jupiter.exchange({
+  const { transactions } = await jupiter.exchange({
     routeInfo,
     userPublicKey: owner.publicKey,
     feeAccount: owner.publicKey,

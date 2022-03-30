@@ -6,7 +6,8 @@ import {
   Signer,
   sendAndConfirmTransaction,
   TokenAccountsFilter,
-  TransactionInstruction
+  TransactionInstruction,
+  Transaction
  } from "@solana/web3.js";
 import { executeOrcaSwap, getOrcaQuote } from "./utils/orcaSwap";
 import { executeJupiterSwap, retrieveJupRoutes } from "./utils/jupiterSwap";
@@ -41,29 +42,56 @@ const routeOutput = async () => {
   const connection = new Connection(RPC);
 
   // Info
-  let inAmount = 0.05;
+  let inAmount = 0.03;
   let tokenIn = 'SOL';
   let tokenOut = 'OXY';
+
+  // let inAmount = 15;
+  // let tokenIn = 'OXY';
+  // let tokenOut = 'SOL';
 
   try {
   const transaction = await retrieveJupRoutes({connection, inAmount, owner, tokenIn, tokenOut});
 
-  console.log(transaction.swapTransaction);
+  console.log(transaction.swapTransaction.instructions);
   
   // let instructions: TransactionInstruction[] = [];
   // let cleanupInstructions: TransactionInstruction[] = [];
   let signers: Signer[] = [owner];
-  transaction.swapTransaction.instructions.forEach((curr) => {
-    // signers = signers.concat(curr)
-  });
+  //let transactionArray: Transaction[] = [transaction.setupTransaction, transaction.swapTransaction, transaction.cleanupTransaction]
+  let setupTransaction = transaction.setupTransaction;
+  let swapTransaction = transaction.swapTransaction;
+  let cleanupTransaction = transaction.cleanupTransaction;
+  //const { setupTransaction, swapTransaction, cleanupTransaction } = transactions
+  // transaction.swapTransaction.instructions.forEach((curr) => {
+  //   // signers = signers.concat(curr)
+  // });
   // transaction.swapTransaction.sign(owner)
 
   // signers.concat(transaction.swapTransaction.signatures);
 
-  console.log(transaction.swapTransaction.signatures);
-  //const signature: string = await connection.sendTransaction(transaction.swapTransaction, signers);
-  const signature: string = await sendAndConfirmTransaction(connection, transaction.swapTransaction, signers);
-  console.log("tx: ", signature);
+  // console.log(transaction.swapTransaction.signatures);
+  const txid = await connection.sendTransaction(swapTransaction, signers, {
+        skipPreflight: true
+      });
+      await connection.confirmTransaction(txid)
+    console.log(`https://solscan.io/tx/${txid}`)
+
+
+  // for (let serializedTransaction of [setupTransaction, swapTransaction, cleanupTransaction].filter(Boolean)) {
+  //   // get transaction object from serialized transaction
+  //   const transaction = Transaction.from(Buffer.from(serializedTransaction, 'base64'))
+  //   // perform the swap
+  //   const txid = await connection.sendTransaction(transaction, signers, {
+  //     skipPreflight: true
+  //   })
+  //   await connection.confirmTransaction(txid)
+  //   console.log(`https://solscan.io/tx/${txid}`)
+  // }
+  
+  //const signature: string = await sendAndConfirmTransaction(connection, transaction.swapTransaction, signers);
+  // console.log("tx: ", signature);
+
   } catch(err) {
     console.warn(err);
   }

@@ -87,3 +87,10 @@ Working on logging transactions and testing enviroment
 Worked on testing during the weekend and figuring out which function works best (Sol->Oxy or Oxy->Sol)  
 Found that Sol->Oxy is a bit more consistent  
 Working on gathering data to log and store transactions  
+  
+# 3/30/22  
+Meeting with Dr.Huang and Laren  
+Able to write transactions to a log file  
+Able to read transactions from log file and analyize proformace  
+Continuing to run and gather info about the two transactions  
+Discussing how to pivot strategies to what Dr.Huang recommended (staying off chain but gathering forward and backward routes seperatly)

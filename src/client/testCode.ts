@@ -1,4 +1,13 @@
-import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey, sendAndConfirmTransaction, TokenAccountsFilter } from "@solana/web3.js";
+import { 
+  Connection, 
+  Keypair, 
+  LAMPORTS_PER_SOL, 
+  PublicKey, 
+  Signer,
+  sendAndConfirmTransaction, 
+  TokenAccountsFilter,
+  TransactionInstruction
+ } from "@solana/web3.js";
 import { executeOrcaSwap, getOrcaQuote } from "./utils/orcaSwap";
 import { executeJupiterSwap, retrieveJupRoutes } from "./utils/jupiterSwap";
 import { fetchWalletBalance } from "./utils/shared";
@@ -37,12 +46,22 @@ const routeOutput = async () => {
   let tokenOut = 'OXY';
 
   try {
-  const route = await retrieveJupRoutes({connection, inAmount, owner, tokenIn, tokenOut});
+  const transaction = await retrieveJupRoutes({connection, inAmount, owner, tokenIn, tokenOut});
 
-  console.log(route!.routesInfos[2].marketInfos[0].marketMeta);
-
+  console.log(transaction.swapTransaction.signatures);
   
-  // const signature: string = await sendAndConfirmTransaction(connection, swapPayload.transaction, swapPayload.signers);
+  // let instructions: TransactionInstruction[] = [];
+  // let cleanupInstructions: TransactionInstruction[] = [];
+  // let signers: Signer[] = [];
+  //   transaction.swapTransaction.instructions.forEach((curr) => {
+  //     signers = signers.concat(transaction.swapTransaction.signers)
+  //   });
+
+  // transaction.swapTransaction.sign(owner);
+
+  // console.log(transaction.swapTransaction.signatures);
+  
+  // const signature: string = await sendAndConfirmTransaction(connection, transaction.swapTransaction, transaction.swapTransaction.signatures);
   // console.log("tx: ", signature);
   } catch(err) {
     console.warn(err);

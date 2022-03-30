@@ -51,7 +51,8 @@ export const executeOrcaSwap = async ({
       console.log(`Swap ${Amount.toString()} OXY for at least ${outAmount.toNumber()} SOL`);
       const swapPayload = await orcaSolPool.swap(owner, IN_TOKEN, Amount, outAmount);
       // console.log('orcaSolPool.swap: ');
-      // console.log(swapPayload.transaction);
+      console.log(swapPayload.transaction);
+      console.log(swapPayload.signers)
 
       const signature: string = await sendAndConfirmTransaction(connection, swapPayload.transaction, swapPayload.signers);
       console.log("tx: ", signature);

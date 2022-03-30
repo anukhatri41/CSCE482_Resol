@@ -85,6 +85,7 @@ import {
       // Execute swap
       //console.log("EXECUTING SWAP");
       const swapResult: any = await execute(); // Force any to ignore TS misidentifying SwapResult type
+      //console.log(transactions);
       // console.log("Swapped");
   
       if (swapResult.error) {
@@ -246,5 +247,18 @@ export const retrieveJupRoutes = async ({
     slippage: slippage, // 1% slippage
   });
 
-  return routes;
+  //console.log("IN retrieveJupRoutes");
+  let routeInfo: RouteInfo = routes!.routesInfos[0];
+  const { transactions, execute } = await jupiter.exchange({
+    routeInfo,
+    userPublicKey: owner.publicKey,
+    feeAccount: owner.publicKey,
+    wrapUnwrapSOL: true,
+  });
+  // console.log(transactions);
+  // console.log("ADSADASDASDASDASDASDASDASDA")
+
+  //return routes;
+  // Changed this to return the route with the proper transaction stuff.
+  return transactions;
 }

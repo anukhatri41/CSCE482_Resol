@@ -358,7 +358,9 @@ const main = async () => {
   //await solTOoxy();
 
   // Top Bottom Trading Strat
-  await runTradingUntilStopped();
+  // await runTradingUntilStopped();
+
+
 
 };
   main()

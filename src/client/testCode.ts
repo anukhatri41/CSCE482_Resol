@@ -52,7 +52,7 @@ const routeOutput = async () => {
   
   // let instructions: TransactionInstruction[] = [];
   // let cleanupInstructions: TransactionInstruction[] = [];
-  let signers: Signer[] = [];
+  let signers: Signer[] = [owner];
   transaction.swapTransaction.instructions.forEach((curr) => {
     // signers = signers.concat(curr)
   });
@@ -61,8 +61,8 @@ const routeOutput = async () => {
   // signers.concat(transaction.swapTransaction.signatures);
 
   console.log(transaction.swapTransaction.signatures);
-  const signature: string = await connection.sendTransaction(transaction.swapTransaction, signers);
-  //const signature: string = await sendAndConfirmTransaction(connection, transaction.swapTransaction, transaction.swapTransaction.signatures);
+  //const signature: string = await connection.sendTransaction(transaction.swapTransaction, signers);
+  const signature: string = await sendAndConfirmTransaction(connection, transaction.swapTransaction, signers);
   console.log("tx: ", signature);
   } catch(err) {
     console.warn(err);

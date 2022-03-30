@@ -9,6 +9,7 @@
   "scripts": {
     "mvp": "ts-node client/mvp.ts",
     "test": "ts-node client/testCode.ts",
+    "twt": "ts-node client/twoWayTestCode.ts",
     "start-with-test-validator": "start-server-and-test 'solana-test-validator --reset --quiet' http://localhost:8899/health start",
     "lint": "eslint --ext .ts src/client/* && prettier --check \"src/client/**/*.ts\"",
     "lint:fix": "eslint --ext .ts src/client/* --fix && prettier --write \"src/client/**/*.ts\"",

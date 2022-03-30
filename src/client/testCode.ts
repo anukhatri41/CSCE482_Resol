@@ -4,7 +4,7 @@ import {
   LAMPORTS_PER_SOL, 
   PublicKey, 
   Signer,
-  sendAndConfirmTransaction, 
+  sendAndConfirmTransaction,
   TokenAccountsFilter,
   TransactionInstruction
  } from "@solana/web3.js";
@@ -48,21 +48,22 @@ const routeOutput = async () => {
   try {
   const transaction = await retrieveJupRoutes({connection, inAmount, owner, tokenIn, tokenOut});
 
-  console.log(transaction.swapTransaction.signatures);
+  console.log(transaction.swapTransaction);
   
   // let instructions: TransactionInstruction[] = [];
   // let cleanupInstructions: TransactionInstruction[] = [];
-  // let signers: Signer[] = [];
-  //   transaction.swapTransaction.instructions.forEach((curr) => {
-  //     signers = signers.concat(transaction.swapTransaction.signers)
-  //   });
+  let signers: Signer[] = [];
+  transaction.swapTransaction.instructions.forEach((curr) => {
+    // signers = signers.concat(curr)
+  });
+  // transaction.swapTransaction.sign(owner)
 
-  // transaction.swapTransaction.sign(owner);
+  // signers.concat(transaction.swapTransaction.signatures);
 
-  // console.log(transaction.swapTransaction.signatures);
-  
-  // const signature: string = await sendAndConfirmTransaction(connection, transaction.swapTransaction, transaction.swapTransaction.signatures);
-  // console.log("tx: ", signature);
+  console.log(transaction.swapTransaction.signatures);
+  const signature: string = await connection.sendTransaction(transaction.swapTransaction, signers);
+  //const signature: string = await sendAndConfirmTransaction(connection, transaction.swapTransaction, transaction.swapTransaction.signatures);
+  console.log("tx: ", signature);
   } catch(err) {
     console.warn(err);
   }

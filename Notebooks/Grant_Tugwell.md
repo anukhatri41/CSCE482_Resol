@@ -213,3 +213,9 @@ Currently with the trading strategy I am using, my only issue I am running into 
 Today in class we continued to work on our trading strategy. After speaking with Veronica, we decided that since we plan to move on chain soon anyways, there isn't much point to continue struggling with the js client. So, I have started to work on attempting to abstract the transaction information from jupiter, so hopefully we can get something we can send.
 
 Ideally, we can just take the routing the create for us and execute on that, however, we likely will have to do something more complicated than that.
+
+<h4>3/29/22</h4>
+
+Today I spent a lot of time trying to make sure we could actually get the transactions from Jupiter, and then that we could execute them on our own. This is important to us because when we start moving on chain, we can use those transaction objects that we are using currently to do the transactions. This was important and we are definitely now closer to where we need to be!
+
+The main things we need to work on now are our UI as well as our on chain program.

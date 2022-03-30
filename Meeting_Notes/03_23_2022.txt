@@ -1,0 +1,33 @@
+Meeting Notes - 03/23/2022
+
+Trading Strategy
+- Is a little random
+- Is doing Orca then Jupiter
+- Orca is right now OXY -> SOL
+- Jupiter is SOL -> OXY
+
+Move the transaction steps into 1 function that's on chain
+Check after two steps if there's profit, if not, cancel both
+
+How is Jupiter getting the info for the routes, and is it real-time?
+
+Simulation vs. Real Transaction may have discrepancies, so can only be precise if we have our own on chain program for doing simulation to see profit and immediately sending real one
+
+Write a logging functionality
+Macro message in smart contract - msg something
+- Refer to hello world program
+Log message is stored on chain, and can go back to look at them
+
+Get results from sending to smart contract on rpc
+- Problem may arise when there a lot of transactions, harder to visualize
+
+Priority
+- Write atomic function on chain
+- Send transaction to that, and see if can improve profit
+
+Can get reimbursement for the expenses like the RPC node and the rent
+Will also be more when deploying the smart contract because takes many transactions
+
+Need infrastructure, get on chain, rollback if not profitable, then can optimize it 
+
+Right now we're doing currency pairs, but could expand to do more beyond that

@@ -42,28 +42,28 @@ import {
     const connection = new Connection(RPC);
   
     // Info
-    let inAmount = 0.03;
+    let inAmount = 0.05;
     let tokenIn = 'SOL';
     let tokenOut = 'OXY';
   
     try {
-    // const transaction = await retrieveJupRoutes({connection, inAmount, owner, tokenIn, tokenOut});
-    // console.log(transaction.swapTransaction.instructions);
+    const transactionSO = await retrieveJupRoutes({connection, inAmount, owner, tokenIn, tokenOut});
+    console.log(transactionSO.swapTransaction.instructions);
   
-    inAmount = 15;
+    inAmount = 14.5;
     tokenIn = 'OXY';
     tokenOut = 'SOL';
   
-    const transaction = await retrieveJupRoutes({connection, inAmount, owner, tokenIn, tokenOut});
-    console.log(transaction.swapTransaction.instructions);
+    const transactionOS = await retrieveJupRoutes({connection, inAmount, owner, tokenIn, tokenOut});
+    console.log(transactionOS.swapTransaction.instructions);
     
     // let instructions: TransactionInstruction[] = [];
     // let cleanupInstructions: TransactionInstruction[] = [];
     let signers: Signer[] = [owner];
     //let transactionArray: Transaction[] = [transaction.setupTransaction, transaction.swapTransaction, transaction.cleanupTransaction]
-    let setupTransaction = transaction.setupTransaction;
-    let swapTransaction = transaction.swapTransaction;
-    let cleanupTransaction = transaction.cleanupTransaction;
+    let setupTransaction = transactionOS.setupTransaction;
+    let swapTransaction = transactionOS.swapTransaction;
+    let cleanupTransaction = transactionOS.cleanupTransaction;
     //const { setupTransaction, swapTransaction, cleanupTransaction } = transactions
     // transaction.swapTransaction.instructions.forEach((curr) => {
     //   // signers = signers.concat(curr)
@@ -72,26 +72,26 @@ import {
   
     // signers.concat(transaction.swapTransaction.signatures);
   
-    // console.log(transaction.swapTransaction.signatures);
-    // const txid = await connection.sendTransaction(swapTransaction, signers, {
-    //       skipPreflight: true
-    //     });
-    //     await connection.confirmTransaction(txid)
-    //   console.log(`https://solscan.io/tx/${txid}`)
+    //console.log(transaction.swapTransaction.signatures);
+    const txid = await connection.sendTransaction(transactionSO.swapTransaction, signers, {
+          skipPreflight: true
+        });
+        await connection.confirmTransaction(txid)
+      console.log(`https://solscan.io/tx/${txid}`)
   
   
     for (let serializedTransaction of [setupTransaction, swapTransaction, cleanupTransaction].filter(Boolean)) {
       // get transaction object from serialized transaction
-      let transaction;
       if (serializedTransaction) {
+      let transaction: Transaction;
         transaction = Transaction.from(Buffer.from(serializedTransaction.toString(), 'base64'))
         // perform the swap
-      }
         const txid = await connection.sendTransaction(transaction, signers, {
           skipPreflight: true
-      })
+        })
       await connection.confirmTransaction(txid)
       console.log(`https://solscan.io/tx/${txid}`)
+    }
     }
     
     //const signature: string = await sendAndConfirmTransaction(connection, transaction.swapTransaction, signers);

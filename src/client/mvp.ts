@@ -11,10 +11,23 @@ import {
 const sleep = require('./sleep');
 
 const { performance } = require('perf_hooks');
+const fs = require('fs')
 
 var lgs = {
-  trans: []  as  any
+  O2S: []  as  any,
+  S2O: []  as  any
 };
+
+
+// fs.readFile(__dirname + '/test_trans/O2S_S2O_0.json', 'utf8', function readFileCallback(err, data){
+//   if (err){
+//       console.log(err);
+//   } else {
+//     lgs = JSON.parse(data); 
+// }});
+
+lgs = JSON.parse(fs.readFileSync(__dirname + '/test_trans/O2S_S2O_0.json'));
+
 
 // Swapping from OXY -> SOL -> OXY
 const oxyTOsol = async () => {
@@ -25,6 +38,10 @@ const oxyTOsol = async () => {
   // });
   // const secretKey = Uint8Array.from(JSON.parse(secretKeyString));
   // const owner = Keypair.fromSecretKey(secretKey);
+
+  var tx = {} as any
+
+  var startTime = performance.now()
 
   require('dotenv').config()
   const details = {
@@ -62,7 +79,7 @@ const oxyTOsol = async () => {
   // Info for Orca
   let tokenIn = 'OXY';
   let tokenOut = 'SOL';
-  let inAmount = .01;
+  let inAmount = .03;
   
   console.log("First Swap", inAmount,"OXY for SOL.\n");
   // HOW executeOrcaSwap WORKS: pass in connection, owner is your public key, tokenIn: either SOL or OXY, tokenOut: either SOL or OXY
@@ -114,6 +131,30 @@ const oxyTOsol = async () => {
   }
 
   console.log("JUPITER SWAP FINISHED");
+
+
+  var endTime = performance.now()
+
+  var dur = +(((endTime - startTime) / 1000).toFixed(2));
+
+  console.log(`Transaction took: ${dur} Seconds`)
+
+  // const finalBalance = await fetchWalletBalance({connection, owner, tokenAccountsFilter});
+
+  tx['init_sol'] =  initSOLBalance/LAMPORTS_PER_SOL
+  tx['init_oxy'] = initOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount
+  tx['sol_traded'] = (initSOLBalance - midSOLBalance)/LAMPORTS_PER_SOL
+  tx['oxy_recieved'] = (midOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount - initOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount)
+  tx['final_sol'] = await connection.getBalance(owner.publicKey) / LAMPORTS_PER_SOL
+  tx['final_oxy'] = (await connection.getParsedTokenAccountsByOwner(owner.publicKey,tokenAccountsFilter)).value[0].account.data.parsed.info.tokenAmount.uiAmount
+  // tx['sol_prof'] = (finalBalance[0] - initSOLBalance)/LAMPORTS_PER_SOL
+  // tx['oxy_prof'] = (finalBalance[1] - initOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount)
+  tx['duration'] = dur;
+  
+
+  lgs.O2S.push(tx);
+
+
 
   // Hopefully get rid of any wSOL
   // const associatedTokenAccount = await getAssociatedTokenAddress(
@@ -240,27 +281,33 @@ const solTOoxy = async () => {
 
     var endTime = performance.now()
 
-    var dur = ((endTime - startTime) / 1000).toFixed(2);
+    var dur = +(((endTime - startTime) / 1000).toFixed(2));
 
     console.log(`Transaction took: ${dur} Seconds`)
 
+    // const finalBalance = await fetchWalletBalance({connection, owner, tokenAccountsFilter})
+    // console.log(finalBalance)
   
-    tx['strat'] = 'S2O'
     tx['init_sol'] =  initSOLBalance/LAMPORTS_PER_SOL
     tx['init_oxy'] = initOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount
     tx['sol_traded'] = (initSOLBalance - midSOLBalance)/LAMPORTS_PER_SOL
     tx['oxy_recieved'] = (midOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount - initOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount)
+    tx['final_sol'] = await connection.getBalance(owner.publicKey) / LAMPORTS_PER_SOL
+    tx['final_oxy'] = (await connection.getParsedTokenAccountsByOwner(owner.publicKey,tokenAccountsFilter)).value[0].account.data.parsed.info.tokenAmount.uiAmount
+    // tx['sol_prof'] = (finalBalance[0] - initSOLBalance)/LAMPORTS_PER_SOL
+    // tx['oxy_prof'] = (finalBalance[1] - initOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount)
     tx['duration'] = dur;
     
 
-    lgs.trans.push(tx);
+    lgs.S2O.push(tx);
 
 
-      //console.log("Did we wait?");
-      // const finalSOLBalance = await connection.getBalance(owner.publicKey);
-      // const finalOXYBalance = await connection.getParsedTokenAccountsByOwner(owner.publicKey,tokenAccountsFilter);
-      // console.log("Final SOL Balance: ", finalSOLBalance/LAMPORTS_PER_SOL);
-      // console.log("Final OXY Balance: ", finalOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount)
+    // console.log("Did we wait?");
+    
+    // const finalSOLBalance = await connection.getBalance(owner.publicKey);
+    // const finalOXYBalance = await connection.getParsedTokenAccountsByOwner(owner.publicKey,tokenAccountsFilter);
+    // console.log("Final SOL Balance: ", finalSOLBalance/LAMPORTS_PER_SOL);
+    // console.log("Final OXY Balance: ", finalOXYBalance.value[0].account.data.parsed.info.tokenAmount.uiAmount)
     // const finalBalance = await fetchWalletBalance({connection, owner, tokenAccountsFilter});
 
     // let solProfit = (finalBalance[0] - initSOLBalance)/LAMPORTS_PER_SOL;
@@ -297,7 +344,7 @@ const solTOoxy = async () => {
 const main = async () => {
   
   // OXY -> SOL -> OXY
-  // await oxyTOsol(); //timeout error happens more frequently
+  await oxyTOsol(); //timeout error happens more frequently
 
   // SOL -> OXY -> SOL
   await solTOoxy(); //seems to be a better strat and losses less than other 
@@ -305,6 +352,25 @@ const main = async () => {
   // lost $2.50 when it gave me radiyum
 
   console.log(lgs)
+
+  console.log("\nAfter ", lgs.O2S.length, ' runs of O2S:')
+  console.log("Initial SOL: ", lgs.O2S[0].init_sol)
+  console.log("Final SOL: ", lgs.O2S[lgs.O2S.length-1].final_sol)
+  console.log("Initial OXY: ", lgs.O2S[0].init_oxy)
+  console.log("Final OXY: ", lgs.O2S[lgs.O2S.length-1].final_oxy)
+  console.log("SOL DIF: ", lgs.O2S[lgs.O2S.length-1].final_sol - lgs.O2S[0].init_sol)
+  console.log("OXY DIF: ", lgs.O2S[lgs.O2S.length-1].final_oxy - lgs.O2S[0].init_oxy )
+
+
+  console.log("\nAfter ", lgs.S2O.length, ' runs of S2O:')
+  console.log("Initial SOL: ", lgs.S2O[0].init_sol)
+  console.log("Final SOL: ", lgs.S2O[lgs.S2O.length-1].final_sol)
+  console.log("Initial OXY: ", lgs.S2O[0].init_oxy)
+  console.log("Final OXY: ", lgs.S2O[lgs.S2O.length-1].final_oxy)
+  console.log("SOL DIF: ", lgs.S2O[lgs.S2O.length-1].final_sol - lgs.S2O[0].init_sol)
+  console.log("OXY DIF: ", lgs.S2O[lgs.S2O.length-1].final_oxy - lgs.S2O[0].init_oxy )
+
+  fs.writeFileSync(__dirname + '/test_trans/O2S_S2O_0.json', JSON.stringify(lgs)); //add txids
 
 };
   main()

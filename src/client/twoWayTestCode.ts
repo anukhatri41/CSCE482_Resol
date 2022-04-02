@@ -42,7 +42,7 @@ import {
     const connection = new Connection(RPC);
   
     // Info
-    let inAmount = 0.05;
+    let inAmount = 0.04;
     let tokenIn = 'SOL';
     let tokenOut = 'OXY';
   
@@ -80,19 +80,17 @@ import {
       console.log(`https://solscan.io/tx/${txid}`)
   
   
-    for (let serializedTransaction of [setupTransaction, swapTransaction, cleanupTransaction].filter(Boolean)) {
-      // get transaction object from serialized transaction
-      if (serializedTransaction) {
-      let transaction: Transaction;
-        transaction = Transaction.from(Buffer.from(serializedTransaction.toString(), 'base64'))
-        // perform the swap
-        const txid = await connection.sendTransaction(transaction, signers, {
-          skipPreflight: true
-        })
-      await connection.confirmTransaction(txid)
-      console.log(`https://solscan.io/tx/${txid}`)
-    }
-    }
+      for (let serializedTransaction of [setupTransaction, swapTransaction, cleanupTransaction].filter(Boolean)) {
+        // get transaction object from serialized transaction
+        if (serializedTransaction) {
+    
+          const txid = await connection.sendTransaction(serializedTransaction, signers, {
+            skipPreflight: true
+          })
+          await connection.confirmTransaction(txid)
+          console.log(`TX1 SOL->OXY: https://solscan.io/tx/${txid}`)
+        }
+      }
     
     //const signature: string = await sendAndConfirmTransaction(connection, transaction.swapTransaction, signers);
     // console.log("tx: ", signature);

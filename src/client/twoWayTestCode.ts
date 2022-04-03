@@ -1,5 +1,5 @@
 import { 
-    Connection, 
+    Connection,
     Keypair, 
     LAMPORTS_PER_SOL, 
     PublicKey, 
@@ -82,26 +82,46 @@ import {
     //     });
     //     await connection.confirmTransaction(txid)
     //   console.log(`https://solscan.io/tx/${txid}`)
-  
-      console.log("SEARLIZING");
-      const payload = new Transaction();
-      if (setupTransaction) {
-        console.log('setupTransaction: ', setupTransaction);
-        payload.add(setupTransaction);
-      }
-      payload.add(transactionSO.swapTransaction);
-      payload.add(swapTransaction);
-      if (cleanupTransaction) {
-        console.log('cleanupTransaction: ', cleanupTransaction);
-        payload.add(cleanupTransaction);
-      }
+    
+      // console.log("SEARLIZING");
 
-      const txid = await connection.sendTransaction(payload, signers, {
-        skipPreflight: true
-      })
+      // const txidSO = await connection.sendTransaction(transactionSO.swapTransaction, signers, {
+      //   skipPreflight: true
+      // })
 
-      await connection.confirmTransaction(txid)
-      console.log(`TX1 SOL->OXY: https://solscan.io/tx/${txid}`)
+      // await connection.confirmTransaction(txidSO)
+      // console.log(`TX SOL->OXY->SOL: https://solscan.io/tx/${txidSO}`)
+
+      // const payload = new Transaction();
+      // if (setupTransaction) {
+      //   console.log('setupTransaction: ', setupTransaction);
+      //   payload.add(setupTransaction);
+      // }
+
+      // payload.add(swapTransaction);
+
+      // if (cleanupTransaction) {
+      //   console.log('cleanupTransaction: ', cleanupTransaction);
+      //   payload.add(cleanupTransaction);
+      // }
+
+      // const txidOS = await connection.sendTransaction(payload, signers, {
+      //   skipPreflight: true
+      // })
+
+      // await connection.confirmTransaction(txidOS)
+      // console.log(`CLEANUP: https://solscan.io/tx/${txidOS}`)
+
+      for (let serializedTransaction of [setupTransaction, transactionSO.swapTransaction, swapTransaction, cleanupTransaction].filter(Boolean)) {
+        // get transaction object from serialized transaction
+        const transaction = Transaction.from(Buffer.from(serializedTransaction, 'base64'))
+        // perform the swap
+        const txid = await connection.sendTransaction(transaction, signers, {
+          skipPreflight: true
+        })
+        await connection.confirmTransaction(txid)
+        console.log(`https://solscan.io/tx/${txid}`)
+      }
 
       // for (let serializedTransaction of [setupTransaction, transactionSO.swapTransaction, swapTransaction, cleanupTransaction].filter(Boolean)) {
       //   // get transaction object from serialized transaction

@@ -42,15 +42,19 @@ import {
     const connection = new Connection(RPC);
   
     // Info
-    let inAmount = 0.04;
+    let inAmount = 0.1;
     let tokenIn = 'SOL';
     let tokenOut = 'OXY';
   
     try {
+
+    const quoteInfo = await getOrcaQuote({connection, tokenIn, tokenOut, inAmount})
+    console.log("QUOTE FOR AMT OF OXY FOR 0.1 SOL: ", quoteInfo);
+
     const transactionSO = await retrieveJupRoutes({connection, inAmount, owner, tokenIn, tokenOut});
     console.log(transactionSO.swapTransaction.instructions);
   
-    inAmount = 14.5;
+    inAmount = quoteInfo;
     tokenIn = 'OXY';
     tokenOut = 'SOL';
   
@@ -73,24 +77,43 @@ import {
     // signers.concat(transaction.swapTransaction.signatures);
   
     //console.log(transaction.swapTransaction.signatures);
-    const txid = await connection.sendTransaction(transactionSO.swapTransaction, signers, {
-          skipPreflight: true
-        });
-        await connection.confirmTransaction(txid)
-      console.log(`https://solscan.io/tx/${txid}`)
+    // const txid = await connection.sendTransaction(transactionSO.swapTransaction, signers, {
+    //       skipPreflight: true
+    //     });
+    //     await connection.confirmTransaction(txid)
+    //   console.log(`https://solscan.io/tx/${txid}`)
   
-  
-      for (let serializedTransaction of [setupTransaction, swapTransaction, cleanupTransaction].filter(Boolean)) {
-        // get transaction object from serialized transaction
-        if (serializedTransaction) {
-    
-          const txid = await connection.sendTransaction(serializedTransaction, signers, {
-            skipPreflight: true
-          })
-          await connection.confirmTransaction(txid)
-          console.log(`TX1 SOL->OXY: https://solscan.io/tx/${txid}`)
-        }
+      console.log("SEARLIZING");
+      const payload = new Transaction();
+      if (setupTransaction) {
+        console.log('setupTransaction: ', setupTransaction);
+        payload.add(setupTransaction);
       }
+      payload.add(transactionSO.swapTransaction);
+      payload.add(swapTransaction);
+      if (cleanupTransaction) {
+        console.log('cleanupTransaction: ', cleanupTransaction);
+        payload.add(cleanupTransaction);
+      }
+
+      const txid = await connection.sendTransaction(payload, signers, {
+        skipPreflight: true
+      })
+
+      await connection.confirmTransaction(txid)
+      console.log(`TX1 SOL->OXY: https://solscan.io/tx/${txid}`)
+
+      // for (let serializedTransaction of [setupTransaction, transactionSO.swapTransaction, swapTransaction, cleanupTransaction].filter(Boolean)) {
+      //   // get transaction object from serialized transaction
+      //   if (serializedTransaction) {
+    
+      //     const txid = await connection.sendTransaction(serializedTransaction, signers, {
+      //       skipPreflight: true
+      //     })
+      //     await connection.confirmTransaction(txid)
+      //     console.log(`TX1 SOL->OXY: https://solscan.io/tx/${txid}`)
+      //   }
+      // }
     
     //const signature: string = await sendAndConfirmTransaction(connection, transaction.swapTransaction, signers);
     // console.log("tx: ", signature);

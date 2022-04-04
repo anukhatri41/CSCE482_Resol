@@ -1,5 +1,5 @@
 import { Jupiter, RouteInfo, TOKEN_LIST_URL } from "@jup-ag/core";
-import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import fetch from "isomorphic-fetch";
 import {
   ENV,
@@ -219,6 +219,8 @@ export const retrieveJupRoutes = async ({
   // Retrieve token list
   const tokens: Token[] = await (await fetch(TOKEN_LIST_URL[ENV])).json();
 
+  console.log(tokens);
+
   //  Load Jupiter
   const jupiter = await Jupiter.load({
     connection,
@@ -235,7 +237,11 @@ export const retrieveJupRoutes = async ({
   } else if ( tokenIn == 'OXY' && tokenOut == 'SOL'){
     inputToken = tokens.find((t) => t.address == OXY_MINT_ADDRESS); 
     outputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS); 
-  } else {
+  } else if ( tokenIn == 'SOL' && tokenOut == 'SOL') {
+    inputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS); 
+    outputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS); 
+  }
+  else {
     throw("This token pair is not configured.")
   }
 
@@ -249,12 +255,104 @@ export const retrieveJupRoutes = async ({
 
   //console.log("IN retrieveJupRoutes");
   let routeInfo: RouteInfo = routes!.routesInfos[0];
+  console.log(routeInfo.marketInfos);
   const { transactions } = await jupiter.exchange({
     routeInfo,
     userPublicKey: owner.publicKey,
     feeAccount: owner.publicKey,
     wrapUnwrapSOL: true,
   });
+
+  // console.log(transactions);
+  // console.log("ADSADASDASDASDASDASDASDASDA")
+
+  //return routes;
+  // Changed this to return the route with the proper transaction stuff.
+  return transactions;
+}
+
+export const runUntilProfit = async ({
+  connection,
+  inAmount,
+  owner,
+  slippage = 0.3,
+  tokenIn,
+  tokenOut
+}: {
+  connection: Connection;
+  inAmount: number;
+  owner: Keypair;
+  slippage?: number;
+  tokenIn: string;
+  tokenOut: string;
+}) => {
+
+  // Retrieve token list
+  const tokens: Token[] = await (await fetch(TOKEN_LIST_URL[ENV])).json();
+
+  //  Load Jupiter
+  const jupiter = await Jupiter.load({
+    connection,
+    cluster: ENV,
+    user: owner, // or public key
+  });
+
+  // Find token mint addresses
+  let inputToken;
+  let outputToken;
+  if ( tokenIn == 'SOL' && tokenOut == 'OXY') {
+    inputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS);
+    outputToken = tokens.find((t) => t.address == OXY_MINT_ADDRESS);
+  } else if ( tokenIn == 'OXY' && tokenOut == 'SOL'){
+    inputToken = tokens.find((t) => t.address == OXY_MINT_ADDRESS); 
+    outputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS); 
+  } else if ( tokenIn == 'SOL' && tokenOut == 'SOL') {
+    inputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS); 
+    outputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS); 
+  }
+  else {
+    throw("This token pair is not configured.")
+  }
+
+  const routes = await getRoutes({
+    jupiter,
+    inputToken,
+    outputToken,
+    inputAmount: inAmount, // 1 unit in UI
+    slippage: slippage, // 1% slippage
+  });
+  let routeInfo: RouteInfo = routes!.routesInfos[0];
+  let inAm = routeInfo.inAmount + (0.000015  * LAMPORTS_PER_SOL);
+  let outAm = routeInfo.outAmountWithSlippage;
+  console.log("#####################################");
+  console.log(inAm/LAMPORTS_PER_SOL);
+  console.log(outAm/LAMPORTS_PER_SOL);
+  console.log("####################################")
+  while (inAm > outAm) {
+    const routes = await getRoutes({
+      jupiter,
+      inputToken,
+      outputToken,
+      inputAmount: inAmount, // 1 unit in UI
+      slippage: slippage, // 1% slippage
+    });
+
+    //console.log("IN retrieveJupRoutes");
+    routeInfo = routes!.routesInfos[0];
+    inAm = routeInfo.inAmount + (0.000015  * LAMPORTS_PER_SOL);
+    outAm = routeInfo.outAmountWithSlippage;
+    console.log(inAm/LAMPORTS_PER_SOL);
+    console.log(outAm/LAMPORTS_PER_SOL);
+    console.log("####################################")
+  }
+
+  const { transactions } = await jupiter.exchange({
+    routeInfo,
+    userPublicKey: owner.publicKey,
+    feeAccount: owner.publicKey,
+    wrapUnwrapSOL: true,
+  });
+  
   // console.log(transactions);
   // console.log("ADSADASDASDASDASDASDASDASDA")
 

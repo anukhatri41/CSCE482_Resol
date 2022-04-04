@@ -10,11 +10,11 @@ import {
     Transaction
    } from "@solana/web3.js";
   import { executeOrcaSwap, getOrcaQuote } from "./utils/orcaSwap";
-  import { executeJupiterSwap, retrieveJupRoutes } from "./utils/jupiterSwap";
+  import { executeJupiterSwap, retrieveJupRoutes, runUntilProfit } from "./utils/jupiterSwap";
   import { fetchWalletBalance } from "./utils/shared";
   import bs58 from "bs58";
   import {
-    OXY_MINT_ADDRESS,
+    OXY_MINT_ADDRESS, SOLANA_RPC_ENDPOINT,
   } from "./constants";
   const sleep = require('./sleep');
   
@@ -39,27 +39,32 @@ import {
     const serumAPI = 'https://solana-api.projectserum.com';
   
     // 2. Initialize Orca object with mainnet connection
-    const connection = new Connection(RPC);
+    const connectionRPC = new Connection(RPC);
+    const connection = new Connection(SOLANA_RPC_ENDPOINT);
+
+    const initSOLBalance = await connection.getBalance(owner.publicKey);
+    console.log("Initial SOL Balance: ", initSOLBalance/LAMPORTS_PER_SOL);
+
   
     // Info
-    let inAmount = 0.1;
-    let tokenIn = 'SOL';
-    let tokenOut = 'OXY';
+    // let inAmount = 0.1;
+    // let tokenIn = 'SOL';
+    // let tokenOut = 'OXY';
   
     try {
 
-    const quoteInfo = await getOrcaQuote({connection, tokenIn, tokenOut, inAmount})
-    console.log("QUOTE FOR AMT OF OXY FOR 0.1 SOL: ", quoteInfo);
+    // const quoteInfo = await getOrcaQuote({connection, tokenIn, tokenOut, inAmount})
+    // console.log("QUOTE FOR AMT OF OXY FOR 0.1 SOL: ", quoteInfo);
 
-    const transactionSO = await retrieveJupRoutes({connection, inAmount, owner, tokenIn, tokenOut});
-    console.log(transactionSO.swapTransaction.instructions);
+    // const transactionSO = await retrieveJupRoutes({connection, inAmount, owner, tokenIn, tokenOut});
+    // console.log(transactionSO.swapTransaction.instructions);
   
-    inAmount = quoteInfo;
-    tokenIn = 'OXY';
-    tokenOut = 'SOL';
+    let inAmount = 0.5;
+    let tokenIn = 'SOL';
+    let tokenOut = 'SOL';
   
-    const transactionOS = await retrieveJupRoutes({connection, inAmount, owner, tokenIn, tokenOut});
-    console.log(transactionOS.swapTransaction.instructions);
+    const transactionOS = await runUntilProfit({connection, inAmount, owner, tokenIn, tokenOut});
+    //console.log(transactionOS.swapTransaction.instructions);
     
     // let instructions: TransactionInstruction[] = [];
     // let cleanupInstructions: TransactionInstruction[] = [];
@@ -112,29 +117,32 @@ import {
       // await connection.confirmTransaction(txidOS)
       // console.log(`CLEANUP: https://solscan.io/tx/${txidOS}`)
 
-      for (let serializedTransaction of [setupTransaction, transactionSO.swapTransaction, swapTransaction, cleanupTransaction].filter(Boolean)) {
-        // get transaction object from serialized transaction
-        const transaction = Transaction.from(Buffer.from(serializedTransaction, 'base64'))
-        // perform the swap
-        const txid = await connection.sendTransaction(transaction, signers, {
-          skipPreflight: true
-        })
-        await connection.confirmTransaction(txid)
-        console.log(`https://solscan.io/tx/${txid}`)
-      }
-
       // for (let serializedTransaction of [setupTransaction, transactionSO.swapTransaction, swapTransaction, cleanupTransaction].filter(Boolean)) {
       //   // get transaction object from serialized transaction
-      //   if (serializedTransaction) {
-    
-      //     const txid = await connection.sendTransaction(serializedTransaction, signers, {
-      //       skipPreflight: true
-      //     })
-      //     await connection.confirmTransaction(txid)
-      //     console.log(`TX1 SOL->OXY: https://solscan.io/tx/${txid}`)
-      //   }
+      //   const transaction = Transaction.from(Buffer.from(serializedTransaction, 'base64'))
+      //   // perform the swap
+      //   const txid = await connection.sendTransaction(transaction, signers, {
+      //     skipPreflight: true
+      //   })
+      //   await connection.confirmTransaction(txid)
+      //   console.log(`https://solscan.io/tx/${txid}`)
       // }
+
+      for (let serializedTransaction of [setupTransaction, swapTransaction, cleanupTransaction].filter(Boolean)) {
+        // get transaction object from serialized transaction
+        if (serializedTransaction) {
     
+          const txid = await connectionRPC.sendTransaction(serializedTransaction, signers, {
+            skipPreflight: true
+          })
+          await connectionRPC.confirmTransaction(txid)
+          console.log(`TX${serializedTransaction.toString()}: https://solscan.io/tx/${txid}`)
+        }
+      }
+    
+    const finalSOLBalance = await connection.getBalance(owner.publicKey);
+    console.log("Final SOL Balance: ", finalSOLBalance/LAMPORTS_PER_SOL);
+    console.log("Profit?: ", (finalSOLBalance-initSOLBalance)/LAMPORTS_PER_SOL);
     //const signature: string = await sendAndConfirmTransaction(connection, transaction.swapTransaction, signers);
     // console.log("tx: ", signature);
   

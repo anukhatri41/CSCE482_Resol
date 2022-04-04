@@ -85,3 +85,18 @@ https://blog.chain.link/levels-of-data-aggregation-in-chainlink-price-feeds/
 **March 16, 2022**
 - met with team this evening to plan out tasks for the next couple days regarding CDR
 - tried to understand as a team why Jupiter executeSwap function wasnt completing
+
+**March 21, 2022**
+- since last update, worked with team on the CDR presentation and report
+- worked with Grant to get demo ready
+  - specifically worked on getting token amount from wallet to display gains/losses
+- today, met with team before class to practice presentation
+- presented CDR and Demo to class
+
+**March 30, 2022**
+- spent a lot of time trying to get on chain function with Anchor working
+  - specifically trying to pass transaction information into an onchain function
+- shifted to not using Anchor, and instead trying to make an onchain function using C
+- met with Prof and TA in class
+  - decided to focus more off chain and trying to make a profit with Jupiter price routes
+- worked with Grant and Robert on getting sendTransaction instruction working with the transactions returned from Jupiter

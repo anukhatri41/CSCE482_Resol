@@ -219,3 +219,11 @@ Ideally, we can just take the routing the create for us and execute on that, how
 Today I spent a lot of time trying to make sure we could actually get the transactions from Jupiter, and then that we could execute them on our own. This is important to us because when we start moving on chain, we can use those transaction objects that we are using currently to do the transactions. This was important and we are definitely now closer to where we need to be!
 
 The main things we need to work on now are our UI as well as our on chain program.
+
+<h4>3/30/22</h4>
+
+Today we met with Laren & Dr. Huang, we discussed with them some of the things we were worried about concerning our on chain program. Basically, we decided that we want to focus on trying to get our trading strategy to work. We had previously split up our on chain work and trying different strategies off chain, but now we are focusing all off chain.
+
+After speaking with Dr. Huang, he gave us the idea of getting the swaps going both ways, then trying to run them all in the same transaction. At this point, that is the main thing we are trying to work on.
+
+Hopefully we get something going, but we are feeling ok right now.

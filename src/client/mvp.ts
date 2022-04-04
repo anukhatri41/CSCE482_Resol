@@ -18,7 +18,6 @@ var lgs = {
   S2O: []  as  any
 };
 
-
 // fs.readFile(__dirname + '/test_trans/O2S_S2O_0.json', 'utf8', function readFileCallback(err, data){
 //   if (err){
 //       console.log(err);
@@ -27,6 +26,49 @@ var lgs = {
 // }});
 
 lgs = JSON.parse(fs.readFileSync(__dirname + '/test_trans/O2S_S2O_0.json'));
+
+
+console.log(lgs.O2S[0].init_oxy)
+
+function get_init_sol(obj: any) {
+  var l = []
+  for (let i = 0; i < obj.length ; i++) {l.push(obj[i].init_sol)}
+  return l
+}
+
+function get_init_oxy(obj: any) {
+  var l = []
+  for (let i = 0; i < obj.length ; i++) {l.push(obj[i].init_oxy)}
+  return l
+}
+
+function get_final_sol(obj: any) {
+  var l = []
+  for (let i = 0; i < obj.length ; i++) {l.push(obj[i].final_sol)}
+  return l
+}
+
+function get_final_oxy(obj: any) {
+  var l = []
+  for (let i = 0; i < obj.length ; i++) {l.push(obj[i].final_oxy)}
+  return l
+}
+
+function get_sol_dif(obj: any) {
+  var l = []
+  for (let i = 0; i < obj.length ; i++) {l.push(obj[i].final_sol-obj[i].init_sol)}
+  return l
+}
+
+function get_oxy_dif(obj: any) {
+  var l = []
+  for (let i = 0; i < obj.length ; i++) {l.push(obj[i].final_oxy-obj[i].init_oxy)}
+  return l
+}
+
+
+
+
 
 
 // Swapping from OXY -> SOL -> OXY
@@ -344,31 +386,34 @@ const solTOoxy = async () => {
 const main = async () => {
   
   // OXY -> SOL -> OXY
-  await oxyTOsol(); //timeout error happens more frequently
+  // await oxyTOsol(); //timeout error happens more frequently
 
   // SOL -> OXY -> SOL
-  await solTOoxy(); //seems to be a better strat and losses less than other 
+  // await solTOoxy(); //seems to be a better strat and losses less than other 
   //gave radiyum once 
   // lost $2.50 when it gave me radiyum
 
-  console.log(lgs)
-
-  console.log("\nAfter ", lgs.O2S.length, ' runs of O2S:')
-  console.log("Initial SOL: ", lgs.O2S[0].init_sol)
-  console.log("Final SOL: ", lgs.O2S[lgs.O2S.length-1].final_sol)
-  console.log("Initial OXY: ", lgs.O2S[0].init_oxy)
-  console.log("Final OXY: ", lgs.O2S[lgs.O2S.length-1].final_oxy)
-  console.log("SOL DIF: ", lgs.O2S[lgs.O2S.length-1].final_sol - lgs.O2S[0].init_sol)
-  console.log("OXY DIF: ", lgs.O2S[lgs.O2S.length-1].final_oxy - lgs.O2S[0].init_oxy )
+  // console.log(lgs)
 
 
-  console.log("\nAfter ", lgs.S2O.length, ' runs of S2O:')
-  console.log("Initial SOL: ", lgs.S2O[0].init_sol)
-  console.log("Final SOL: ", lgs.S2O[lgs.S2O.length-1].final_sol)
-  console.log("Initial OXY: ", lgs.S2O[0].init_oxy)
-  console.log("Final OXY: ", lgs.S2O[lgs.S2O.length-1].final_oxy)
-  console.log("SOL DIF: ", lgs.S2O[lgs.S2O.length-1].final_sol - lgs.S2O[0].init_sol)
-  console.log("OXY DIF: ", lgs.S2O[lgs.S2O.length-1].final_oxy - lgs.S2O[0].init_oxy )
+  console.log(get_oxy_dif(lgs.S2O))
+  
+  // console.log("\nAfter ", lgs.O2S.length, ' runs of O2S:')
+  // console.log("Initial SOL: ", lgs.O2S[0].init_sol)
+  // console.log("Final SOL: ", lgs.O2S[lgs.O2S.length-1].final_sol)
+  // console.log("Initial OXY: ", lgs.O2S[0].init_oxy)
+  // console.log("Final OXY: ", lgs.O2S[lgs.O2S.length-1].final_oxy)
+  // console.log("SOL DIF: ", lgs.O2S[lgs.O2S.length-1].final_sol - lgs.O2S[0].init_sol)
+  // console.log("OXY DIF: ", lgs.O2S[lgs.O2S.length-1].final_oxy - lgs.O2S[0].init_oxy )
+
+
+  // console.log("\nAfter ", lgs.S2O.length, ' runs of S2O:')
+  // console.log("Initial SOL: ", lgs.S2O[0].init_sol)
+  // console.log("Final SOL: ", lgs.S2O[lgs.S2O.length-1].final_sol)
+  // console.log("Initial OXY: ", lgs.S2O[0].init_oxy)
+  // console.log("Final OXY: ", lgs.S2O[lgs.S2O.length-1].final_oxy)
+  // console.log("SOL DIF: ", lgs.S2O[lgs.S2O.length-1].final_sol - lgs.S2O[0].init_sol)
+  // console.log("OXY DIF: ", lgs.S2O[lgs.S2O.length-1].final_oxy - lgs.S2O[0].init_oxy )
 
   fs.writeFileSync(__dirname + '/test_trans/O2S_S2O_0.json', JSON.stringify(lgs)); //add txids
 

@@ -94,3 +94,10 @@ Able to write transactions to a log file
 Able to read transactions from log file and analyize proformace  
 Continuing to run and gather info about the two transactions  
 Discussing how to pivot strategies to what Dr.Huang recommended (staying off chain but gathering forward and backward routes seperatly)
+
+# 4/04/22  
+Discussed plans for moving forward  
+Created functions for parsing data from log file in order to use that data on front end  
+Working on front end to use the data that we are collecting  
+Found a way to visually represent our data in a usefull manner that shows preformace (controll chart)  
+Going to create a demo chart for next meeting with Dr.Huang and Laren 

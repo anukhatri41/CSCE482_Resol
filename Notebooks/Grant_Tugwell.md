@@ -227,3 +227,11 @@ Today we met with Laren & Dr. Huang, we discussed with them some of the things w
 After speaking with Dr. Huang, he gave us the idea of getting the swaps going both ways, then trying to run them all in the same transaction. At this point, that is the main thing we are trying to work on.
 
 Hopefully we get something going, but we are feeling ok right now.
+
+<h4>4/4/22</h4>
+
+Today we began working on different stratagies to try to get some sort of arbitrage profit. We considered many options, such as buying, then waiting a short period of time and selling, looking for opputunities by scanning all avaliable trade pairs and looking for the one that would give us some sort of profit. We also considered trying to find tokens that most frequently moved against SOL and then trade from SOL to the token and then back to SOL. Ulitmately, we decided to try doing a trading pair from SOL to SOL. 
+
+Using Jupiter, it can help us find an intermediate that could possible give us some sort of profit. We had to do a lot of tweaking, but we eventually landed on a slippage of 0.3% and then added in the tranaction cost as part of our intial 'fee' this way, the trade wouldn't execute unless we could nearly gauruntee a profit. As we have found however, there is almost no times when this happens. I think maybe we need to continue our research.
+
+The main thing we need now is our UI, which Anu is working on.

@@ -386,34 +386,31 @@ const solTOoxy = async () => {
 const main = async () => {
   
   // OXY -> SOL -> OXY
-  // await oxyTOsol(); //timeout error happens more frequently
+  await oxyTOsol(); //timeout error happens more frequently
 
   // SOL -> OXY -> SOL
-  // await solTOoxy(); //seems to be a better strat and losses less than other 
-  //gave radiyum once 
+  await solTOoxy(); //seems to be a better strat and losses less than other 
+  // gave radiyum once 
   // lost $2.50 when it gave me radiyum
 
-  // console.log(lgs)
-
-
-  console.log(get_oxy_dif(lgs.S2O))
+  // console.log(get_oxy_dif(lgs.S2O))
   
-  // console.log("\nAfter ", lgs.O2S.length, ' runs of O2S:')
-  // console.log("Initial SOL: ", lgs.O2S[0].init_sol)
-  // console.log("Final SOL: ", lgs.O2S[lgs.O2S.length-1].final_sol)
-  // console.log("Initial OXY: ", lgs.O2S[0].init_oxy)
-  // console.log("Final OXY: ", lgs.O2S[lgs.O2S.length-1].final_oxy)
-  // console.log("SOL DIF: ", lgs.O2S[lgs.O2S.length-1].final_sol - lgs.O2S[0].init_sol)
-  // console.log("OXY DIF: ", lgs.O2S[lgs.O2S.length-1].final_oxy - lgs.O2S[0].init_oxy )
+  console.log("\nAfter ", lgs.O2S.length, ' runs of O2S:')
+  console.log("Initial SOL: ", lgs.O2S[0].init_sol)
+  console.log("Final SOL: ", lgs.O2S[lgs.O2S.length-1].final_sol)
+  console.log("Initial OXY: ", lgs.O2S[0].init_oxy)
+  console.log("Final OXY: ", lgs.O2S[lgs.O2S.length-1].final_oxy)
+  console.log("SOL DIF: ", lgs.O2S[lgs.O2S.length-1].final_sol - lgs.O2S[0].init_sol)
+  console.log("OXY DIF: ", lgs.O2S[lgs.O2S.length-1].final_oxy - lgs.O2S[0].init_oxy )
 
 
-  // console.log("\nAfter ", lgs.S2O.length, ' runs of S2O:')
-  // console.log("Initial SOL: ", lgs.S2O[0].init_sol)
-  // console.log("Final SOL: ", lgs.S2O[lgs.S2O.length-1].final_sol)
-  // console.log("Initial OXY: ", lgs.S2O[0].init_oxy)
-  // console.log("Final OXY: ", lgs.S2O[lgs.S2O.length-1].final_oxy)
-  // console.log("SOL DIF: ", lgs.S2O[lgs.S2O.length-1].final_sol - lgs.S2O[0].init_sol)
-  // console.log("OXY DIF: ", lgs.S2O[lgs.S2O.length-1].final_oxy - lgs.S2O[0].init_oxy )
+  console.log("\nAfter ", lgs.S2O.length, ' runs of S2O:')
+  console.log("Initial SOL: ", lgs.S2O[0].init_sol)
+  console.log("Final SOL: ", lgs.S2O[lgs.S2O.length-1].final_sol)
+  console.log("Initial OXY: ", lgs.S2O[0].init_oxy)
+  console.log("Final OXY: ", lgs.S2O[lgs.S2O.length-1].final_oxy)
+  console.log("SOL DIF: ", lgs.S2O[lgs.S2O.length-1].final_sol - lgs.S2O[0].init_sol)
+  console.log("OXY DIF: ", lgs.S2O[lgs.S2O.length-1].final_oxy - lgs.S2O[0].init_oxy )
 
   fs.writeFileSync(__dirname + '/test_trans/O2S_S2O_0.json', JSON.stringify(lgs)); //add txids
 

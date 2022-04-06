@@ -18,7 +18,26 @@ import {
   } from "./constants";
   const sleep = require('./sleep');
   
+  const { performance } = require('perf_hooks');
+  const fs = require('fs')
+
+
+  var lgs = {
+    S2S: []  as  any,
+  };
+
+  lgs = JSON.parse(fs.readFileSync(__dirname + '/test_trans/S2S.json'));
+
+  function get_tot_prof(obj: any) {
+    var sum = 0
+    for (let i = 0; i < obj.length ; i++) {sum += obj[i].tot_prof}
+    return sum
+  }
+  
+
   const routeOutput = async () => {
+
+    var tx = {} as any
   
     require('dotenv').config()
     const details = {
@@ -48,7 +67,10 @@ import {
     let cont = true;
     let totalProfit = 0;
 
-    console.time("Ran for");
+    // console.time("Ran for");
+
+    var startTime = performance.now()
+
     let initSOLBalance = await connection.getBalance(owner.publicKey);
     let beginningSOLBal = initSOLBalance;
     let totSwaps = 0;
@@ -116,7 +138,11 @@ import {
     const endingSOLBalance = await connection.getBalance(owner.publicKey);
 
     console.log("FINAL META: ");
-    console.timeEnd("Ran for");
+    // console.timeEnd("Ran for");
+
+    var endTime = performance.now()
+    var dur = +(((endTime - startTime) / 1000).toFixed(2));
+
     console.log("Total Swaps: ", totSwaps);
     console.log("Positive Swaps: ", positiveSwaps);
     console.log("Errored Swaps: ", swapsErr);
@@ -124,11 +150,24 @@ import {
     console.log("Beginning Balance: ",beginningSOLBal/LAMPORTS_PER_SOL);
     console.log("Ending Balance: ",endingSOLBalance/LAMPORTS_PER_SOL);
     console.log("Total Profit: ", totalProfit);
+
+    tx['total_swaps'] =  totSwaps
+    tx['pos_swaps'] =  positiveSwaps
+    tx['err_swaps'] =  swapsErr
+    tx['neg_swaps'] =  negativeSwaps
+    tx['init_bal'] =  beginningSOLBal/LAMPORTS_PER_SOL
+    tx['end_bal'] =  endingSOLBalance/LAMPORTS_PER_SOL
+    tx['tot_prof'] =  totalProfit
+    lgs.S2S.push(tx);
   }
   
   const main = async () => {
       
     await routeOutput();
+    fs.writeFileSync(__dirname + '/test_trans/S2S.json', JSON.stringify(lgs)); //add txids
+
+    console.log("\nAfter ", lgs.S2S.length, " runs:")
+    console.log("Total Profit: ", get_tot_prof(lgs.S2S))
   
     };
       main()

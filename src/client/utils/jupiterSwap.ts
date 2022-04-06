@@ -275,7 +275,7 @@ export const runUntilProfit = async ({
   connection,
   inAmount,
   owner,
-  slippage = 0.3,
+  slippage = 0.1,
   tokenIn,
   tokenOut
 }: {
@@ -324,11 +324,18 @@ export const runUntilProfit = async ({
   let routeInfo: RouteInfo = routes!.routesInfos[0];
   let inAm = routeInfo.inAmount + (0.000015  * LAMPORTS_PER_SOL);
   let outAm = routeInfo.outAmountWithSlippage;
-  console.log("#####################################");
-  console.log(inAm/LAMPORTS_PER_SOL);
-  console.log(outAm/LAMPORTS_PER_SOL);
-  console.log("####################################")
-  while (inAm > outAm) {
+  const diffThresh = 0.0001;
+  let spread = outAm - inAm;
+  console.log("######################################");
+  console.log("I: ", inAm/LAMPORTS_PER_SOL);
+  console.log("O: ", outAm/LAMPORTS_PER_SOL);
+  console.log("S: ", spread/LAMPORTS_PER_SOL);
+  if ((spread/LAMPORTS_PER_SOL) > diffThresh) {
+    console.log("TGTBT");
+    spread = -1;
+  }
+  console.log("######################################");
+  while (spread < 0) {
     const routes = await getRoutes({
       jupiter,
       inputToken,
@@ -341,9 +348,15 @@ export const runUntilProfit = async ({
     routeInfo = routes!.routesInfos[0];
     inAm = routeInfo.inAmount + (0.000015  * LAMPORTS_PER_SOL);
     outAm = routeInfo.outAmountWithSlippage;
-    console.log(inAm/LAMPORTS_PER_SOL);
-    console.log(outAm/LAMPORTS_PER_SOL);
-    console.log("####################################")
+    spread = outAm - inAm;
+    console.log("I: ", inAm/LAMPORTS_PER_SOL);
+    console.log("O: ", outAm/LAMPORTS_PER_SOL);
+    console.log("S: ", spread/LAMPORTS_PER_SOL);
+    if ((spread/LAMPORTS_PER_SOL) > diffThresh) {
+      console.log("TGTBT");
+      spread = -1;
+    }
+    console.log("######################################")
   }
 
   const { transactions } = await jupiter.exchange({

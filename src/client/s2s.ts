@@ -33,6 +33,21 @@ import {
     for (let i = 0; i < obj.length ; i++) {sum += obj[i].tot_prof}
     return sum
   }
+
+  function get_init_bal(obj: any) {
+    var l = []
+    for (let i = 0; i < obj.length ; i++) {l.push(obj[i].init_bal)}
+    return l
+  }
+
+
+  function get_end_bal(obj: any) {
+    var l = []
+    for (let i = 0; i < obj.length ; i++) {l.push(obj[i].end_bal)}
+    return l
+  }
+
+
   
 
   const routeOutput = async () => {
@@ -168,6 +183,8 @@ import {
 
     console.log("\nAfter ", lgs.S2S.length, " runs:")
     console.log("Total Profit: ", get_tot_prof(lgs.S2S))
+
+    console.log(get_end_bal(lgs.S2S))
   
     };
       main()

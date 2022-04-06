@@ -2,8 +2,8 @@
 import { FC } from "react";
 import { SignMessage } from '../../components/SignMessage';
 import { SendTransaction } from '../../components/SendTransaction';
-import { FaBitcoin } from 'react-icons/fa';
 import { FcAreaChart, FcBarChart, FcDoughnutChart } from 'react-icons/fc';
+import {CategoryScale} from 'chart.js'; Chart.register(CategoryScale);
 
 export const BasicsView: FC = (props) => {
   return (

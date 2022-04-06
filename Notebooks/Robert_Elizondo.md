@@ -100,4 +100,8 @@ Discussed plans for moving forward
 Created functions for parsing data from log file in order to use that data on front end  
 Working on front end to use the data that we are collecting  
 Found a way to visually represent our data in a usefull manner that shows preformace (controll chart)  
-Going to create a demo chart for next meeting with Dr.Huang and Laren 
+Going to create a demo chart for next meeting with Dr.Huang and Laren  
+  
+# 4/06/22  
+Meeting with Dr.Huang and Laren  
+Testing Sol to Sol strategy

@@ -8,6 +8,7 @@
   "license": "MIT",
   "scripts": {
     "mvp": "ts-node client/mvp.ts",
+    "s2s": "ts-node client/s2s.ts",
     "transaction": "ts-node client/transaction.ts",
     "orcaTransaction": "ts-node client/sendTransaction.ts",
     "exchange": "ts-node client/exchangeClient.ts",

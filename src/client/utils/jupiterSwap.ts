@@ -1,5 +1,6 @@
 import { Jupiter, RouteInfo, TOKEN_LIST_URL } from "@jup-ag/core";
-import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import { LAMPORTS_PER_SIGNATURE } from "@jup-ag/core/dist/constants";
+import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import fetch from "isomorphic-fetch";
 import {
   ENV,
@@ -11,6 +12,7 @@ import {
   Token,
   USDC_MINT_ADDRESS
 } from "../constants";
+const sleep = require('../sleep');
 
   const getRoutes = async ({
     jupiter,
@@ -29,7 +31,6 @@ import {
       if (!inputToken || !outputToken) {
         return null;
       }
-  
       console.log(
         `Getting routes for ${inputAmount} ${inputToken.symbol} -> ${outputToken.symbol}...`
       );
@@ -123,6 +124,7 @@ export const executeJupiterSwap = async ({
     try {
       //const connection = new Connection(RPC); // Setup Solana RPC. RPC is our custome RPC from .env file.
       const tokens: Token[] = await (await fetch(TOKEN_LIST_URL[ENV])).json(); // Fetch token list from Jupiter API
+      console.log(tokens)
       console.log("Established connection.")
       //  Load Jupiter
       const jupiter = await Jupiter.load({
@@ -156,7 +158,7 @@ export const executeJupiterSwap = async ({
           inputToken,
           outputToken,
           inputAmount: inAmount, // 1 unit in UI
-          slippage: 1, // 1% slippage
+          slippage: 0.1, // 1% slippage
         });
 
         if (outputToken && routes) {
@@ -218,7 +220,7 @@ export const retrieveJupRoutes = async ({
 
   // Retrieve token list
   const tokens: Token[] = await (await fetch(TOKEN_LIST_URL[ENV])).json();
-
+  // console.log(tokens)
   //  Load Jupiter
   const jupiter = await Jupiter.load({
     connection,
@@ -229,36 +231,83 @@ export const retrieveJupRoutes = async ({
   // Find token mint addresses
   let inputToken;
   let outputToken;
-  if ( tokenIn == 'SOL' && tokenOut == 'OXY') {
-    inputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS);
+  if ( tokenIn == 'OXY' && tokenOut == 'OXY') {
+    inputToken = tokens.find((t) => t.address == OXY_MINT_ADDRESS);
     outputToken = tokens.find((t) => t.address == OXY_MINT_ADDRESS);
-  } else if ( tokenIn == 'OXY' && tokenOut == 'SOL'){
-    inputToken = tokens.find((t) => t.address == OXY_MINT_ADDRESS); 
+  } else if ( tokenIn == 'SOL' && tokenOut == 'SOL'){
+    inputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS); 
     outputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS); 
   } else {
     throw("This token pair is not configured.")
   }
 
-  const routes = await getRoutes({
-    jupiter,
-    inputToken,
-    outputToken,
-    inputAmount: inAmount, // 1 unit in UI
-    slippage: slippage, // 1% slippage
-  });
+  while (true) {
+    const routes_0 = await getRoutes({
+      jupiter,
+      inputToken,
+      outputToken,
+      inputAmount: inAmount, // 1 unit in UI
+      slippage: slippage, // 1% slippage
+    });
+    // const routes_1 = await getRoutes({
+    //   jupiter,
+    //   outputToken,
+    //   inputToken,
+    //   inputAmount: inAmount, // 1 unit in UI
+    //   slippage: slippage, // 1% slippage
+    // });
+
+    console.log("----")
+    // console.log(routes!.routesInfos[0])
+    console.log(routes_0!.routesInfos[0].inAmount);
+    console.log(routes_0!.routesInfos[0].outAmountWithSlippage);
+    let in_amount = inAmount * LAMPORTS_PER_SOL
+    // let routeInfo: RouteInfo = routes!.routesInfos[0];
+    if (routes_0!.routesInfos[0].outAmountWithSlippage > routes_0!.routesInfos[0].inAmount)
+    // if (((routes_0!.routesInfos[0].outAmountWithSlippage - routes_0!.routesInfos[0].inAmount) / routes_0!.routesInfos[0].inAmount) > 0.01)
+    {
+      console.log("PROFIT!!");
+      let routeInfo: RouteInfo = routes_0!.routesInfos[0];
+      // let routeInfo_1: RouteInfo = routes_1!.routesInfos[0];
+      let { transactions, execute } = await jupiter.exchange({
+        routeInfo,
+        userPublicKey: owner.publicKey,
+        feeAccount: owner.publicKey,
+        wrapUnwrapSOL: true,
+      });
+      // let transaction_0 = transactions;
+      // { transactions } = await jupiter.exchange({
+      //   routeInfo,
+      //   userPublicKey: owner.publicKey,
+      //   feeAccount: owner.publicKey,
+      //   wrapUnwrapSOL: true,
+      // });
+      // let transaction_1 = transactions
+      return transactions 
+      // break;r
+    }
+    // await sleep(100);
+  }
 
   //console.log("IN retrieveJupRoutes");
-  let routeInfo: RouteInfo = routes!.routesInfos[0];
-  const { transactions } = await jupiter.exchange({
-    routeInfo,
-    userPublicKey: owner.publicKey,
-    feeAccount: owner.publicKey,
-    wrapUnwrapSOL: true,
-  });
-  // console.log(transactions);
-  // console.log("ADSADASDASDASDASDASDASDASDA")
+  // let routeInfo: RouteInfo = routes!.routesInfos[0];
+  // try {
+  // console.log(routes!.routesInfos)
+  // // console.log(routeInfo.marketInfos[1].marketMeta)
+  // }
+  // catch (error) {
+  //   console.log("oop")
+  // }
+  // const { transactions } = await jupiter.exchange({
+  //   routeInfo,
+  //   userPublicKey: owner.publicKey,
+  //   feeAccount: owner.publicKey,
+  //   wrapUnwrapSOL: true,
+  // });
+  // // console.log(transactions);
+  // // console.log("ADSADASDASDASDASDASDASDASDA")
 
-  //return routes;
-  // Changed this to return the route with the proper transaction stuff.
-  return transactions;
+  // //return routes;
+  // // Changed this to return the route with the proper transaction stuff.
+  // return transactions;
 }

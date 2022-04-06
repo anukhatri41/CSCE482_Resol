@@ -235,3 +235,11 @@ Today we began working on different stratagies to try to get some sort of arbitr
 Using Jupiter, it can help us find an intermediate that could possible give us some sort of profit. We had to do a lot of tweaking, but we eventually landed on a slippage of 0.3% and then added in the tranaction cost as part of our intial 'fee' this way, the trade wouldn't execute unless we could nearly gauruntee a profit. As we have found however, there is almost no times when this happens. I think maybe we need to continue our research.
 
 The main thing we need now is our UI, which Anu is working on.
+
+<h4>4/6/22</h4>
+
+Today we met with Dr. Huang and Laren. We showed them our progress we have so far, which is the fact that we have made some trades that have profit. While these aren't reliable, we noticed that overall we aren't really losing money, so we aren't exactly sure if this is going to be our final policy.
+
+I think moving forward, we need to continue testing and be sure that things are working as expected.
+
+We will continue testing these throughout the weeek. Our UI is also coming along well. Anu and Robert have been working together and they are making some progress. Things have been going good.

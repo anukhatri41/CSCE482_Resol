@@ -25,6 +25,36 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+
+const fs = require('fs')
+
+var lgs = {
+  S2S: []  as  any,
+};
+
+lgs = JSON.parse(fs.readFileSync(__dirname + '/S2S.json'));
+console.log(lgs);
+
+function get_tot_prof(obj: any) {
+  var sum = 0
+  for (let i = 0; i < obj.length ; i++) {sum += obj[i].tot_prof}
+  return sum
+}
+
+function get_init_bal(obj: any) {
+  var l = []
+  for (let i = 0; i < obj.length ; i++) {l.push(obj[i].init_bal)}
+  return l
+}
+
+
+function get_end_bal(obj: any) {
+  var l = []
+  for (let i = 0; i < obj.length ; i++) {l.push(obj[i].end_bal)}
+  return l
+}
+
+
 export const options = {
   responsive: true,
   plugins: {
@@ -45,7 +75,7 @@ export const data = {
   datasets: [
     {
       label: 'Dataset 1',
-      data: [650, 300, 800, 810, 560, 550, 450],
+      data: get_end_bal(lgs.S2S),
       borderColor: 'rgb(255, 99, 132)',
       backgroundColor: 'rgba(255, 99, 132, 0.5)',
     },

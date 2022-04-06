@@ -100,4 +100,13 @@ Discussed plans for moving forward
 Created functions for parsing data from log file in order to use that data on front end  
 Working on front end to use the data that we are collecting  
 Found a way to visually represent our data in a usefull manner that shows preformace (controll chart)  
-Going to create a demo chart for next meeting with Dr.Huang and Laren 
+Going to create a demo chart for next meeting with Dr.Huang and Laren  
+  
+# 4/06/22  
+Meeting with Dr.Huang and Laren  
+Testing Sol to Sol strategy  
+Added logging to Sol to Sol stragety  
+Seeing some successful profitable trades and some ocassional losses  
+Looking into recommendation from Dr.Huang, which is to make a simple on-chain transaction  
+Going to try tuning Sol to Sol strategy and gathering more data  
+Going to try integrating gathered data to frontend

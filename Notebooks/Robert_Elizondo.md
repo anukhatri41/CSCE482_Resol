@@ -104,4 +104,9 @@ Going to create a demo chart for next meeting with Dr.Huang and Laren
   
 # 4/06/22  
 Meeting with Dr.Huang and Laren  
-Testing Sol to Sol strategy
+Testing Sol to Sol strategy  
+Added logging to Sol to Sol stragety  
+Seeing some successful profitable trades and some ocassional losses  
+Looking into recommendation from Dr.Huang, which is to make a simple on-chain transaction  
+Going to try tuning Sol to Sol strategy and gathering more data  
+Going to try integrating gathered data to frontend

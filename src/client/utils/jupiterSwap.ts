@@ -322,7 +322,7 @@ export const runUntilProfit = async ({
     slippage: slippage, // 1% slippage
   });
   let routeInfo: RouteInfo = routes!.routesInfos[0];
-  let inAm = routeInfo.inAmount + (0.000015  * LAMPORTS_PER_SOL);
+  let inAm = routeInfo.inAmount + (0.000005  * LAMPORTS_PER_SOL);
   let outAm = routeInfo.outAmountWithSlippage;
   const diffThresh = 0.0001;
   let spread = outAm - inAm;
@@ -348,9 +348,11 @@ export const runUntilProfit = async ({
 
     //console.log("IN retrieveJupRoutes");
     routeInfo = routes!.routesInfos[0];
-    inAm = routeInfo.inAmount + (0.000015  * LAMPORTS_PER_SOL);
+    inAm = routeInfo.inAmount + (0.000005  * LAMPORTS_PER_SOL);
     outAm = routeInfo.outAmountWithSlippage;
     spread = outAm - inAm;
+    console.log(routeInfo.marketInfos[0].amm.label);
+    console.log(routeInfo.marketInfos[1].amm.label);
     console.log("I: ", inAm/LAMPORTS_PER_SOL);
     console.log("O: ", outAm/LAMPORTS_PER_SOL);
     console.log("S: ", spread/LAMPORTS_PER_SOL);
@@ -368,7 +370,8 @@ export const runUntilProfit = async ({
     wrapUnwrapSOL: true,
   });
   
-  // console.log(transactions);
+  // TRANSACTION META DATA
+  //console.log(transactions.swapTransaction.instructions);
   // console.log("ADSADASDASDASDASDASDASDASDA")
 
   //return routes;

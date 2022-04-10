@@ -33,6 +33,7 @@ export const OUTPUT_MINT_ADDRESS =
 export const SOL_MINT_ADDRESS = "So11111111111111111111111111111111111111112";
 export const USDC_MINT_ADDRESS = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
 export const OXY_MINT_ADDRESS = "z3dn17yLaGMKffVogeFHQ9zWVcXgqgf3PQnDsNs2g6M";
+export const mSOL_MINT_ADDRESS = "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So";
 // Interface
 export interface Token {
   chainId: number; // 101,

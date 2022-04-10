@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@blockworks-foundation/mango-client": "^3.3.17",
+    "@cremafinance/crema-sdk": "^1.1.14",
     "@jup-ag/core": "^1.0.0-beta.20",
     "@orca-so/sdk": "^1.2.23",
     "@project-serum/serum": "^0.13.61",

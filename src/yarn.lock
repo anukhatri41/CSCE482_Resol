@@ -52,6 +52,17 @@
   "resolved" "https://registry.npmjs.org/@colors/colors/-/colors-1.5.0.tgz"
   "version" "1.5.0"
 
+"@cremafinance/crema-sdk@^1.1.14":
+  "integrity" "sha512-Bg4PxsQ8NYSg9RkGpy1qLFrmzreHkUmTy/wJBrhllESME5VubnVapbs0eqv4g9lehW6cK1IznmsE2twvZtP4eQ=="
+  "resolved" "https://registry.npmjs.org/@cremafinance/crema-sdk/-/crema-sdk-1.1.14.tgz"
+  "version" "1.1.14"
+  dependencies:
+    "@solana/buffer-layout" "^4.0.0"
+    "@solana/spl-token" "^0.1.8"
+    "decimal.js" "^10.3.1"
+    "tiny-invariant" "^1.2.0"
+    "tslib" "^2.3.1"
+
 "@cspotcode/source-map-consumer@0.8.0":
   "integrity" "sha512-41qniHzTU8yAGbCp04ohlmSrZf8bkf/iJsl3V0dRGsQN/5GFfx+LbCSsCpp2gqrqjTVg/K6O8ycoV35JIwAzAg=="
   "resolved" "https://registry.npmjs.org/@cspotcode/source-map-consumer/-/source-map-consumer-0.8.0.tgz"

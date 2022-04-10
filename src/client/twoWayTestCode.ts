@@ -56,7 +56,7 @@ import {
     let negativeSwaps = 0;
     let swapsErr = 0;
 
-    while (totSwaps < 2) {
+    while (totSwaps < 5) {
       try {
 
         totSwaps++;

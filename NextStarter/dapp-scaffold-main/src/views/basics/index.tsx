@@ -15,6 +15,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { StartStop } from "components/StartStop";
 
 ChartJS.register(
   CategoryScale,
@@ -26,7 +27,7 @@ ChartJS.register(
   Legend
 );
 
-const fs = require('fs')
+/*const fs = require('fs')
 
 var lgs = {
   S2S: []  as  any,
@@ -53,7 +54,7 @@ function get_end_bal(obj: any) {
   for (let i = 0; i < obj.length ; i++) {l.push(obj[i].end_bal)}
   return l
 }
-
+*/
 
 export const options = {
   responsive: true,
@@ -68,24 +69,46 @@ export const options = {
   },
 };
 
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+const labels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30];
 
 export const data = {
   labels,
   datasets: [
     {
-      label: 'Dataset 1',
-      data: get_end_bal(lgs.S2S),
+      label: 'Wallet Balance',
+      data: [
+        0.035052831, 0.035052831, 0.033089632,
+        0.045123912, 0.045123912, 0.045123912,
+        0.045123912, 0.045123912, 0.045123912,
+        0.045123912, 0.071297268, 0.059252988,
+        0.071287268, 0.071287268, 0.071287268,
+        0.071314315, 0.071314315, 0.071314315,
+        0.071314315, 0.071309315, 0.071309315,
+        0.071309315, 0.071309315, 0.071309315,
+        0.071309315, 0.071309315, 0.071309315,
+        0.071309315, 0.071309315, 0.071309315,
+        0.071309315
+      ],
       borderColor: 'rgb(255, 99, 132)',
       backgroundColor: 'rgba(255, 99, 132, 0.5)',
-    },
-    {
-      label: 'Dataset 2',
-      data: [600, 250, 700, 600, 560, 400, 200],
-      borderColor: 'rgb(53, 162, 235)',
-      backgroundColor: 'rgba(53, 162, 235, 0.5)',
-    },
+    }
   ],
+  options: {
+    scales: {
+      yAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: 'SOL Balance'
+        }
+      }],
+      xAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: 'Transaction Iteration'
+        }
+      }],
+    }     
+  }
 };
 
 export const BasicsView: FC = ({ }) => {
@@ -96,8 +119,9 @@ export const BasicsView: FC = ({ }) => {
         <h1 className="text-center text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
           Basics
         </h1>
+        <StartStop />
         <div className="flex items-center justify-center p-5 space-x-5">
-        <svg width="100%" height="24" viewBox="0 0 646 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="100%" height="24" viewBox="0 0 646 96" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g clipPath="url(#clip0_1064_606)">
                 <path d="M108.53 75.6899L90.81 94.6899C90.4267 95.1026 89.9626 95.432 89.4464 95.6573C88.9303 95.8827 88.3732 95.9994 87.81 95.9999H3.81C3.40937 95.9997 3.01749 95.8827 2.68235 95.6631C2.34722 95.4436 2.08338 95.1311 1.92313 94.7639C1.76288 94.3967 1.71318 93.9908 1.78012 93.5958C1.84706 93.2008 2.02772 92.8338 2.3 92.5399L20 73.5399C20.3833 73.1273 20.8474 72.7979 21.3636 72.5725C21.8797 72.3472 22.4368 72.2305 23 72.2299H107C107.404 72.2216 107.802 72.333 108.143 72.5502C108.484 72.7674 108.754 73.0806 108.917 73.4504C109.081 73.8203 109.131 74.2303 109.062 74.6288C108.993 75.0273 108.808 75.3965 108.53 75.6899ZM90.81 37.4199C90.4253 37.0091 89.9608 36.6811 89.445 36.4558C88.9292 36.2306 88.3728 36.1129 87.81 36.11H3.81C3.40937 36.1102 3.01749 36.2272 2.68235 36.4468C2.34722 36.6663 2.08338 36.9788 1.92313 37.346C1.76288 37.7132 1.71318 38.1191 1.78012 38.5141C1.84706 38.9091 2.02772 39.2761 2.3 39.57L20 58.58C20.3847 58.9908 20.8492 59.3188 21.365 59.5441C21.8808 59.7693 22.4372 59.887 23 59.8899H107C107.4 59.8878 107.79 59.7693 108.124 59.5491C108.458 59.3288 108.72 59.0162 108.879 58.6494C109.038 58.2826 109.087 57.8774 109.019 57.4833C108.952 57.0892 108.772 56.7232 108.5 56.43L90.81 37.4199ZM3.81 23.7699H87.81C88.3732 23.7694 88.9303 23.6527 89.4464 23.4273C89.9626 23.202 90.4267 22.8726 90.81 22.4599L108.53 3.45995C108.808 3.16647 108.993 2.79726 109.062 2.39877C109.131 2.00028 109.081 1.59031 108.917 1.22045C108.754 0.850591 108.484 0.537368 108.143 0.320195C107.802 0.103021 107.404 -0.0084012 107 -5.10783e-05H23C22.4368 0.000541762 21.8797 0.117167 21.3636 0.342553C20.8474 0.567938 20.3833 0.897249 20 1.30995L2.3 20.3099C2.02772 20.6038 1.84706 20.9708 1.78012 21.3658C1.71318 21.7608 1.76288 22.1667 1.92313 22.5339C2.08338 22.9011 2.34722 23.2136 2.68235 23.4331C3.01749 23.6527 3.40937 23.7697 3.81 23.7699Z" fill="url(#paint0_linear_1064_606)" />
                 <path d="M210.94 40.6002H166V25.8002H222.62V11.0002H165.85C163.91 10.9897 161.988 11.3613 160.192 12.0938C158.396 12.8264 156.761 13.9055 155.383 15.2696C154.004 16.6337 152.907 18.2561 152.155 20.044C151.403 21.832 151.01 23.7506 151 25.6902V40.6902C151.008 42.6315 151.398 44.5523 152.149 46.3425C152.9 48.1328 153.996 49.7575 155.375 51.1237C156.755 52.49 158.39 53.5709 160.187 54.3047C161.984 55.0385 163.909 55.4108 165.85 55.4002H210.85V70.2002H152.07V85.0002H210.94C212.88 85.0108 214.802 84.6391 216.598 83.9066C218.394 83.174 220.029 82.0949 221.407 80.7308C222.786 79.3667 223.883 77.7444 224.635 75.9564C225.387 74.1684 225.78 72.2498 225.79 70.3102V55.3102C225.782 53.3689 225.392 51.4482 224.641 49.6579C223.89 47.8676 222.794 46.2429 221.415 44.8767C220.035 43.5105 218.4 42.4296 216.603 41.6958C214.806 40.962 212.881 40.5897 210.94 40.6002Z" fill="white" />
@@ -125,34 +149,9 @@ export const BasicsView: FC = ({ }) => {
             <h2 className="text-lg font-black text-gray-500">Solana</h2>
             <p className="text-sm text-gray-500">$ 42770</p>
           </div>
-          <div className="flex flex-col space-y-2 pl-10">
-            <div className="flex items-center space-x-2">
-              <FcDoughnutChart className="w-7 h-7" />
-              <p className="text-sm text-gray-500 font-bold">Total Supply</p>
-              <span className="text-xs font-bold text-white bg-green-500 px-2 py-1 rounded-full">
-                21M
-              </span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <FcAreaChart className="w-7 h-7" />
-              <p className="text-sm text-gray-500 font-bold">
-                Circulating Supply
-              </p>
-              <span className="text-xs font-bold text-white bg-green-500 px-2 py-1 rounded-full">
-                18M
-              </span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <FcBarChart className="w-7 h-7" />
-              <p className="text-sm text-gray-500 font-bold">Max Supply</p>
-              <span className="text-xs font-bold text-white bg-green-500 px-2 py-1 rounded-full">
-                21M
-              </span>
-            </div>
-          </div>
         </div>
         <div>
-          <h2>Line Example</h2>
+          <h2>Wallet Balance</h2>
           <Line
             data={data}
             width={400}

@@ -243,3 +243,17 @@ Today we met with Dr. Huang and Laren. We showed them our progress we have so fa
 I think moving forward, we need to continue testing and be sure that things are working as expected.
 
 We will continue testing these throughout the weeek. Our UI is also coming along well. Anu and Robert have been working together and they are making some progress. Things have been going good.
+
+<h4>4/10/22</h4>
+
+This weekend, I have been working on either moving away from jupiter as a whole, or try to use jupiters many different AMM's it interacts with to make transactions without them having their hands in it.
+
+Dr. Huang asked us to consider moving away from Jupiter, and we totally agree and want to, however we believe it would be a major time sink to try to get other things working at this point. So instead, we want to leverage Jupiter's many AMM's it interacts with and try to make our transactions smaller so we can make them atomic.
+
+I believe we are on track to make this work, and so far, I have been able to get atmoic transactions, at a loss, but nonetheless atmoic.
+
+<h4>4/11/22</h4>
+
+Today we continued working on making our transactions atomic. Veronica started to work on raydium individually, so hopefully we can get that going. I have continued pouring my efforts into Jupiter because I believe we can use their already built SDK to interact with many different AMM's, while still keeping the transactions atmoic and profitable.
+
+I have not yet been able to accomplish this, however I think I can hopefully get somewhere by the end of today.

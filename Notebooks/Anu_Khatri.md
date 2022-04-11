@@ -75,7 +75,7 @@ Individual Notebook - Anu Khatri
 
 3/8/2022
 - Met with Veronica and Grant to make clear what our progress has been and what our next steps should be to accomplish our goals for the CDR
-- Created 5th week's report anf turned it in to repository
+- Created 5th week's report and turned it in to repository
 
 3/16/2022
 - Had meeting with team to discuss what needs to get accomplished for the CDR
@@ -87,3 +87,33 @@ Individual Notebook - Anu Khatri
 3/21/2022
 - Met with team to rehearse CDR Presentation
 - Presented CDR to class
+
+3/22/2022
+- Created 6th week's report and turned into repository
+
+3/23/2022
+- Had meeting with professor and TA, took meeting notes
+- UI sketches
+- Got frontend to be able to add/access the user's wallet
+
+3/29/2022
+- Created 7th week's report and turned into repository
+
+4/4/2022
+- Was sick so did not attend class
+
+4/5/2022
+- Created 8th week's report and turned into repository
+- Added chartjs graphs to UI to show account balance - mock data
+
+4/6/2022
+- Had meeting with professor and TA, took meeting notes
+- Edited graphs to try to work with real data, but failed at this point
+
+4/10/2022
+- Added start/stop trading button to UI 
+- Modified charts to add labels and other visual edits
+
+4/11/2022
+- Worked with Robert to get data from JSON and use real data for the graphs
+

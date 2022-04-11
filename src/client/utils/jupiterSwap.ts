@@ -1,5 +1,5 @@
-import { Jupiter, RouteInfo, TOKEN_LIST_URL } from "@jup-ag/core";
-import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
+import { Jupiter, RouteInfo, TOKEN_LIST_URL,  } from "@jup-ag/core";
+import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey, Transaction, SystemProgram } from "@solana/web3.js";
 import fetch from "isomorphic-fetch";
 import {
   ENV,
@@ -8,9 +8,15 @@ import {
   SOLANA_RPC_ENDPOINT,
   SOL_MINT_ADDRESS,
   OXY_MINT_ADDRESS,
+  mSOL_MINT_ADDRESS,
   Token,
   USDC_MINT_ADDRESS
 } from "../constants";
+import {
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  Token as TokenSPL,
+  TOKEN_PROGRAM_ID,
+} from "@solana/spl-token";
 
   const getRoutes = async ({
     jupiter,
@@ -44,6 +50,7 @@ import {
               inputAmount: inputAmountInSmallestUnits, // raw input amount of tokens
               slippage,
               forceFetch: true,
+              onlyDirectRoutes: true,
             })
           : null;
   
@@ -377,4 +384,228 @@ export const runUntilProfit = async ({
   //return routes;
   // Changed this to return the route with the proper transaction stuff.
   return transactions;
+}
+
+// wsol account
+export const createWSolAccount = async ({
+  connection,
+  owner
+}: {
+  connection: Connection;
+  owner: Keypair;
+}) => {
+  const wsolAddress = await TokenSPL.getAssociatedTokenAddress(
+    ASSOCIATED_TOKEN_PROGRAM_ID,
+    TOKEN_PROGRAM_ID,
+    new PublicKey(SOL_MINT_ADDRESS),
+    owner.publicKey
+  );
+
+  const wsolAccount = await connection.getAccountInfo(wsolAddress);
+
+  if (!wsolAccount) {
+    const transaction = new Transaction({
+      feePayer: owner.publicKey,
+    });
+    const instructions = [];
+
+    instructions.push(
+      await TokenSPL.createAssociatedTokenAccountInstruction(
+        ASSOCIATED_TOKEN_PROGRAM_ID,
+        TOKEN_PROGRAM_ID,
+        new PublicKey(SOL_MINT_ADDRESS),
+        wsolAddress,
+        owner.publicKey,
+        owner.publicKey
+      )
+    );
+
+    // fund 1 sol to the account
+    instructions.push(
+      SystemProgram.transfer({
+        fromPubkey: owner.publicKey,
+        toPubkey: wsolAddress,
+        lamports: 1_000_000_000/4, // 1 sol
+      })
+    );
+
+    instructions.push(
+      // This is not exposed by the types, but indeed it exists
+      (TokenSPL as any).createSyncNativeInstruction(TOKEN_PROGRAM_ID, wsolAddress)
+    );
+
+    transaction.add(...instructions);
+    transaction.recentBlockhash = await (
+      await connection.getRecentBlockhash()
+    ).blockhash;
+    transaction.partialSign(owner);
+    const result = await connection.sendTransaction(transaction, [
+      owner,
+    ]);
+    console.log({ result });
+  }
+
+  return wsolAccount;
+};
+
+// This is a modification to runUntilProfit which finds only single routes, so we can put them in 1 transaction.
+export const runUntilProfitV2 = async ({
+  connection,
+  inAmount,
+  owner,
+  slippage = 0.06,
+  token1, // This should be the token you are starting with.
+  token2
+}: {
+  connection: Connection;
+  inAmount: number;
+  owner: Keypair;
+  slippage?: number;
+  token1: string;
+  token2: string;
+}) => {
+
+  // Retrieve token list
+  const tokens: Token[] = await (await fetch(TOKEN_LIST_URL[ENV])).json();
+
+  //  Load Jupiter
+  const jupiter = await Jupiter.load({
+    connection,
+    cluster: ENV,
+    user: owner, // or public key
+  });
+
+  // Find token mint addresses
+  let inputToken;
+  let outputToken;
+  inputToken = tokens.find((t) => t.address == token1);
+  outputToken = tokens.find((t) => t.address == token2);
+
+  const routes1 = await getRoutes({
+    jupiter,
+    inputToken,
+    outputToken,
+    inputAmount: inAmount, // 1 unit in UI
+    slippage: slippage, // 1% slippage
+  });
+
+
+  let routeInfo1: RouteInfo;
+  let routeInfo2: RouteInfo;
+  //console.log(routes1);
+  // let i = 0;
+  // while (routes1!.routesInfos[i]!.marketInfos!.length != 1 && routes1!.routesInfos[i]!.marketInfos[0]!.amm!.label) {
+  //   i++
+  // }
+  routeInfo1 = routes1!.routesInfos[0];
+  inputToken = tokens.find((t) => t.address == token2);
+  outputToken = tokens.find((t) => t.address == token1);
+
+  const routes2 = await getRoutes({
+    jupiter,
+    inputToken,
+    outputToken,
+    inputAmount: (routeInfo1.outAmountWithSlippage/LAMPORTS_PER_SOL), // 1 unit in UI
+    slippage: slippage, // 1% slippage
+  });
+  // i = 0;
+  // while (routes2!.routesInfos[i]!.marketInfos!.length != 1 && routes2!.routesInfos[i]!.marketInfos[0]!.amm!.label) {
+  //   i++
+  // }
+  routeInfo2 = routes2!.routesInfos[0];
+
+  // console.log("######################################");
+  // console.log(routeInfo1);
+  // console.log("######################################");
+  // console.log(routeInfo2);
+  // console.log("######################################");
+  
+  let inAm = routeInfo1.inAmount + (0.000005  * LAMPORTS_PER_SOL);
+  let outAm = routeInfo2.outAmountWithSlippage;
+  const diffThresh = 0.0001;
+  let spread = outAm - inAm;
+  console.log("######################################");
+  console.log(routeInfo1.marketInfos[0].amm.label);
+  console.log(routeInfo2.marketInfos[0].amm.label);
+  console.log("I: ", inAm/LAMPORTS_PER_SOL);
+  console.log("O: ", outAm/LAMPORTS_PER_SOL);
+  console.log("S: ", spread/LAMPORTS_PER_SOL);
+  if ((spread/LAMPORTS_PER_SOL) > diffThresh) {
+    console.log("TGTBT");
+    spread = -1;
+  }
+  console.log("######################################");
+  while (spread < 0) {
+    inputToken = tokens.find((t) => t.address == token1);
+    outputToken = tokens.find((t) => t.address == token2);
+
+    const routes1 = await getRoutes({
+      jupiter,
+      inputToken,
+      outputToken,
+      inputAmount: inAmount, // 1 unit in UI
+      slippage: slippage, // 1% slippage
+    });
+
+
+    let routeInfo1: RouteInfo;
+    let routeInfo2: RouteInfo;
+    let i = 0;
+    while (routes1!.routesInfos[i]!.marketInfos!.length != 1 && routes1!.routesInfos[i]!.marketInfos[0]!.amm!.label) {
+      i++
+    }
+    routeInfo1 = routes1!.routesInfos[i];
+    inputToken = tokens.find((t) => t.address == token2);
+    outputToken = tokens.find((t) => t.address == token1);
+
+    const routes2 = await getRoutes({
+      jupiter,
+      inputToken,
+      outputToken,
+      inputAmount: (routeInfo1.outAmountWithSlippage/LAMPORTS_PER_SOL), // 1 unit in UI
+      slippage: slippage, // 1% slippage
+    });
+    i = 0;
+    while (routes2!.routesInfos[i]!.marketInfos!.length != 1 && routes2!.routesInfos[i]!.marketInfos[0]!.amm!.label) {
+      i++
+    }
+    routeInfo2 = routes2!.routesInfos[i];
+    //console.log("IN retrieveJupRoutes");
+    inAm = routeInfo1.inAmount + (0.000005  * LAMPORTS_PER_SOL);
+    outAm = routeInfo2.outAmountWithSlippage;
+    spread = outAm - inAm;
+    console.log(routeInfo1.marketInfos[0].amm.label);
+    console.log(routeInfo2.marketInfos[0].amm.label);
+    console.log("I: ", inAm/LAMPORTS_PER_SOL);
+    console.log("O: ", outAm/LAMPORTS_PER_SOL);
+    console.log("S: ", spread/LAMPORTS_PER_SOL);
+    if ((spread/LAMPORTS_PER_SOL) > diffThresh) {
+      console.log("TGTBT");
+      spread = -1;
+    }
+    console.log("######################################")
+  }
+
+  
+  const { transactions: transactions1 } = await jupiter.exchange({
+    routeInfo: routeInfo1,
+    userPublicKey: owner.publicKey,
+    feeAccount: owner.publicKey,
+    wrapUnwrapSOL: false,
+  });
+
+  const { transactions: transactions2 } = await jupiter.exchange({
+    routeInfo: routeInfo2,
+    userPublicKey: owner.publicKey,
+    feeAccount: owner.publicKey,
+    wrapUnwrapSOL: false
+  });
+  
+  // TRANSACTION META DATA
+  //console.log(transactions.swapTransaction.instructions);
+  // console.log("ADSADASDASDASDASDASDASDASDA")
+
+  //return routes;
+  // Changed this to return the route with the proper transaction stuff.
+  return{ transactions1, transactions2 };
 }

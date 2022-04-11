@@ -76,6 +76,8 @@ function Basics ({balanceData}) {
   for (let i = 0; i < balanceData.length ; i++) {endBal.push(balanceData[i].end_bal)}
   var labels = []
   for (let i = 1; i <= balanceData.length; i++) {labels.push(i)}
+  var differenceColor = ((balanceData[balanceData.length - 1].end_bal - balanceData[0].init_bal) > 0) ? 'rgb(99, 255, 222, 0.5)' : 'rgb(255, 99, 132, 0.5)';
+  
 
   const data = {
     labels,
@@ -83,8 +85,8 @@ function Basics ({balanceData}) {
       {
         label: 'Wallet Balance',
         data: endBal,
-        borderColor: 'rgb(255, 99, 132)',
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        borderColor: differenceColor,
+        backgroundColor: differenceColor,
       }
     ],
     options: {

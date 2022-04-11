@@ -109,4 +109,12 @@ Added logging to Sol to Sol stragety
 Seeing some successful profitable trades and some ocassional losses  
 Looking into recommendation from Dr.Huang, which is to make a simple on-chain transaction  
 Going to try tuning Sol to Sol strategy and gathering more data  
-Going to try integrating gathered data to frontend
+Going to try integrating gathered data to frontend  
+  
+# 4/11/22  
+Worked on express.js backend over weekend  
+No longer needing express.js. Now using Next.js  
+Helping on sending data from backend to frontend    
+Got graph to render with data from DB file  
+Working on auto-updating graph  
+Working on allowing user to select params to graph  

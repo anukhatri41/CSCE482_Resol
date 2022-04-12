@@ -1,4 +1,4 @@
-import { Jupiter, RouteInfo, TOKEN_LIST_URL,  } from "@jup-ag/core";
+import { Jupiter, RouteInfo, TOKEN_LIST_URL, MarketInfo } from "@jup-ag/core";
 import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey, Transaction, SystemProgram } from "@solana/web3.js";
 import fetch from "isomorphic-fetch";
 import {
@@ -24,12 +24,14 @@ import {
     outputToken,
     inputAmount,
     slippage,
+    directOnly = false,
   }: {
     jupiter: Jupiter;
     inputToken?: Token;
     outputToken?: Token;
     inputAmount: number;
     slippage: number;
+    directOnly?: boolean;
   }) => {
     try {
       if (!inputToken || !outputToken) {
@@ -50,7 +52,7 @@ import {
               inputAmount: inputAmountInSmallestUnits, // raw input amount of tokens
               slippage,
               forceFetch: true,
-              onlyDirectRoutes: true,
+              onlyDirectRoutes: directOnly,
             })
           : null;
   
@@ -487,6 +489,7 @@ export const runUntilProfitV2 = async ({
     outputToken,
     inputAmount: inAmount, // 1 unit in UI
     slippage: slippage, // 1% slippage
+    directOnly: true,
   });
 
 
@@ -507,6 +510,7 @@ export const runUntilProfitV2 = async ({
     outputToken,
     inputAmount: (routeInfo1.outAmountWithSlippage/LAMPORTS_PER_SOL), // 1 unit in UI
     slippage: slippage, // 1% slippage
+    directOnly: true,
   });
   // i = 0;
   // while (routes2!.routesInfos[i]!.marketInfos!.length != 1 && routes2!.routesInfos[i]!.marketInfos[0]!.amm!.label) {
@@ -545,16 +549,17 @@ export const runUntilProfitV2 = async ({
       outputToken,
       inputAmount: inAmount, // 1 unit in UI
       slippage: slippage, // 1% slippage
+      directOnly: true,
     });
 
 
     let routeInfo1: RouteInfo;
     let routeInfo2: RouteInfo;
-    let i = 0;
-    while (routes1!.routesInfos[i]!.marketInfos!.length != 1 && routes1!.routesInfos[i]!.marketInfos[0]!.amm!.label) {
-      i++
-    }
-    routeInfo1 = routes1!.routesInfos[i];
+    // let i = 0;
+    // while (routes1!.routesInfos[i]!.marketInfos!.length != 1 && routes1!.routesInfos[i]!.marketInfos[0]!.amm!.label) {
+    //   i++
+    // }
+    routeInfo1 = routes1!.routesInfos[0];
     inputToken = tokens.find((t) => t.address == token2);
     outputToken = tokens.find((t) => t.address == token1);
 
@@ -564,12 +569,13 @@ export const runUntilProfitV2 = async ({
       outputToken,
       inputAmount: (routeInfo1.outAmountWithSlippage/LAMPORTS_PER_SOL), // 1 unit in UI
       slippage: slippage, // 1% slippage
+      directOnly: true,
     });
-    i = 0;
-    while (routes2!.routesInfos[i]!.marketInfos!.length != 1 && routes2!.routesInfos[i]!.marketInfos[0]!.amm!.label) {
-      i++
-    }
-    routeInfo2 = routes2!.routesInfos[i];
+    // i = 0;
+    // while (routes2!.routesInfos[i]!.marketInfos!.length != 1 && routes2!.routesInfos[i]!.marketInfos[0]!.amm!.label) {
+    //   i++
+    // }
+    routeInfo2 = routes2!.routesInfos[0];
     //console.log("IN retrieveJupRoutes");
     inAm = routeInfo1.inAmount + (0.000005  * LAMPORTS_PER_SOL);
     outAm = routeInfo2.outAmountWithSlippage;
@@ -586,7 +592,6 @@ export const runUntilProfitV2 = async ({
     console.log("######################################")
   }
 
-  
   const { transactions: transactions1 } = await jupiter.exchange({
     routeInfo: routeInfo1,
     userPublicKey: owner.publicKey,

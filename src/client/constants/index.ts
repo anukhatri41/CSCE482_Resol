@@ -34,6 +34,8 @@ export const SOL_MINT_ADDRESS = "So11111111111111111111111111111111111111112";
 export const USDC_MINT_ADDRESS = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
 export const OXY_MINT_ADDRESS = "z3dn17yLaGMKffVogeFHQ9zWVcXgqgf3PQnDsNs2g6M";
 export const mSOL_MINT_ADDRESS = "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So";
+export const STEP_MINT_ADDRESS = "StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT";
+export const stSOL_MINT_ADDRESS = "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj";
 // Interface
 export interface Token {
   chainId: number; // 101,

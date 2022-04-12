@@ -21,6 +21,7 @@ import {
     SOL_MINT_ADDRESS,
     OXY_MINT_ADDRESS,
     mSOL_MINT_ADDRESS,
+    STEP_MINT_ADDRESS,
     Token,
     USDC_MINT_ADDRESS
   } from "./constants";
@@ -183,7 +184,7 @@ import {
         initSOLBalance = await connection.getBalance(owner.publicKey);
         console.log("Initial SOL Balance: ", initSOLBalance/LAMPORTS_PER_SOL);
         let token1 = SOL_MINT_ADDRESS;
-        let token2 = mSOL_MINT_ADDRESS;
+        let token2 = STEP_MINT_ADDRESS;
         let transactions = await runUntilProfitV2({connection, inAmount, owner, token1, token2});
 
         let signers: Signer[] = [owner];

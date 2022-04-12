@@ -20,10 +20,7 @@ import {
     Signer,
     Transaction
    } from "@solana/web3.js";
-// import {
-//     getOrCreateAssociatedTokenAccount,
-//     getAccount
-// } from "@solana/spl-token/src/state/account"
+
 const spltoken = require("@solana/spl-token")
 const bn = require("bn.js")
 require('dotenv').config()
@@ -34,19 +31,18 @@ const details = {
     _RPC: process.env.RPC_ENDPOINT as string, // named _RPC because functions were throwing a fit when passing in details.RPC
 };
 import {Buffer} from "buffer"
-// import { Fraction } from "@ubeswap/token-math";
-// import { Spl } from "@project-serum/anchor";
-// if secret key is in .env:
+
 const WALLET_PRIVATE_KEY = details.secret
 const USER_PRIVATE_KEY = bs58.decode(WALLET_PRIVATE_KEY);
 const owner = Keypair.fromSecretKey(USER_PRIVATE_KEY);
-// const owner_ = new PublicKey("")
-// console.log(owner);
+
 const mainnet = 'https://api.mainnet-beta.solana.com';
 const RPC = details._RPC;
 const connection_1 = new Connection(mainnet);
-// import bs58 from "bs58";
-// const Base58 = require("base-58")
+
+const OXY_MINT_ADDRESS = "z3dn17yLaGMKffVogeFHQ9zWVcXgqgf3PQnDsNs2g6M"
+const RAY_MINT_ADDRESS = "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R"
+
 
 const a = async() => {
     const routeinfo: RouteInfo[] = [
@@ -79,108 +75,69 @@ const a = async() => {
         }
     ]
 
-    // const commit: Commitment = "finalized"
-    // const config: GetParsedProgramAccountsConfig = {
-    const taf: TokenAccountsFilter = {
-        // mint: new PublicKey("z3dn17yLaGMKffVogeFHQ9zWVcXgqgf3PQnDsNs2g6M"),
-        // mint: new PublicKey("z3dn17yLaGMKffVogeFHQ9zWVcXgqgf3PQnDsNs2g6M")
-        programId: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA")
-    }
-    const taf_ray: TokenAccountsFilter = {
-        mint: new PublicKey("4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R"),
-    }
-    const taf_oxy: TokenAccountsFilter = {
-        mint: new PublicKey("z3dn17yLaGMKffVogeFHQ9zWVcXgqgf3PQnDsNs2g6M"),
-    }
+
+    // const taf: TokenAccountsFilter = {
+    //     programId: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA")
     // }
+
+    const tokenaccountfilter_ray: TokenAccountsFilter = {
+        mint: new PublicKey(RAY_MINT_ADDRESS),
+    }
+    const tokenaccountfilter_oxy: TokenAccountsFilter = {
+        mint: new PublicKey(OXY_MINT_ADDRESS),
+    }
+    
     // const prgmacct = await connection_1.getParsedTokenAccountsByOwner(new PublicKey("2Nocd3ihAoAzNuvnVKAn9NHU6ieeDiv3eWMAQUHXiUmY"), taf)
-    const prgmacct_oxy = await connection_1.getParsedTokenAccountsByOwner(new PublicKey("2Nocd3ihAoAzNuvnVKAn9NHU6ieeDiv3eWMAQUHXiUmY"), taf_oxy)
-    const prgmacct_ray = await connection_1.getParsedTokenAccountsByOwner(new PublicKey("2Nocd3ihAoAzNuvnVKAn9NHU6ieeDiv3eWMAQUHXiUmY"), taf_ray)
-    const acctInfo = await connection_1.getParsedAccountInfo(new PublicKey("2Nocd3ihAoAzNuvnVKAn9NHU6ieeDiv3eWMAQUHXiUmY"))
-    const ata = await spltoken.getOrCreateAssociatedTokenAccount(connection_1, owner, new PublicKey("z3dn17yLaGMKffVogeFHQ9zWVcXgqgf3PQnDsNs2g6M"), owner.publicKey)
-    const ata_ray = await spltoken.getOrCreateAssociatedTokenAccount(connection_1, owner, new PublicKey("4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R"), owner.publicKey)
-    
+    const tokenaccount_oxy = await connection_1.getParsedTokenAccountsByOwner(owner.publicKey, tokenaccountfilter_oxy)
+    const tokenaccount_ray = await connection_1.getParsedTokenAccountsByOwner(owner.publicKey, tokenaccountfilter_ray)
+    // const acctInfo = await connection_1.getParsedAccountInfo(owner.publicKey)
+    const ata_oxy = await spltoken.getOrCreateAssociatedTokenAccount(connection_1, owner, new PublicKey(OXY_MINT_ADDRESS), owner.publicKey)
+    const ata_ray = await spltoken.getOrCreateAssociatedTokenAccount(connection_1, owner, new PublicKey(RAY_MINT_ADDRESS), owner.publicKey)
 
-
-    // console.log(ata.owner.toString())
-    // console.log(ata_ray.owner.toString())
-    // for (let i in prgmacct.value) {
-    //     console.log("pubkey:",prgmacct.value[i].pubkey.toString())
-    //     console.log("owner:",prgmacct.value[i].account.owner.toString())
-    //     console.log(prgmacct.value[i].account.data.parsed.info)
-    //     console.log("-----")
-    // }
-    
-    // console.log(prgmacct.value)
-    // console.log(acctInfo)
-    // console.log(ata)
-    // if (prgmacct_ray.value)
-    // {
-        
-    //     console.log(prgmacct_ray.value[0].pubkey)
-    //     console.log(prgmacct_ray.value[0].account)
-    //     console.log(prgmacct_ray.value[0].account.data.parsed)
-    // }
-
-    // const b = bn.BN('0')
-
-    // const splacct: SplAccount = {
-    //     owner: prgmacct.value[0].account.owner,
-    //     state: prgmacct.value[0].account.data.parsed.info.state,
-    //     mint: prgmacct.value[0].account.data.parsed.info.mint,
-    //     amount: prgmacct.value[0].account.data.parsed.info.tokenAmount.amount,
-    //     delegateOption: 0,
-    //     delegate: ata.delegate,
-    //     isNativeOption: prgmacct.value[0].account.data.parsed.info.isNative,
-    //     isNative: prgmacct.value[0].account.data.parsed.info.isNative,
-    //     delegatedAmount: new bn.BN(0),
-    //     closeAuthorityOption: 0,
-    //     closeAuthority: ata.closeAuthority
-    // }
-    
     const splacct: SplAccount = {
-        owner: ata.owner,
-        state: prgmacct_oxy.value[0].account.data.parsed.info.state,
-        mint: ata.mint,
-        amount: prgmacct_oxy.value[0].account.data.parsed.info.tokenAmount.amount,
+        owner: ata_oxy.owner,
+        state: tokenaccount_oxy.value[0].account.data.parsed.info.state,
+        mint: ata_oxy.mint,
+        amount: tokenaccount_oxy.value[0].account.data.parsed.info.tokenAmount.amount,
         delegateOption: 0,
-        delegate: ata.delegate,
-        isNativeOption: prgmacct_oxy.value[0].account.data.parsed.info.isNative,
-        isNative: prgmacct_oxy.value[0].account.data.parsed.info.isNative,
+        delegate: ata_oxy.delegate,
+        isNativeOption: tokenaccount_oxy.value[0].account.data.parsed.info.isNative,
+        isNative: tokenaccount_oxy.value[0].account.data.parsed.info.isNative,
         delegatedAmount: new bn.BN(0),
         closeAuthorityOption: 0,
-        closeAuthority: ata.closeAuthority
+        closeAuthority: ata_oxy.closeAuthority
     }
     const splacct_ray: SplAccount = {
         owner: ata_ray.owner,
-        state: prgmacct_ray.value[0].account.data.parsed.info.state,
+        state: tokenaccount_ray.value[0].account.data.parsed.info.state,
         mint: ata_ray.mint,
-        amount: prgmacct_ray.value[0].account.data.parsed.info.tokenAmount.amount,
+        amount: tokenaccount_ray.value[0].account.data.parsed.info.tokenAmount.amount,
         delegateOption: 0,
         delegate: ata_ray.delegate,
-        isNativeOption: prgmacct_ray.value[0].account.data.parsed.info.isNative,
-        isNative: prgmacct_ray.value[0].account.data.parsed.info.isNative,
+        isNativeOption: tokenaccount_ray.value[0].account.data.parsed.info.isNative,
+        isNative: tokenaccount_ray.value[0].account.data.parsed.info.isNative,
         delegatedAmount: new bn.BN(0),
         closeAuthorityOption: 0,
         closeAuthority: ata_ray.closeAuthority
     }
     const tokenaccts: TokenAccount[] = [
         {
-            pubkey: new PublicKey(prgmacct_oxy.value[0].pubkey),
+            pubkey: new PublicKey(tokenaccount_oxy.value[0].pubkey),
             accountInfo: splacct
         },
         {
-            pubkey: new PublicKey(prgmacct_ray.value[0].pubkey),
+            pubkey: new PublicKey(tokenaccount_oxy.value[0].pubkey),
             accountInfo: splacct_ray
         },
     ]
 
-    const oxytoken = new Token("z3dn17yLaGMKffVogeFHQ9zWVcXgqgf3PQnDsNs2g6M", 6, "OXY", "Oxygen")
-    const raytoken = new Token("4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R", 6, "RAY", "Raydium")
-    // const val = 1000%1
-    // console.log(val)
+    const oxytoken = new Token(OXY_MINT_ADDRESS, 6, "OXY", "Oxygen")
+    const raytoken = new Token(RAY_MINT_ADDRESS, 6, "RAY", "Raydium")
     const oxytokenamt = new TokenAmount(oxytoken, 1000)
     const raytokenamt = new TokenAmount(raytoken, 1)
+
+    // potentially good function to set good amountOut param:
+
     // const bestout: GetBestAmountOutParams = {
     //     amountIn: oxytokenamt,
     //     currencyOut: raytoken,
@@ -188,6 +145,7 @@ const a = async() => {
     // }
     // const bestamountout = await Trade.getBestAmountOut(bestout)
     // console.log(bestamountout)
+
     const params: TradeTransactionParams = 
     {
         connection: connection_1,
@@ -200,63 +158,47 @@ const a = async() => {
         },
         amountIn: oxytokenamt,
         amountOut: raytokenamt,
-        fixedSide: "in"
+        fixedSide: "in" // "buy"
         // config?: {
         // bypassAssociatedCheck?: boolean;
         // };
     }
 
-
-    // const closeacct = spltoken.createCloseAccountInstruction(
-    //     ata_ray.address,
-    //    new PublicKey("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"),
-    //     owner.publicKey,
-    //     [owner],
-    // )
-
-    // console.log(closeacct)
-    let connection_rpc = new Connection(RPC)
     let signers: Signer[] = [owner];
-    // const transaction = new Transaction({
-    //     feePayer: owner.publicKey,
-    //   });
-    // transaction.add(closeacct)
-    // transaction.recentBlockhash = await (
-    //     await connection_1.getRecentBlockhash()
-    //   ).blockhash;
-    //   transaction.partialSign(owner);
-    // const txid = await connection_rpc.sendTransaction(transaction, signers, {
-    //             skipPreflight: true
-    //         })
-    //         try {
-    //             const swapResult: any = await connection_rpc.confirmTransaction(txid) 
-    //             console.log(swapResult)
-    //         }
-            
+
     const tx = await Trade.makeTradeTransaction(params)
     console.log(tx)
     
     if (tx.tradeTransaction) {
-        console.log(tx.tradeTransaction.transaction.instructions)  
-        
-        // const transaction = new Transaction({
-        //         feePayer: owner.publicKey,
-        //       });
-        //     transaction.add(tx.tradeTransaction.transaction.instructions[1])
-            // transaction.recentBlockhash = await (
-            //     await connection_1.getRecentBlockhash()
-            //   ).blockhash;
-            //   transaction.partialSign(owner);
-    //     let connection_rpc = new Connection(RPC)
-        const txid = await connection_1.sendTransaction(tx.tradeTransaction.transaction, signers, {
-            skipPreflight: true
-        })
-        try {
-            const swapResult: any = await connection_1.confirmTransaction(txid) 
-            console.log(swapResult)
+        const txid = ""
+        if (tx.tradeTransaction.transaction.instructions.length > 1)
+        {
+            const transaction = new Transaction({
+                feePayer: owner.publicKey,
+              });
+            transaction.add(tx.tradeTransaction.transaction.instructions[1])
+            let txid = await connection_1.sendTransaction(transaction, signers, {
+                skipPreflight: true
+            })
+            try {
+                const swapResult: any = await connection_1.confirmTransaction(txid) 
+                console.log(swapResult)
+            }
+            catch (error) {
+                console.log(error)
+            }
         }
-        catch (error) {
-            console.log(error)
+        else {
+            let txid = await connection_1.sendTransaction(tx.tradeTransaction.transaction, signers, {
+                skipPreflight: true
+            })
+            try {
+                const swapResult: any = await connection_1.confirmTransaction(txid) 
+                console.log(swapResult)
+            }
+            catch (error) {
+                console.log(error)
+            }
         }
     }
 

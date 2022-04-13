@@ -132,14 +132,14 @@ export const executeOrcaSwap = async ({
     const quoteOUT = await orcaPool.getQuote(OUT_TOKEN, outAmount1);
     const outAmount2 = quoteOUT.getMinOutputAmount();
 
-    console.log(outAmount1.toNumber());
-    console.log(outAmount2.toNumber());
+    console.log("SOL -> STEP: ",outAmount1.toNumber());
+    console.log("STEP -> SOL: ",outAmount2.toNumber());
 
     const swapPayload1 = await orcaPool.swap(owner, IN_TOKEN, AmountIN, outAmount1);
     const swapPayload2 = await orcaPool.swap(owner, OUT_TOKEN, outAmount1, outAmount2);
 
-    console.log(swapPayload1.transaction);
-    console.log(swapPayload2.transaction);
+    // console.log(swapPayload1.transaction);
+    // console.log(swapPayload2.transaction);
 
     return {swapPayload1, swapPayload2}
 

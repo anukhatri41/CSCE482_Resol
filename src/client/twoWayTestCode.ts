@@ -284,21 +284,32 @@ import {
       owner
     });
 
-    let signers: Signer[] = [];
+    let signers: Signer[] = [owner];
     // Need to find a way to append two signers.
     // trans.swapPayload1.signers.push(trans.swapPayload2.signers[0])
     const payload = new Transaction();
+    
+    for (let i = 0; i < trans.swapPayload1.signers.length; i++) {
+      trans.swapPayload1.transaction.sign(trans.swapPayload1.signers[i]);
+      signers.push(trans.swapPayload1.signers[i]);
+    }
+
+    for (let i = 0; i < trans.swapPayload2.signers.length; i++) {
+      trans.swapPayload2.transaction.sign(trans.swapPayload2.signers[i]);
+      signers.push(trans.swapPayload2.signers[i]);
+    }
+
     payload.add(trans.swapPayload1.transaction);
     payload.add(trans.swapPayload2.transaction);
 
-    console.log(trans.swapPayload1.signers == trans.swapPayload2.signers);
-    console.log(trans.swapPayload2.signers);
+    console.log(trans.swapPayload1.transaction.signatures);
+    console.log(trans.swapPayload2.transaction.signatures);
 
     for (let serializedTransaction of [payload].filter(Boolean)) {
       // get transaction object from serialized transaction
       if (serializedTransaction) {
   
-        const txid = await connectionRPC.sendTransaction(serializedTransaction, trans.swapPayload1.signers, {
+        const txid = await connectionRPC.sendTransaction(serializedTransaction, signers, {
           skipPreflight: true
         })
         await connectionRPC.confirmTransaction(txid)

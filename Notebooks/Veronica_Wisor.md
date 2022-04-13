@@ -100,3 +100,30 @@ https://blog.chain.link/levels-of-data-aggregation-in-chainlink-price-feeds/
 - met with Prof and TA in class
   - decided to focus more off chain and trying to make a profit with Jupiter price routes
 - worked with Grant and Robert on getting sendTransaction instruction working with the transactions returned from Jupiter
+
+**April 6, 2022**
+- in the past week, played around with the Jupiter price routes to try to maximize profit
+  - started looking at price routes from SOL -> SOL
+  - Grant noticed that when sweeping price routes from SOL->SOL, sometimes the outAmount would be larger than the inAmount
+  - we decided to try to target these scenarios to only make transactions when the outAmount was larger than the inAmount
+- met with Prof and TA in class
+  - had a long discussion about Jupiter and how we use it to make transactions, as well as how much we are risking during our trades
+  - decided to shift my focus towards trying to get a simple proof of concept up by next week to prove that we can make transactions without the help of Jupiter
+- due to the higher risk we want to add to our trading, I decided to set up a Coinbase account and transfer some money into it so that I can have more SOL to trade
+  - I need to wait 7 days to be able to send the money to my wallet that I use to trade with
+
+**April 12, 2022**
+- spent a lot of time over the weekend looking into how Jupiter creates the swap transactions that we've been using to try to get a better understanding of what they're doing
+  - in the process of that, I found that Jupiter also offers an instruction parser
+    - spent some time getting the parser working, several edits were needed to the code for it to compile
+    - used the parser to parse through the transactions that Jupiter produces for us
+    - this gave me a better idea of what the transactions contained:
+      - programID of JupiterAggregator, meaning that every transaction we send that was made by Jupiter is going to Jupiter's onchain function, instead of directly to an amm's onchain function
+      - several public keys
+      - data that included amountIn and minimumAmountOut
+    - also discovered why I was losing so much money with some of the Jupiter transactions-sometimes part of the transaction that sent SOL to Jupiter was in the first transaction, and the second transaction would fail... this means that it wasn't atomic
+       - However, Jupiters transactions are usually atomic, just not always
+- After speaking with the team in class, yesterday and today I spent a lot of time trying to get Raydium Swaps to work through Raydium
+   - Very excitingly, I was able to get a swap working this evening where I send OXY to Raydium and it sends back RAY
+   - Grant said he would try to get a little demo together with Orca (already previously got swaps on Orca to work) and Raydium to show the Prof and TA tomorrow during our meeting
+   - Although we have these working, I still believe Jupiter will give us a higher chance at profit, we just wanted to show that we can indeed make and send successful atomic transactions without the help Jupiter

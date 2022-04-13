@@ -257,3 +257,11 @@ I believe we are on track to make this work, and so far, I have been able to get
 Today we continued working on making our transactions atomic. Veronica started to work on raydium individually, so hopefully we can get that going. I have continued pouring my efforts into Jupiter because I believe we can use their already built SDK to interact with many different AMM's, while still keeping the transactions atmoic and profitable.
 
 I have not yet been able to accomplish this, however I think I can hopefully get somewhere by the end of today.
+
+<h4>4/13/22</h4>
+
+Today we had our meeting with Dr. Huang and Laren, and told them about our progress with Raydium and Orca, but now we decided to take a look at jupiter some more.
+
+We have now found a way to do those two jupiter swaps atomically, so we think we can check for minimumAmountOut before we send the transaction, and then if the price changes or something, the atomic element will just make the trade fail.
+
+The difference we have made is that we are building the transaction and checking minimumAmoutOut from the transaction instead of from the route like we were previously checking. In this case, the route would sometimes show that there was a possible profit, but when we built the transaction, the profit was gone. We think this was due to the time difference it took, so going forward we are going to check in the transaction instead of in the route.

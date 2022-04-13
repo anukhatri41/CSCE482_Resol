@@ -7,7 +7,10 @@ import {
     TokenAmount,
     GetBestAmountOutParams,
     Token,
-    Fraction
+    Fraction,
+    AmmSource,
+    LiquidityFetchInfoParams,
+    Liquidity 
 } from "@raydium-io/raydium-sdk"
 import bs58 from "bs58";
 import { 
@@ -18,7 +21,8 @@ import {
     Commitment,
     TokenAccountsFilter,
     Signer,
-    Transaction
+    Transaction,
+    sendAndConfirmTransaction
    } from "@solana/web3.js";
 
 const spltoken = require("@solana/spl-token")
@@ -31,6 +35,8 @@ const details = {
     _RPC: process.env.RPC_ENDPOINT as string, // named _RPC because functions were throwing a fit when passing in details.RPC
 };
 import {Buffer} from "buffer"
+import { getOrca, OrcaFarmConfig, OrcaPoolConfig } from "@orca-so/sdk";
+import Decimal from "decimal.js";
 
 const WALLET_PRIVATE_KEY = details.secret
 const USER_PRIVATE_KEY = bs58.decode(WALLET_PRIVATE_KEY);
@@ -44,7 +50,10 @@ const OXY_MINT_ADDRESS = "z3dn17yLaGMKffVogeFHQ9zWVcXgqgf3PQnDsNs2g6M"
 const RAY_MINT_ADDRESS = "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R"
 
 
-const a = async() => {
+const RaydiumOrcaAtomicSwap = async() => {
+
+    // construct raydium swap transaction
+
     const routeinfo: RouteInfo[] = [
         {
             source: "amm",
@@ -90,7 +99,7 @@ const a = async() => {
     // const prgmacct = await connection_1.getParsedTokenAccountsByOwner(new PublicKey("2Nocd3ihAoAzNuvnVKAn9NHU6ieeDiv3eWMAQUHXiUmY"), taf)
     const tokenaccount_oxy = await connection_1.getParsedTokenAccountsByOwner(owner.publicKey, tokenaccountfilter_oxy)
     const tokenaccount_ray = await connection_1.getParsedTokenAccountsByOwner(owner.publicKey, tokenaccountfilter_ray)
-    // const acctInfo = await connection_1.getParsedAccountInfo(owner.publicKey)
+    // const acctInfo = await connection_1.getParsedAccountInfo(new PublicKey(""))
     const ata_oxy = await spltoken.getOrCreateAssociatedTokenAccount(connection_1, owner, new PublicKey(OXY_MINT_ADDRESS), owner.publicKey)
     const ata_ray = await spltoken.getOrCreateAssociatedTokenAccount(connection_1, owner, new PublicKey(RAY_MINT_ADDRESS), owner.publicKey)
 
@@ -133,18 +142,43 @@ const a = async() => {
 
     const oxytoken = new Token(OXY_MINT_ADDRESS, 6, "OXY", "Oxygen")
     const raytoken = new Token(RAY_MINT_ADDRESS, 6, "RAY", "Raydium")
-    const oxytokenamt = new TokenAmount(oxytoken, 1000)
+    const oxytokenamt = new TokenAmount(oxytoken, 100000)
     const raytokenamt = new TokenAmount(raytoken, 1)
 
     // potentially good function to set good amountOut param:
+    // const infoparams: LiquidityFetchInfoParams = {
+    //     connection: connection_1,
+    //     poolKeys:  routeinfo[0].keys
+    // }
+    
+    // const info = await Liquidity.fetchInfo(infoparams)
+    // console.log(info)
+    // const oxy_ray_pool: AmmSource = {
+    //     poolInfo: info,
+    //     poolKeys: routeinfo[0].keys,
+        
+    // }
 
     // const bestout: GetBestAmountOutParams = {
+    //     pools: [oxy_ray_pool],
     //     amountIn: oxytokenamt,
     //     currencyOut: raytoken,
-    //     slippage: new Fraction(1,100)
+    //     slippage: new Fraction(1,1000)
     // }
     // const bestamountout = await Trade.getBestAmountOut(bestout)
     // console.log(bestamountout)
+    // console.log(bestamountout.minAmountOut.denominator.toNumber())
+
+
+    // const amtout = await Liquidity.computeAmountOut({
+    //     poolKeys: routeinfo[0].keys,
+    //     poolInfo: info,
+    //     amountIn: oxytokenamt,
+    //     currencyOut: raytoken,
+    //     slippage: new Fraction(1,1),
+    //   });
+    
+    //   console.log(amtout)
 
     const params: TradeTransactionParams = 
     {
@@ -164,11 +198,36 @@ const a = async() => {
         // };
     }
 
-    let signers: Signer[] = [owner];
-
     const tx = await Trade.makeTradeTransaction(params)
     console.log(tx)
     
+
+    // constuct Orca swap transaction
+
+    const orca = getOrca(connection_1);
+    const orcaRaySolPool = orca.getPool(OrcaPoolConfig.RAY_SOL);
+    const IN_TOKEN = orcaRaySolPool.getTokenA();
+    const OUT_TOKEN = orcaRaySolPool.getTokenB();
+    const Amount = new Decimal(0.0001);
+    const quote = await orcaRaySolPool.getQuote(IN_TOKEN, Amount);
+    const outAmount = quote.getMinOutputAmount();
+
+    console.log(`Swap ${Amount.toString()} RAY for at least ${outAmount.toNumber()} SOL`);
+    const swapPayload = await orcaRaySolPool.swap(owner, IN_TOKEN, Amount, outAmount);
+
+    // for (let i in swapPayload.transaction.instructions) {
+    //     console.log(swapPayload.transaction.instructions[i].programId.toString());
+    // }
+    
+    // for (let i in swapPayload.signers)
+    // {
+    //     console.log(swapPayload.signers[i].publicKey.toString())
+    // }
+    
+    let signers: Signer[] = [owner, swapPayload.signers[1]];
+
+
+    // send transactions as single transaction
     if (tx.tradeTransaction) {
         const txid = ""
         if (tx.tradeTransaction.transaction.instructions.length > 1)
@@ -177,6 +236,7 @@ const a = async() => {
                 feePayer: owner.publicKey,
               });
             transaction.add(tx.tradeTransaction.transaction.instructions[1])
+            transaction.add(swapPayload.transaction.instructions[3])
             let txid = await connection_1.sendTransaction(transaction, signers, {
                 skipPreflight: true
             })
@@ -189,7 +249,12 @@ const a = async() => {
             }
         }
         else {
-            let txid = await connection_1.sendTransaction(tx.tradeTransaction.transaction, signers, {
+            const transaction = new Transaction({
+                feePayer: owner.publicKey,
+              });
+            transaction.add(...tx.tradeTransaction.transaction.instructions)
+            transaction.add(swapPayload.transaction.instructions[3])
+            let txid = await connection_1.sendTransaction(transaction, signers, {
                 skipPreflight: true
             })
             try {
@@ -202,6 +267,7 @@ const a = async() => {
         }
     }
 
+
 }
 
 
@@ -212,7 +278,7 @@ const a = async() => {
 
 const main = async () => {
     
-    await a();
+    await RaydiumOrcaAtomicSwap();
   
     };
       main()

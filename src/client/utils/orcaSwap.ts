@@ -127,11 +127,21 @@ export const executeOrcaSwap = async ({
     const AmountIN = new Decimal(inAmount);
     const quoteIN = await orcaPool.getQuote(IN_TOKEN, AmountIN);
     const outAmount1 = quoteIN.getMinOutputAmount();
-    const swapPayload1 = await orcaPool.swap(owner, IN_TOKEN, AmountIN, outAmount1);
+    
 
     const quoteOUT = await orcaPool.getQuote(OUT_TOKEN, outAmount1);
     const outAmount2 = quoteOUT.getMinOutputAmount();
-    const swapPayload2 = await orcaPool
+
+    console.log(outAmount1.toNumber());
+    console.log(outAmount2.toNumber());
+
+    const swapPayload1 = await orcaPool.swap(owner, IN_TOKEN, AmountIN, outAmount1);
+    const swapPayload2 = await orcaPool.swap(owner, OUT_TOKEN, outAmount1, outAmount2);
+
+    console.log(swapPayload1.transaction);
+    console.log(swapPayload2.transaction);
+
+    return {swapPayload1, swapPayload2}
 
 
   }

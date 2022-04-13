@@ -9,9 +9,10 @@ import {
     TransactionInstruction,
     Transaction
    } from "@solana/web3.js";
-  import { executeOrcaSwap, getOrcaQuote } from "./utils/orcaSwap";
+  import { executeOrcaSwap, getOrcaQuote, orcaTwoWayTrade } from "./utils/orcaSwap";
   import { executeJupiterSwap, retrieveJupRoutes, runUntilProfit, runUntilProfitV2, createWSolAccount } from "./utils/jupiterSwap";
   import { fetchWalletBalance } from "./utils/shared";
+  import { raydiumSwap } from "./utils/raydiumSwap";
   import bs58 from "bs58";
   import {
     ENV,
@@ -250,11 +251,72 @@ import {
     console.log("Ending Balance: ",endingSOLBalance/LAMPORTS_PER_SOL);
     console.log("Total Profit: ", totalProfit);
   }
+
+  const orcaTest = async () => {
+    
+    require('dotenv').config()
+    const details = {
+        sender_keypair: process.env.SENDER_KEY as string,
+        secret: process.env.SENDER_SECRET as string,
+        reciever: process.env.DEFAULT_RECEIVER_PUBKEY as string,
+        _RPC: process.env.RPC_ENDPOINT as string, // named _RPC because functions were throwing a fit when passing in details.RPC
+    };
+  
+    // if secret key is in .env:
+    const WALLET_PRIVATE_KEY = details.secret
+    const USER_PRIVATE_KEY = bs58.decode(WALLET_PRIVATE_KEY);
+    const owner = Keypair.fromSecretKey(USER_PRIVATE_KEY);
+  
+    const RPC = details._RPC;
+    const devnet = 'https://api.devnet.solana.com';
+    const mainnet = 'https://api.mainnet-beta.solana.com';
+    const serumAPI = 'https://solana-api.projectserum.com';
+  
+    // 2. Initialize Orca object with mainnet connection
+    const connectionRPC = new Connection(RPC);
+    const connection = new Connection(SOLANA_RPC_ENDPOINT);
+
+    const trans = await orcaTwoWayTrade({
+      connection: connectionRPC,
+      token1: "SOL",
+      token2: "STEP",
+      inAmount: 0.01,
+      owner
+    });
+
+    let signers: Signer[] = [];
+    // Need to find a way to append two signers.
+    // trans.swapPayload1.signers.push(trans.swapPayload2.signers[0])
+    const payload = new Transaction();
+    payload.add(trans.swapPayload1.transaction);
+    payload.add(trans.swapPayload2.transaction);
+
+    console.log(trans.swapPayload1.signers == trans.swapPayload2.signers);
+    console.log(trans.swapPayload2.signers);
+
+    for (let serializedTransaction of [payload].filter(Boolean)) {
+      // get transaction object from serialized transaction
+      if (serializedTransaction) {
+  
+        const txid = await connectionRPC.sendTransaction(serializedTransaction, trans.swapPayload1.signers, {
+          skipPreflight: true
+        })
+        await connectionRPC.confirmTransaction(txid)
+        console.log(`TX${serializedTransaction.toString()}: https://solscan.io/tx/${txid}`)
+      }
+    }
+
+  }
   
   const main = async () => {
       
-    await routeOutputV2();
-  
+    //await routeOutputV2();
+    
+    //await raydiumSwap({});
+
+    await orcaTest();
+
+
     };
       main()
         .then(() => {

@@ -127,3 +127,8 @@ https://blog.chain.link/levels-of-data-aggregation-in-chainlink-price-feeds/
    - Very excitingly, I was able to get a swap working this evening where I send OXY to Raydium and it sends back RAY
    - Grant said he would try to get a little demo together with Orca (already previously got swaps on Orca to work) and Raydium to show the Prof and TA tomorrow during our meeting
    - Although we have these working, I still believe Jupiter will give us a higher chance at profit, we just wanted to show that we can indeed make and send successful atomic transactions without the help Jupiter
+
+**April 13, 2022**
+- met with TA and Prof
+- worked with Grant to try getting raydium swaps with SOL and STEP working
+- showed Grant how to parse code

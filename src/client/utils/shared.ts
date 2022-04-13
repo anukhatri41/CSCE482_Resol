@@ -17,6 +17,7 @@ import {
   Token as TokenSPL,
   TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
+import { Wallet } from "@project-serum/anchor";
 
 
 export const fetchWalletBalance = async ({
@@ -43,23 +44,25 @@ export const fetchWalletBalance = async ({
   // wsol account
 export const createWSolAccount = async ({
   connection,
-  owner
+  owner,
+  wallet
 }: {
   connection: Connection;
   owner: Keypair;
+  wallet: Wallet;
 }) => {
   const wsolAddress = await TokenSPL.getAssociatedTokenAddress(
     ASSOCIATED_TOKEN_PROGRAM_ID,
     TOKEN_PROGRAM_ID,
     new PublicKey(SOL_MINT_ADDRESS),
-    owner.publicKey
+    wallet.publicKey
   );
 
   const wsolAccount = await connection.getAccountInfo(wsolAddress);
 
   if (!wsolAccount) {
     const transaction = new Transaction({
-      feePayer: owner.publicKey,
+      feePayer: wallet.publicKey,
     });
     const instructions = [];
 
@@ -69,15 +72,15 @@ export const createWSolAccount = async ({
         TOKEN_PROGRAM_ID,
         new PublicKey(SOL_MINT_ADDRESS),
         wsolAddress,
-        owner.publicKey,
-        owner.publicKey
+        wallet.publicKey,
+        wallet.publicKey
       )
     );
 
     // fund 1 sol to the account
     instructions.push(
       SystemProgram.transfer({
-        fromPubkey: owner.publicKey,
+        fromPubkey: wallet.publicKey,
         toPubkey: wsolAddress,
         lamports: 1_000_000_000/4, // 1 sol
       })
@@ -92,9 +95,9 @@ export const createWSolAccount = async ({
     transaction.recentBlockhash = await (
       await connection.getRecentBlockhash()
     ).blockhash;
-    transaction.partialSign(owner);
+    transaction.partialSign(wallet.payer);
     const result = await connection.sendTransaction(transaction, [
-      owner,
+      wallet.payer,
     ]);
     console.log({ result });
   }

@@ -388,68 +388,6 @@ export const runUntilProfit = async ({
   return transactions;
 }
 
-// wsol account
-export const createWSolAccount = async ({
-  connection,
-  owner
-}: {
-  connection: Connection;
-  owner: Keypair;
-}) => {
-  const wsolAddress = await TokenSPL.getAssociatedTokenAddress(
-    ASSOCIATED_TOKEN_PROGRAM_ID,
-    TOKEN_PROGRAM_ID,
-    new PublicKey(SOL_MINT_ADDRESS),
-    owner.publicKey
-  );
-
-  const wsolAccount = await connection.getAccountInfo(wsolAddress);
-
-  if (!wsolAccount) {
-    const transaction = new Transaction({
-      feePayer: owner.publicKey,
-    });
-    const instructions = [];
-
-    instructions.push(
-      await TokenSPL.createAssociatedTokenAccountInstruction(
-        ASSOCIATED_TOKEN_PROGRAM_ID,
-        TOKEN_PROGRAM_ID,
-        new PublicKey(SOL_MINT_ADDRESS),
-        wsolAddress,
-        owner.publicKey,
-        owner.publicKey
-      )
-    );
-
-    // fund 1 sol to the account
-    instructions.push(
-      SystemProgram.transfer({
-        fromPubkey: owner.publicKey,
-        toPubkey: wsolAddress,
-        lamports: 1_000_000_000/4, // 1 sol
-      })
-    );
-
-    instructions.push(
-      // This is not exposed by the types, but indeed it exists
-      (TokenSPL as any).createSyncNativeInstruction(TOKEN_PROGRAM_ID, wsolAddress)
-    );
-
-    transaction.add(...instructions);
-    transaction.recentBlockhash = await (
-      await connection.getRecentBlockhash()
-    ).blockhash;
-    transaction.partialSign(owner);
-    const result = await connection.sendTransaction(transaction, [
-      owner,
-    ]);
-    console.log({ result });
-  }
-
-  return wsolAccount;
-};
-
 // This is a modification to runUntilProfit which finds only single routes, so we can put them in 1 transaction.
 export const runUntilProfitV2 = async ({
   connection,

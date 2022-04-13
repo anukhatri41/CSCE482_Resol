@@ -10,8 +10,8 @@ import {
     Transaction
    } from "@solana/web3.js";
   import { executeOrcaSwap, getOrcaQuote, orcaTwoWayTrade } from "./utils/orcaSwap";
-  import { executeJupiterSwap, retrieveJupRoutes, runUntilProfit, runUntilProfitV2, createWSolAccount } from "./utils/jupiterSwap";
-  import { fetchWalletBalance } from "./utils/shared";
+  import { executeJupiterSwap, retrieveJupRoutes, runUntilProfit, runUntilProfitV2 } from "./utils/jupiterSwap";
+  import { fetchWalletBalance, createWSolAccount } from "./utils/shared";
   import { raydiumSwap } from "./utils/raydiumSwap";
   import bs58 from "bs58";
   import {
@@ -323,9 +323,9 @@ import {
       
     //await routeOutputV2();
     
-    //await raydiumSwap({});
+    await raydiumSwap({});
 
-    await orcaTest();
+    //await orcaTest();
 
 
     };

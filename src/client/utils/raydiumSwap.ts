@@ -7,6 +7,8 @@ import {
     SplAccount,
     TokenAmount,
     GetBestAmountOutParams,
+    Liquidity,
+    LiquidityFetchInfoParams,
     Token,
     Fraction
 } from "@raydium-io/raydium-sdk"
@@ -33,10 +35,9 @@ import {
     USDC_MINT_ADDRESS,
     RAY_MINT_ADDRESS
 } from "../constants";
-// import {
-//     getOrCreateAssociatedTokenAccount,
-//     getAccount
-// } from "@solana/spl-token/src/state/account"
+import { getOrca, OrcaFarmConfig, OrcaPoolConfig } from "@orca-so/sdk";
+import Decimal from "decimal.js";
+
 const spltoken = require("@solana/spl-token")
 const bn = require("bn.js")
 require('dotenv').config()
@@ -114,7 +115,7 @@ export const raydiumSwap = async({
         //     }
         // }
         
-        // Route for SOL-STEP
+        // Route for STEP-SOL
         {
             source: "amm",
             keys: {
@@ -144,19 +145,33 @@ export const raydiumSwap = async({
         }
     ]
 
-    // const tokenaccountfilter_ray: TokenAccountsFilter = {
-    //     mint: new PublicKey(RAY_MINT_ADDRESS),
-    // }
-    // const tokenaccountfilter_oxy: TokenAccountsFilter = {
-    //     mint: new PublicKey(OXY_MINT_ADDRESS),
-    // }
-    
-    // // const prgmacct = await connection_1.getParsedTokenAccountsByOwner(new PublicKey("2Nocd3ihAoAzNuvnVKAn9NHU6ieeDiv3eWMAQUHXiUmY"), taf)
-    // const tokenaccount_oxy = await connection_1.getParsedTokenAccountsByOwner(owner.publicKey, tokenaccountfilter_oxy)
-    // const tokenaccount_ray = await connection_1.getParsedTokenAccountsByOwner(owner.publicKey, tokenaccountfilter_ray)
-    // // const acctInfo = await connection_1.getParsedAccountInfo(owner.publicKey)
-    // const ata_oxy = await spltoken.getOrCreateAssociatedTokenAccount(connection_1, owner, new PublicKey(OXY_MINT_ADDRESS), owner.publicKey)
-    // const ata_ray = await spltoken.getOrCreateAssociatedTokenAccount(connection_1, owner, new PublicKey(RAY_MINT_ADDRESS), owner.publicKey)
+    const tokenaccountfilter_ray: TokenAccountsFilter = {
+        mint: new PublicKey(RAY_MINT_ADDRESS),
+    }
+    const tokenaccountfilter_oxy: TokenAccountsFilter = {
+        mint: new PublicKey(OXY_MINT_ADDRESS),
+    }
+    const tokenaccountfilter_sol: TokenAccountsFilter = {
+        mint: new PublicKey(SOL_MINT_ADDRESS),
+    }
+    const tokenaccountfilter_step: TokenAccountsFilter = {
+        mint: new PublicKey(STEP_MINT_ADDRESS),
+    }
+
+    // const prgmacct = await connection_1.getParsedTokenAccountsByOwner(new PublicKey("2Nocd3ihAoAzNuvnVKAn9NHU6ieeDiv3eWMAQUHXiUmY"), taf)
+    const tokenaccount_sol = await connection_1.getParsedTokenAccountsByOwner(owner.publicKey, tokenaccountfilter_sol)
+    const tokenaccount_step = await connection_1.getParsedTokenAccountsByOwner(owner.publicKey, tokenaccountfilter_step)
+    // const acctInfo = await connection_1.getParsedAccountInfo(owner.publicKey)
+    const ata_sol = await spltoken.getOrCreateAssociatedTokenAccount(connection_1, owner, new PublicKey(SOL_MINT_ADDRESS), owner.publicKey)
+    const ata_step = await spltoken.getOrCreateAssociatedTokenAccount(connection_1, owner, new PublicKey(STEP_MINT_ADDRESS), owner.publicKey)
+
+
+    const ata_1 = ata_sol;
+    const tokenaccnt_1 = tokenaccount_sol;
+    const ata_2 = ata_step;
+    const tokenaccnt_2 = tokenaccount_step;
+
+    ////////////////////////////////////////////////////
 
     // const splacct: SplAccount = {
     //     owner: ata_oxy.owner,
@@ -184,94 +199,154 @@ export const raydiumSwap = async({
     //     closeAuthorityOption: 0,
     //     closeAuthority: ata_ray.closeAuthority
     // }
-    // const tokenaccts: TokenAccount[] = [
-    //     {
-    //         pubkey: new PublicKey(tokenaccount_oxy.value[0].pubkey),
-    //         accountInfo: splacct
-    //     },
-    //     {
-    //         pubkey: new PublicKey(tokenaccount_oxy.value[0].pubkey),
-    //         accountInfo: splacct_ray
-    //     },
-    // ]
+
+    const splacct_1: SplAccount = {
+        owner: ata_1.owner,
+        state: tokenaccnt_1.value[0].account.data.parsed.info.state,
+        mint: ata_1.mint,
+        amount: tokenaccnt_1.value[0].account.data.parsed.info.tokenAmount.amount,
+        delegateOption: 0,
+        delegate: ata_1.delegate,
+        isNativeOption: tokenaccnt_1.value[0].account.data.parsed.info.isNative,
+        isNative: tokenaccnt_1.value[0].account.data.parsed.info.isNative,
+        delegatedAmount: new bn.BN(0),
+        closeAuthorityOption: 0,
+        closeAuthority: ata_1.closeAuthority
+    }
+    const splacct_2: SplAccount = {
+        owner: ata_2.owner,
+        state: tokenaccnt_2.value[0].account.data.parsed.info.state,
+        mint: ata_2.mint,
+        amount: tokenaccnt_2.value[0].account.data.parsed.info.tokenAmount.amount,
+        delegateOption: 0,
+        delegate: ata_2.delegate,
+        isNativeOption: tokenaccnt_2.value[0].account.data.parsed.info.isNative,
+        isNative: tokenaccnt_2.value[0].account.data.parsed.info.isNative,
+        delegatedAmount: new bn.BN(0),
+        closeAuthorityOption: 0,
+        closeAuthority: ata_2.closeAuthority
+    }
+
+    const tokenaccts: TokenAccount[] = [
+        {
+            pubkey: new PublicKey(tokenaccnt_1.value[0].pubkey),
+            accountInfo: splacct_1
+        },
+        {
+            pubkey: new PublicKey(tokenaccnt_2.value[0].pubkey),
+            accountInfo: splacct_2
+        },
+    ]
+
+    const orca = getOrca(connection_1);
+    const orcaRaySolPool = orca.getPool(OrcaPoolConfig.STEP_SOL);
+    const IN_TOKEN = orcaRaySolPool.getTokenB();
+    const OUT_TOKEN = orcaRaySolPool.getTokenA();
+    const Amount = new Decimal(0.01);
+    const quote = await orcaRaySolPool.getQuote(IN_TOKEN, Amount);
+    const outAmount = quote.getMinOutputAmount();
+
+    console.log(`Swap ${Amount.toString()} SOL for at least ${outAmount.toNumber()} STEP`);
+    const swapPayload = await orcaRaySolPool.swap(owner, IN_TOKEN, Amount, outAmount);
+
 
     const oxytoken = new Token(OXY_MINT_ADDRESS, 6, "OXY", "Oxygen");
     const steptoken = new Token(STEP_MINT_ADDRESS, 9, "STEP", "Step Finance");
     const wsoltoken = new Token(SOL_MINT_ADDRESS, 9, "wSOL", "Wrapped SOL");
     const raytoken = new Token(RAY_MINT_ADDRESS, 6, "RAY", "Raydium");
-    const oxytokenamt = new TokenAmount(oxytoken, 1000)
-    const raytokenamt = new TokenAmount(raytoken, 1)
+    const oxytokenamt = new TokenAmount(oxytoken, 1000);
+    const raytokenamt = new TokenAmount(raytoken, 1);
     const wsoltokenamt = new TokenAmount(wsoltoken, LAMPORTS_PER_SOL * 0.01);
+    //console.log("SAJIOHUBIHDJAKNL: ", LAMPORTS_PER_SOL * outAmount.toNumber())
+    const steptokenamt = new TokenAmount(steptoken, LAMPORTS_PER_SOL * outAmount.toNumber());
+
 
     // potentially good function to set good amountOut param:
-    const step: AmmSource = {
-        poolInfo: ,
-        poolKeys: ,
+    const infoparams: LiquidityFetchInfoParams = {
+        connection: connection_1,
+        poolKeys:  routeinfo[0].keys
+    }
+    
+    const info = await Liquidity.fetchInfo(infoparams)
+    console.log(info)
+    const _pool: AmmSource = {
+        poolInfo: info,
+        poolKeys: routeinfo[0].keys,
         
     }
+
     const bestout: GetBestAmountOutParams = {
-        pools: routeinfo,
-        amountIn: wsoltokenamt,
-        currencyOut: steptoken,
-        slippage: new Fraction(1,100)
+        pools: [_pool],
+        amountIn: steptokenamt,
+        currencyOut: wsoltoken,
+        slippage: new Fraction(1,10),
     }
     const bestamountout = await Trade.getBestAmountOut(bestout)
     console.log(bestamountout)
+    console.log(bestamountout.minAmountOut.denominator.toNumber())
 
-    // const params: TradeTransactionParams = 
-    // {
-    //     connection: connection_1,
-    //     routes: routeinfo,
-    //     routeType: "amm",
-    //     userKeys: {
-    //     tokenAccounts: tokenaccts,
-    //     owner: owner.publicKey,
-    //     //   payer?: PublicKey;
-    //     },
-    //     amountIn: oxytokenamt,
-    //     amountOut: raytokenamt,
-    //     fixedSide: "in" // "buy"
-    //     // config?: {
-    //     // bypassAssociatedCheck?: boolean;
-    //     // };
-    // }
+    const params: TradeTransactionParams = 
+    {
+        connection: connection_1,
+        routes: routeinfo,
+        routeType: "amm",
+        userKeys: {
+        tokenAccounts: tokenaccts,
+        owner: owner.publicKey,
+        //   payer?: PublicKey;
+        },
+        amountIn: steptokenamt,
+        amountOut: wsoltokenamt,
+        fixedSide: "in" // "buy"
+        // config?: {
+        // bypassAssociatedCheck?: boolean;
+        // };
+    }
 
-    // let signers: Signer[] = [owner];
+    const tx = await Trade.makeTradeTransaction(params)
+    console.log(tx)
 
-    // const tx = await Trade.makeTradeTransaction(params)
-    // console.log(tx)
-    
-    // if (tx.tradeTransaction) {
-    //     const txid = ""
-    //     if (tx.tradeTransaction.transaction.instructions.length > 1)
-    //     {
-    //         const transaction = new Transaction({
-    //             feePayer: owner.publicKey,
-    //           });
-    //         transaction.add(tx.tradeTransaction.transaction.instructions[1])
-    //         let txid = await connection_1.sendTransaction(transaction, signers, {
-    //             skipPreflight: true
-    //         })
-    //         try {
-    //             const swapResult: any = await connection_1.confirmTransaction(txid) 
-    //             console.log(swapResult)
-    //         }
-    //         catch (error) {
-    //             console.log(error)
-    //         }
-    //     }
-    //     else {
-    //         let txid = await connection_1.sendTransaction(tx.tradeTransaction.transaction, signers, {
-    //             skipPreflight: true
-    //         })
-    //         try {
-    //             const swapResult: any = await connection_1.confirmTransaction(txid) 
-    //             console.log(swapResult)
-    //         }
-    //         catch (error) {
-    //             console.log(error)
-    //         }
-    //     }
-    // }
+    let signers: Signer[] = [owner, ...swapPayload.signers];
 
+
+    // send transactions as single transaction
+    if (tx.tradeTransaction) {
+        const txid = ""
+        if (tx.tradeTransaction.transaction.instructions.length > 1)
+        {
+            const transaction = new Transaction({
+                feePayer: owner.publicKey,
+              });
+            
+            transaction.add(...swapPayload.transaction.instructions);
+            transaction.add(tx.tradeTransaction.transaction.instructions[1]);
+            let txid = await connection_1.sendTransaction(transaction, signers, {
+                skipPreflight: true
+            })
+            try {
+                const swapResult: any = await connection_1.confirmTransaction(txid) 
+                console.log(swapResult)
+            }
+            catch (error) {
+                console.log(error)
+            }
+        }
+        else {
+            const transaction = new Transaction({
+                feePayer: owner.publicKey,
+              });
+            transaction.add(...swapPayload.transaction.instructions);
+            transaction.add(...tx.tradeTransaction.transaction.instructions);
+            let txid = await connection_1.sendTransaction(transaction, signers, {
+                skipPreflight: true
+            })
+            try {
+                const swapResult: any = await connection_1.confirmTransaction(txid) 
+                console.log(swapResult)
+            }
+            catch (error) {
+                console.log(error)
+            }
+        }
+    }
 }

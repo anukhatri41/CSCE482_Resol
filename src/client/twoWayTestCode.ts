@@ -364,7 +364,7 @@ import {
     let negativeSwaps = 0;
     let swapsErr = 0;
 
-    while (totSwaps < 5) {
+    while (totSwaps < 1) {
       try {
 
         totSwaps++;
@@ -383,17 +383,19 @@ import {
         payload.add(transactions.transactions1.swapTransaction);
         payload.add(transactions.transactions2.swapTransaction);
 
-        for (let serializedTransaction of [payload].filter(Boolean)) {
-          // get transaction object from serialized transaction
-          if (serializedTransaction) {
+        /////////// COMMENT OUT BETWEEN TO STOP SWAP ////////////////////////////////////////////////////
+        // for (let serializedTransaction of [payload].filter(Boolean)) {
+        //   // get transaction object from serialized transaction
+        //   if (serializedTransaction) {
       
-            const txid = await connectionRPC.sendTransaction(serializedTransaction, signers, {
-              skipPreflight: true
-            })
-            await connectionRPC.confirmTransaction(txid)
-            console.log(`TX${serializedTransaction.toString()}: https://solscan.io/tx/${txid}`)
-          }
-        }
+        //     const txid = await connectionRPC.sendTransaction(serializedTransaction, signers, {
+        //       skipPreflight: true
+        //     })
+        //     await connectionRPC.confirmTransaction(txid)
+        //     console.log(`TX${serializedTransaction.toString()}: https://solscan.io/tx/${txid}`)
+        //   }
+        // }
+        /////////// COMMENT OUT BETWEEN TO STOP SWAP ////////////////////////////////////////////////////
         
         const finalSOLBalance = await connection.getBalance(owner.publicKey);
         console.log("Final SOL Balance: ", finalSOLBalance/LAMPORTS_PER_SOL);

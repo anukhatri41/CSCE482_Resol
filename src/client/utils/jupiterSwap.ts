@@ -18,6 +18,8 @@ import {
   TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
 import { Wallet } from "@project-serum/anchor";
+import { InstructionParser } from "./instruction-parser";
+const bn = require("bn.js")
 
   const getRoutes = async ({
     jupiter,
@@ -719,5 +721,55 @@ export const runUntilProfitV3 = async ({
 
   //return routes;
   // Changed this to return the route with the proper transaction stuff.
+  let swapTransaction = transactions1.swapTransaction;
+  console.log("swapTransaction1 #################")
+  for (let i in swapTransaction.instructions) {
+
+    const parser = new InstructionParser();
+    const ix = parser.coder.instruction.decode(swapTransaction.instructions[i].data, "base58");
+
+    // console.log(swapTransaction.instructions[i].data)
+    // if (ix)
+    // console.log(ix.data)
+
+    if(ix) {
+      for (let i in ix.data) {
+        console.log("i: ", i == "inAmount")
+        console.log(i)
+        if (ix.data[i as keyof typeof ix.data]) {
+          console.log("in if: ")
+          console.log(ix.data[i as keyof typeof ix.data].toString())
+          ix.data[i as keyof typeof ix.data] = new bn.BN(0)
+          console.log(ix.data[i as keyof typeof ix.data].toString())
+        }
+      }
+    }
+  }
+
+  swapTransaction = transactions2.swapTransaction;
+  console.log("swapTransaction2 #################")
+  for (let i in swapTransaction.instructions) {
+
+    const parser = new InstructionParser();
+    const ix = parser.coder.instruction.decode(swapTransaction.instructions[i].data, "base58");
+
+    // console.log(swapTransaction.instructions[i].data)
+    // if (ix)
+    // console.log(ix.data)
+
+    if(ix) {
+      for (let i in ix.data) {
+        console.log("i: ", i == "minimumOutAmount")
+        console.log(i)
+        if (ix.data[i as keyof typeof ix.data]) {
+          console.log("in if: ")
+          console.log(ix.data[i as keyof typeof ix.data].toString())
+          ix.data[i as keyof typeof ix.data] = new bn.BN(0)
+          console.log(ix.data[i as keyof typeof ix.data].toString())
+        }
+      }
+    }
+  }
+
   return{ transactions1, transactions2 };
 }

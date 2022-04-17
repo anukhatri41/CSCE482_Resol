@@ -11,7 +11,7 @@ import {
    } from "@solana/web3.js";
   import { executeOrcaSwap, getOrcaQuote, orcaTwoWayTrade } from "./utils/orcaSwap";
   import { executeJupiterSwap, retrieveJupRoutes, runUntilProfit, runUntilProfitV2, runUntilProfitV3 } from "./utils/jupiterSwap";
-  import { fetchWalletBalance, createWSolAccount } from "./utils/shared";
+  import { fetchWalletBalance, createWSolAccount, createWSolAccountWallet } from "./utils/shared";
   import { raydiumSwap } from "./utils/raydiumSwap";
   import { Wallet } from "@project-serum/anchor";
   import bs58 from "bs58";
@@ -338,6 +338,7 @@ import {
     const wrappedOwner = new PublicKey("72rqCZRbzJY27CnMeAV1tgV4YbfvgSo99cb7i81SEGU5");
     const env = details.ENV;
     const wallet = new Wallet(Keypair.fromSecretKey(USER_PRIVATE_KEY));
+    console.log(wallet.payer);
   
     const RPC = details._RPC;
     const devnet = 'https://api.devnet.solana.com';
@@ -354,7 +355,7 @@ import {
     let cont = true;
     let totalProfit = 0;
 
-    //await createWSolAccount({connection, owner, wallet});
+    // await createWSolAccount({connection, owner});
 
     console.time("Ran for");
     let initSOLBalance = await connection.getBalance(owner.publicKey);
@@ -374,27 +375,28 @@ import {
         let token2 = [STEP_MINT_ADDRESS, mSOL_MINT_ADDRESS, stSOL_MINT_ADDRESS, USDC_MINT_ADDRESS];
         let transactions = await runUntilProfitV3({connection, inAmount, owner, token1, token2, wrappedOwner, wallet});
 
-        let signers: Signer[] = [wallet.payer];
-        console.log(transactions.transactions1.swapTransaction.instructions);
+        let signers: Signer[] = [owner];
 
         console.log("Initial SOL Balance: ", initSOLBalance/LAMPORTS_PER_SOL);
 
         const payload = new Transaction();
+
+        console.log(transactions.transactions1.swapTransaction.instructions);
         payload.add(transactions.transactions1.swapTransaction);
         payload.add(transactions.transactions2.swapTransaction);
 
         /////////// COMMENT OUT BETWEEN TO STOP SWAP ////////////////////////////////////////////////////
-        // for (let serializedTransaction of [payload].filter(Boolean)) {
-        //   // get transaction object from serialized transaction
-        //   if (serializedTransaction) {
+        for (let serializedTransaction of [payload].filter(Boolean)) {
+          // get transaction object from serialized transaction
+          if (serializedTransaction) {
       
-        //     const txid = await connectionRPC.sendTransaction(serializedTransaction, signers, {
-        //       skipPreflight: true
-        //     })
-        //     await connectionRPC.confirmTransaction(txid)
-        //     console.log(`TX${serializedTransaction.toString()}: https://solscan.io/tx/${txid}`)
-        //   }
-        // }
+            const txid = await connectionRPC.sendTransaction(serializedTransaction, signers, {
+              skipPreflight: true
+            })
+            await connectionRPC.confirmTransaction(txid)
+            console.log(`TX${serializedTransaction.toString()}: https://solscan.io/tx/${txid}`)
+          }
+        }
         /////////// COMMENT OUT BETWEEN TO STOP SWAP ////////////////////////////////////////////////////
         
         const finalSOLBalance = await connection.getBalance(owner.publicKey);

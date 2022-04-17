@@ -560,7 +560,7 @@ export const runUntilProfitV3 = async ({
   connection,
   inAmount,
   owner,
-  slippage = 0.1,
+  slippage = 0.05,
   token1, // This should be the token you are starting with.
   token2,
   wallet,
@@ -592,67 +592,20 @@ export const runUntilProfitV3 = async ({
   // Find token mint addresses
   let inputToken;
   let outputToken;
-  inputToken = tokens.find((t) => t.address == token1);
-  outputToken = tokens.find((t) => t.address == token2[i]);
-
-  const routes1 = await getRoutes({
-    jupiter,
-    inputToken,
-    outputToken,
-    inputAmount: inAmount, // 1 unit in UI
-    slippage: slippage, // 1% slippage
-    directOnly: true,
-  });
-
-
-  let routeInfo1: RouteInfo;
-  let routeInfo2: RouteInfo;
-  //console.log(routes1);
-  // let i = 0;
-  // while (routes1!.routesInfos[i]!.marketInfos!.length != 1 && routes1!.routesInfos[i]!.marketInfos[0]!.amm!.label) {
-  //   i++
-  // }
-  routeInfo1 = routes1!.routesInfos[0];
-  inputToken = tokens.find((t) => t.address == token2[i]);
-  outputToken = tokens.find((t) => t.address == token1);
-
-  const routes2 = await getRoutes({
-    jupiter,
-    inputToken,
-    outputToken,
-    inputAmount: (routeInfo1.outAmountWithSlippage/LAMPORTS_PER_SOL), // 1 unit in UI
-    slippage: slippage, // 1% slippage
-    directOnly: true,
-  });
-  // i = 0;
-  // while (routes2!.routesInfos[i]!.marketInfos!.length != 1 && routes2!.routesInfos[i]!.marketInfos[0]!.amm!.label) {
-  //   i++
-  // }
-  routeInfo2 = routes2!.routesInfos[0];
-
-  // console.log("######################################");
-  // console.log(routeInfo1);
-  // console.log("######################################");
-  // console.log(routeInfo2);
-  // console.log("######################################");
   
-  let inAm = routeInfo1.inAmount + (0.000005  * LAMPORTS_PER_SOL);
-  let outAm = routeInfo2.outAmountWithSlippage;
+  // Initialize variables for while loop
+  let inAm = 0;
+  let outAm = 0;
+  let outAmString = "";
+  let DECIMAL_PLACES = LAMPORTS_PER_SOL;
   const diffThresh = 0.0001;
   let spread = outAm - inAm;
-  console.log("######################################");
-  console.log(routeInfo1.marketInfos[0].amm.label);
-  console.log(routeInfo2.marketInfos[0].amm.label);
-  console.log("I: ", inAm/LAMPORTS_PER_SOL);
-  console.log("O: ", outAm/LAMPORTS_PER_SOL);
-  console.log("S: ", spread/LAMPORTS_PER_SOL);
-  if ((spread/LAMPORTS_PER_SOL) > diffThresh) {
-    console.log("TGTBT");
-    spread = -1;
-  }
-  console.log("######################################");
-  while (spread > 0) {
-    i++;
+  console.log("######################################")
+
+  let transactions1;
+  let transactions2;
+
+  while (true) {
     inputToken = tokens.find((t) => t.address == token1);
     outputToken = tokens.find((t) => t.address == token2[i%amtOfTok2]);
 
@@ -665,17 +618,20 @@ export const runUntilProfitV3 = async ({
       directOnly: true,
     });
 
-
     let routeInfo1: RouteInfo;
     let routeInfo2: RouteInfo;
-    // let i = 0;
-    // while (routes1!.routesInfos[i]!.marketInfos!.length != 1 && routes1!.routesInfos[i]!.marketInfos[0]!.amm!.label) {
-    //   i++
-    // }
-    routeInfo1 = routes1!.routesInfos[0];
+
+    let p = 0;
+    console.log(routes1!.routesInfos[p]!.marketInfos[0]!.amm!.id.length);
+    while (routes1!.routesInfos[i]!.marketInfos!.length != 1 && routes1!.routesInfos[p]!.marketInfos[0]!.amm!.id.length > 44) {
+      p++
+    }
+    routeInfo1 = routes1!.routesInfos[i];
     inputToken = tokens.find((t) => t.address == token2[i%amtOfTok2]);
     outputToken = tokens.find((t) => t.address == token1);
 
+    // console.log(routeInfo1.marketInfos.length);
+    // console.log(routeInfo2.marketInfos.length);
     const routes2 = await getRoutes({
       jupiter,
       inputToken,
@@ -684,92 +640,70 @@ export const runUntilProfitV3 = async ({
       slippage: slippage, // 1% slippage
       directOnly: true,
     });
-    // i = 0;
-    // while (routes2!.routesInfos[i]!.marketInfos!.length != 1 && routes2!.routesInfos[i]!.marketInfos[0]!.amm!.label) {
-    //   i++
-    // }
-    routeInfo2 = routes2!.routesInfos[0];
-    //console.log("IN retrieveJupRoutes");
-    inAm = routeInfo1.inAmount + (0.000005  * LAMPORTS_PER_SOL);
-    outAm = routeInfo2.outAmountWithSlippage;
+    p = 0;
+    console.log(routes2!.routesInfos[p]!.marketInfos[0]!.amm!.id.length);
+    while (routes2!.routesInfos[i]!.marketInfos!.length != 1 && routes2!.routesInfos[p]!.marketInfos[0]!.amm!.id.length > 44) {
+      p++
+    }
+    routeInfo2 = routes2!.routesInfos[p];
+
+    const { transactions: transactions1 } = await jupiter.exchange({
+      routeInfo: routeInfo1,
+      wrapUnwrapSOL: false,
+    });
+
+    const { transactions: transactions2 } = await jupiter.exchange({
+      routeInfo: routeInfo2,
+      wrapUnwrapSOL: false
+    });
+
+    let swapTransaction = transactions2.swapTransaction;
+    for (let i in swapTransaction.instructions) {
+
+      const parser = new InstructionParser();
+      const ix = parser.coder.instruction.decode(swapTransaction.instructions[i].data, "base58");
+  
+      if(ix) {
+        for (let i in ix.data) {
+          if (ix.data[i as keyof typeof ix.data] && i == "minimumOutAmount") {
+            //console.log("i: ", i == "minimumOutAmount")
+            //console.log(i)
+            outAmString = ix.data[i as keyof typeof ix.data].toString();
+            // ix.data[i as keyof typeof ix.data] = new bn.BN(0)
+            // console.log(ix.data[i as keyof typeof ix.data].toString())
+          }
+        }
+      }
+    }
+
+    // Calculate spread
+    inAm = (routeInfo1.inAmount + (0.000005  * LAMPORTS_PER_SOL))/LAMPORTS_PER_SOL;
+    // Explicit type conversion of string to number
+    let outAm: number  = +outAmString;
+    // Adjusting decimal places.
+    if (token2[i%amtOfTok2] == USDC_MINT_ADDRESS) {
+      DECIMAL_PLACES = LAMPORTS_PER_SOL/1000;
+    }
+    outAm = outAm/DECIMAL_PLACES;
     spread = outAm - inAm;
     console.log(routeInfo1.marketInfos[0].amm.label);
     console.log(routeInfo2.marketInfos[0].amm.label);
-    console.log("I: ", inAm/LAMPORTS_PER_SOL);
-    console.log("O: ", outAm/LAMPORTS_PER_SOL);
-    console.log("S: ", spread/LAMPORTS_PER_SOL);
-    if ((spread/LAMPORTS_PER_SOL) > diffThresh) {
+    console.log("I: ", inAm);
+    console.log("O: ", outAm);
+    console.log("S: ", spread);
+    if (spread > diffThresh) {
       console.log("TGTBT");
       spread = -1;
     }
     console.log("######################################")
+    if (spread > 0) {
+      return{ transactions1, transactions2 };
+    }
+    i++;
+    DECIMAL_PLACES = LAMPORTS_PER_SOL;
   }
-
-  const { transactions: transactions1 } = await jupiter.exchange({
-    routeInfo: routeInfo1,
-    wrapUnwrapSOL: false,
-  });
-
-  const { transactions: transactions2 } = await jupiter.exchange({
-    routeInfo: routeInfo2,
-    wrapUnwrapSOL: false
-  });
-  
-  // TRANSACTION META DATA
-  //console.log(transactions.swapTransaction.instructions);
-  // console.log("ADSADASDASDASDASDASDASDASDA")
 
   //return routes;
   // Changed this to return the route with the proper transaction stuff.
-  let swapTransaction = transactions1.swapTransaction;
-  console.log("swapTransaction1 #################")
-  for (let i in swapTransaction.instructions) {
-
-    const parser = new InstructionParser();
-    const ix = parser.coder.instruction.decode(swapTransaction.instructions[i].data, "base58");
-
-    // console.log(swapTransaction.instructions[i].data)
-    // if (ix)
-    // console.log(ix.data)
-
-    if(ix) {
-      for (let i in ix.data) {
-        console.log("i: ", i == "inAmount")
-        console.log(i)
-        if (ix.data[i as keyof typeof ix.data]) {
-          console.log("in if: ")
-          console.log(ix.data[i as keyof typeof ix.data].toString())
-          ix.data[i as keyof typeof ix.data] = new bn.BN(0)
-          console.log(ix.data[i as keyof typeof ix.data].toString())
-        }
-      }
-    }
-  }
-
-  swapTransaction = transactions2.swapTransaction;
-  console.log("swapTransaction2 #################")
-  for (let i in swapTransaction.instructions) {
-
-    const parser = new InstructionParser();
-    const ix = parser.coder.instruction.decode(swapTransaction.instructions[i].data, "base58");
-
-    // console.log(swapTransaction.instructions[i].data)
-    // if (ix)
-    // console.log(ix.data)
-
-    if(ix) {
-      for (let i in ix.data) {
-        console.log("i: ", i == "minimumOutAmount")
-        console.log(i)
-        if (ix.data[i as keyof typeof ix.data]) {
-          console.log("in if: ")
-          console.log(ix.data[i as keyof typeof ix.data].toString())
-          ix.data[i as keyof typeof ix.data] = new bn.BN(0)
-          console.log(ix.data[i as keyof typeof ix.data].toString())
-        }
-      }
-    }
-  }
-
   return{ transactions1, transactions2 };
 }

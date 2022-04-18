@@ -273,3 +273,11 @@ This weekend I was trying to get some profitable trades working. Ive been doing 
 On Saturday I did a lot of work on our atomic swaps, so hopefully I can use the information I learned from the SOL->SOL swaps, to our custom SOL->something and something->SOL in the future.
 
 I think the backend is coming together to hopefully provide us with something that works well.
+
+<h4>4/18/22</h4>
+
+Today we worked on getting our atmoic swaps working. After collecting the data this weekend, I identified several pairs that potentially will yield us a profit. We also learned, that due to slippage issues, almost all of the successful trades that went through were from either Raydium or Orca. This wasn't necessarily a surprise to us, as their SDK's were the best (although that really isn't saying much because all these SDK's have been quite bad).
+
+We also spoke with Laren, and told him some of the thing we had discovered this weekend, and why we were doing the thigns we were doing.
+
+Currently we are stuck on a really stupid error, basically our for loop keeps going out of bounds. We can't quite figure out why, as there should be litterally zero reasons this should happen, but hopefully we can get it resolved soon.

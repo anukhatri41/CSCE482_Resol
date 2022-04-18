@@ -37,6 +37,7 @@ export const mSOL_MINT_ADDRESS = "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So";
 export const STEP_MINT_ADDRESS = "StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT";
 export const stSOL_MINT_ADDRESS = "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj";
 export const RAY_MINT_ADDRESS = "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R";
+export const oneSOL_MINT_ADDRESS = "4ThReWAbAVZjNVgs5Ui9Pk3cZ5TYaD9u6Y89fp6EFzoF";
 
 // Interface
 export interface Token {

@@ -59,7 +59,7 @@ import {
 
     //let wSOLAccount = await createWSolAccount({connection, owner});
 
-    let inAmount = 0.05;
+    let inAmount = 0.01;
     let tokenIn = 'SOL';
     let tokenOut = 'SOL';
     let cont = true;

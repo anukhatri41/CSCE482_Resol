@@ -1,0 +1,17 @@
+04/13/2022 - Meeting Notes
+
+Have identifies currency pairs that are good for swapping
+Atomic - OXY -> RAY -> SOL
+
+Look at historical data to identify profitable swaps - what time, currency pairs, etc.
+Increase swap amounts - or increase risks in other ways
+
+Look at statistical arbitrage - lose/profit, but overall profits
+Kelly criteria - how to determine how much to put in per trade
+ - If profitability event >50%, should be making the trade
+
+UXP Token
+- May have some good opportunities for swapping
+- Is a stable-ish coin
+
+Leaving open account and keeping the wrapped sol to then close later

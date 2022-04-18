@@ -1,7 +1,8 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import { useRouter } from 'next/router';
 
-import {Line} from 'react-chartjs-2';
+import {Chart, Line} from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,7 +14,10 @@ import {
   Legend,
 } from 'chart.js';
 import { StartStop } from "components/StartStop";
-
+import WalletChart from "components/WalletChart";
+//import reRender from "hooks/reRender";
+import {useEffect, useState} from 'react';
+import { produceWithPatches } from "immer";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -23,6 +27,7 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+
 
 interface balanceType {
   total_swaps: number
@@ -37,6 +42,7 @@ interface balanceType {
 interface PropType {
   balanceData: balanceType[]
 }
+
 
 /*const labels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30];
 
@@ -69,43 +75,53 @@ export const data = {
   }
 };*/
 
+// export const reRender = () =>{
+//   const router = useRouter()
+
+//   useEffect(() => {
+//       const interval = setInterval(() => {
+//         reRender();
+//       }, 1000);
+  
+//       return () => clearInterval(interval);
+//     }, []);
+//   // call this method whenever you want to refresh server-side props
+//   const refreshData = () => router.replace(router.asPath);
+// }
+
 
 
 function Basics ({balanceData}) {
-  var endBal = []
-  for (let i = 0; i < balanceData.length ; i++) {endBal.push(balanceData[i].end_bal)}
-  var labels = []
-  for (let i = 1; i <= balanceData.length; i++) {labels.push(i)}
-  var differenceColor = ((balanceData[balanceData.length - 1].end_bal - balanceData[0].init_bal) > 0) ? 'rgb(99, 255, 222, 0.5)' : 'rgb(255, 99, 132, 0.5)';
-  
+  const [balances, setBalances] = useState(balanceData)
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     reRender();
+  //   }, 1000);
 
-  const data = {
-    labels,
-    datasets: [
-      {
-        label: 'Wallet Balance',
-        data: endBal,
-        borderColor: differenceColor,
-        backgroundColor: differenceColor,
-      }
-    ],
-    options: {
-      scales: {
-        yAxes: [{
-          scaleLabel: {
-            display: true,
-            labelString: 'SOL Balance'
-          }
-        }],
-        xAxes: [{
-          scaleLabel: {
-            display: true,
-            labelString: 'Transaction Iteration'
-          }
-        }],
-      }     
-    }
-  };
+  //   return () => clearInterval(interval);
+  // }, []);
+
+  // const router = useRouter()
+
+  // // call this method whenever you want to refresh server-side props
+  // const refreshData = () => router.replace(router.asPath);
+
+  // setInterval(() => {
+  //   refreshData();
+  // }, 1000);
+
+  /*setInterval(() => {
+     reRender();
+    }, 1000)*/
+
+    useEffect(() => {
+      fetch('http://localhost:4000/S2S')
+        .then((res) => res.json())
+        .then((data) => {
+          setBalances(data)
+        })
+    }, []) 
+  
   return (
     <div>
       <Head>
@@ -151,14 +167,7 @@ function Basics ({balanceData}) {
           <p className="text-sm text-gray-500">$ 42770</p>
         </div>
       </div>
-      <div>
-        <h2>Wallet Balance</h2>
-        <Line
-          data={data}
-          width={400}
-          height={400}
-        />
-      </div>
+      <WalletChart key={balances} balanceData={balances} />
     </div> 
   </div>
     </div>
@@ -168,11 +177,8 @@ function Basics ({balanceData}) {
 export default Basics;
 
 export async function getServerSideProps(){
-  console.log("howdy");
   const response = await fetch('http://localhost:4000/S2S')
   const balanceData = await response.json()
-
-  console.log(balanceData);
 
   return {
     props: {

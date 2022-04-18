@@ -118,3 +118,9 @@ Helping on sending data from backend to frontend
 Got graph to render with data from DB file  
 Working on auto-updating graph  
 Working on allowing user to select params to graph  
+  
+# 4/13/22  
+Meeting with Dr.Huang and Laren  
+Made Graph its own component  
+Working on passing props to component and rendering dynamically  
+Working on auto-updating graph (having trouble with this)  

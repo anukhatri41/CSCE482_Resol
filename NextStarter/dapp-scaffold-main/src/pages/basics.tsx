@@ -24,6 +24,8 @@ import {WalletChart} from "components/WalletChart"
 
 // import React, {Component} from 'react';
 
+const axios = require('axios');
+
 
 
 ChartJS.register(
@@ -51,35 +53,35 @@ interface PropType {
 }
 
 
-class App extends Component {  
+// class App extends Component {  
 
-  state = {
-      readDataLoaded: true
-  }
+//   state = {
+//       readDataLoaded: true
+//   }
 
 
-  constructor(){  
-      super();
+//   constructor(){  
+//       super();
 
-      this.state = {  
-          readDataLoaded: false  
-      }
-  }
+//       this.state = {  
+//           readDataLoaded: false  
+//       }
+//   }
 
-  readData = async () =>{
-      const response = await fetch('http://localhost:4000/S2S')
-      const balanceData = await response.json()
-      this.setState({readDataLoaded: true})
-      return balanceData;
-  }
+//   readData = async () =>{
+//       const response = await fetch('http://localhost:4000/S2S')
+//       const balanceData = await response.json()
+//       this.setState({readDataLoaded: true})
+//       return balanceData;
+//   }
 
-  render(){
-      return(
-          <h1>sdsfd</h1>
-      )
-  }
+//   render(){
+//       return(
+//           <h1>sdsfd</h1>
+//       )
+//   }
 
-}
+// }
 
 // export const data = {
 //   labels,
@@ -236,6 +238,19 @@ export async function getServerSideProps(){
   const balanceData = await response.json()
 
   console.log(balanceData);
+
+
+
+//   axios.post('http://localhost:4000/S2S', {
+//     id: 6,
+//     first_name: 'Fred',
+//     last_name: 'Blair',
+//     email: 'freddyb34@gmail.com'
+// }).then(resp => {
+//     console.log(resp.data);
+// }).catch(error => {
+//     console.log(error);
+// });
 
   return {
     props: {

@@ -265,3 +265,11 @@ Today we had our meeting with Dr. Huang and Laren, and told them about our progr
 We have now found a way to do those two jupiter swaps atomically, so we think we can check for minimumAmountOut before we send the transaction, and then if the price changes or something, the atomic element will just make the trade fail.
 
 The difference we have made is that we are building the transaction and checking minimumAmoutOut from the transaction instead of from the route like we were previously checking. In this case, the route would sometimes show that there was a possible profit, but when we built the transaction, the profit was gone. We think this was due to the time difference it took, so going forward we are going to check in the transaction instead of in the route.
+
+<h4>4/17/22</h4>
+
+This weekend I was trying to get some profitable trades working. Ive been doing a lot of tweaking, and since doing SOL->SOL transfers on jupiter worked in the past, I started doing that again. While it is an option moving forward, its mainly for research of four things. First of all, which exchanges are actually providing working profitable swaps. Second, what input amount provides consistantly profitable trades. Third, how much slippage can we get away with. Fourth, and finally, what intermediant swaps are profitable. So far, it looks like USDT, and various staked SOL (1SOL, stSOL, etc).
+
+On Saturday I did a lot of work on our atomic swaps, so hopefully I can use the information I learned from the SOL->SOL swaps, to our custom SOL->something and something->SOL in the future.
+
+I think the backend is coming together to hopefully provide us with something that works well.

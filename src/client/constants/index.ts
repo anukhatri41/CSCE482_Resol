@@ -38,6 +38,10 @@ export const STEP_MINT_ADDRESS = "StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT";
 export const stSOL_MINT_ADDRESS = "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj";
 export const RAY_MINT_ADDRESS = "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R";
 export const oneSOL_MINT_ADDRESS = "4ThReWAbAVZjNVgs5Ui9Pk3cZ5TYaD9u6Y89fp6EFzoF";
+export const ALL_MINT_ADDRESS = "7ScYHk4VDgSRnQngAUtQk4Eyf7fGat8P4wXq6e2dkzLj";
+export const SHDW_MINT_ADDRESS = "SHDWyBxihqiCj6YekG2GUr7wqKLeLAMK1gHZck9pL6y";
+export const sRLY_MINT_ADDRESS = "RLYv2ubRMDLcGG2UyvPmnPmkfuQTsMbg4Jtygc7dmnq";
+export const USDT_MINT_ADDRESS = "9vMJfxuKxXBoEa7rM12mYLMwTacLMLDJqHozw96WQL8i";
 
 // Interface
 export interface Token {

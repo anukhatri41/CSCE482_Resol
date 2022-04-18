@@ -30,7 +30,11 @@ import {
     Token,
     USDC_MINT_ADDRESS,
     stSOL_MINT_ADDRESS,
-    oneSOL_MINT_ADDRESS
+    oneSOL_MINT_ADDRESS,
+    ALL_MINT_ADDRESS,
+    SHDW_MINT_ADDRESS,
+    sRLY_MINT_ADDRESS,
+    USDT_MINT_ADDRESS
   } from "./constants";
   const sleep = require('./sleep');
   
@@ -398,7 +402,7 @@ import {
         initSOLBalance = await connection.getBalance(owner.publicKey);
         console.log("Initial SOL Balance: ", initSOLBalance/LAMPORTS_PER_SOL);
         let token1 = SOL_MINT_ADDRESS;
-        let token2 = [STEP_MINT_ADDRESS, mSOL_MINT_ADDRESS, oneSOL_MINT_ADDRESS, stSOL_MINT_ADDRESS];
+        let token2 = [STEP_MINT_ADDRESS, ALL_MINT_ADDRESS, SHDW_MINT_ADDRESS, sRLY_MINT_ADDRESS];
         let transactions = await runUntilProfitV3({connection, inAmount, owner, token1, token2, wrappedOwner, wallet});
 
         let signers: Signer[] = [owner];

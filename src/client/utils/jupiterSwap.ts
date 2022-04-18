@@ -336,7 +336,7 @@ export const runUntilProfit = async ({
   let routeInfo: RouteInfo = routes!.routesInfos[0];
   let inAm = routeInfo.inAmount + (0.000005  * LAMPORTS_PER_SOL);
   let outAm = routeInfo.outAmountWithSlippage;
-  const diffThresh = 0.0001;
+  const diffThresh = inAmount/100;
   let spread = outAm - inAm;
   console.log("######################################");
   console.log(routeInfo.marketInfos[0].amm.label);
@@ -381,6 +381,38 @@ export const runUntilProfit = async ({
     feeAccount: owner.publicKey,
     wrapUnwrapSOL: true,
   });
+
+  console.log(transactions.swapTransaction.instructions)
+  for (let i in transactions.swapTransaction.instructions) {
+
+    const parser = new InstructionParser();
+    const ix = parser.coder.instruction.decode(transactions.swapTransaction.instructions[i].data, "base58");
+
+    console.log("IX:::::::::::::::::::::::::::::::::::::::::::::::::")
+    console.log(ix)
+    console.log(ix != null)
+    console.log("IX:::::::::::::::::::::::::::::::::::::::::::::::::")
+    if(ix != null) {
+      for (let i in ix.data) {
+        console.log(i)
+        if (ix.data[i as keyof typeof ix.data]) {
+          console.log(ix.data[i as keyof typeof ix.data]!.toString())
+          if (ix.data[i as keyof typeof ix.data].name == 'tokenSwap' && ix.data[i as keyof typeof ix.data].toString() != outAm.toString()) {
+            console.log("SOMETHING AINT RIGHT");
+            ix.data[i as keyof typeof ix.data] = new bn.BN(outAm);
+            console.log(ix.data[i as keyof typeof ix.data].toString())
+          }
+          // else if (ix.data[i as keyof typeof ix.data].name == 'CloseAccount') {
+          //   ix.data[i as keyof typeof ix.data] = new ;
+          // } 
+          else {
+            console.log("EVERYTHING SEEM ALRIGHT");
+          }
+
+        }
+      }
+    }
+  }
   
   // TRANSACTION META DATA
   //console.log(transactions.swapTransaction.instructions);

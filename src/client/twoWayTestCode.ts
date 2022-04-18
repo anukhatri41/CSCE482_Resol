@@ -16,6 +16,9 @@ import {
   import { Wallet } from "@project-serum/anchor";
   import bs58 from "bs58";
   import {
+    closeAccount
+  } from "@solana/spl-token2.0";
+  import {
     ENV,
     INPUT_MINT_ADDRESS,
     OUTPUT_MINT_ADDRESS,
@@ -54,7 +57,9 @@ import {
     const connectionRPC = new Connection(RPC);
     const connection = new Connection(SOLANA_RPC_ENDPOINT);
 
-    let inAmount = 0.01;
+    //let wSOLAccount = await createWSolAccount({connection, owner});
+
+    let inAmount = 0.05;
     let tokenIn = 'SOL';
     let tokenOut = 'SOL';
     let cont = true;
@@ -67,23 +72,27 @@ import {
     let positiveSwaps = 0;
     let negativeSwaps = 0;
     let swapsErr = 0;
+    let cleanUps: Transaction[];
+    let signers: Signer[] = [owner];
 
-    while (totSwaps < 1) {
+    while (totSwaps < 5) {
       try {
+        await createWSolAccount({connection, owner});
 
         totSwaps++;
         initSOLBalance = await connection.getBalance(owner.publicKey);
         console.log("Initial SOL Balance: ", initSOLBalance/LAMPORTS_PER_SOL);
         let transactionOS = await runUntilProfit({connection, inAmount, owner, tokenIn, tokenOut});
 
-        let signers: Signer[] = [owner];
         let setupTransaction = transactionOS.setupTransaction;
         let swapTransaction = transactionOS.swapTransaction;
-        let cleanupTransaction = transactionOS.cleanupTransaction;
+        // let cleanupTransaction = transactionOS.cleanupTransaction;
+        // cleanUps.push(cleanupTransaction);
 
         console.log("Initial SOL Balance: ", initSOLBalance/LAMPORTS_PER_SOL);
 
-        for (let serializedTransaction of [setupTransaction, swapTransaction, cleanupTransaction].filter(Boolean)) {
+        /////////// COMMENT OUT BETWEEN TO STOP SWAP ////////////////////////////////////////////////////
+        for (let serializedTransaction of [swapTransaction].filter(Boolean)) {
           // get transaction object from serialized transaction
           if (serializedTransaction) {
       
@@ -94,7 +103,8 @@ import {
             console.log(`TX${serializedTransaction.toString()}: https://solscan.io/tx/${txid}`)
           }
         }
-        
+        /////////// COMMENT OUT BETWEEN TO STOP SWAP ////////////////////////////////////////////////////
+
         const finalSOLBalance = await connection.getBalance(owner.publicKey);
         console.log("Final SOL Balance: ", finalSOLBalance/LAMPORTS_PER_SOL);
         console.log("Profit?: ", (finalSOLBalance-initSOLBalance)/LAMPORTS_PER_SOL);
@@ -125,6 +135,21 @@ import {
         console.warn(err);
       }
     }
+
+    // for (let serializedTransaction of cleanUps.filter(Boolean)) {
+    //   // get transaction object from serialized transaction
+    //   if (serializedTransaction) {
+  
+    //     const txid = await connectionRPC.sendTransaction(serializedTransaction, signers, {
+    //       skipPreflight: true
+    //     })
+    //     await connectionRPC.confirmTransaction(txid)
+    //     console.log(`TX${serializedTransaction.toString()}: https://solscan.io/tx/${txid}`)
+    //   }
+    // }
+    // console.log("Closing Account")
+    // await closeAccount(connection, owner, wSOLAccount.owner, owner.publicKey, owner);
+
     const endingSOLBalance = await connection.getBalance(owner.publicKey);
 
     console.log("FINAL META: ");
@@ -444,11 +469,13 @@ import {
   
   const main = async () => {
       
+    await routeOutput();
+
     //await routeOutputV2();
     
     //await raydiumSwap({});
 
-    await routeOutputV3();
+    //await routeOutputV3();
 
     //await orcaTest();
 

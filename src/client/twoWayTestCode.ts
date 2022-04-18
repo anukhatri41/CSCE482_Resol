@@ -29,7 +29,8 @@ import {
     STEP_MINT_ADDRESS,
     Token,
     USDC_MINT_ADDRESS,
-    stSOL_MINT_ADDRESS
+    stSOL_MINT_ADDRESS,
+    oneSOL_MINT_ADDRESS
   } from "./constants";
   const sleep = require('./sleep');
   
@@ -380,8 +381,6 @@ import {
     let cont = true;
     let totalProfit = 0;
 
-    // await createWSolAccount({connection, owner});
-
     console.time("Ran for");
     let initSOLBalance = await connection.getBalance(owner.publicKey);
     let beginningSOLBal = initSOLBalance;
@@ -393,11 +392,13 @@ import {
     while (totSwaps < 1) {
       try {
 
+        await createWSolAccount({connection, owner});
+
         totSwaps++;
         initSOLBalance = await connection.getBalance(owner.publicKey);
         console.log("Initial SOL Balance: ", initSOLBalance/LAMPORTS_PER_SOL);
         let token1 = SOL_MINT_ADDRESS;
-        let token2 = [STEP_MINT_ADDRESS, mSOL_MINT_ADDRESS, stSOL_MINT_ADDRESS, USDC_MINT_ADDRESS];
+        let token2 = [STEP_MINT_ADDRESS, mSOL_MINT_ADDRESS, oneSOL_MINT_ADDRESS, stSOL_MINT_ADDRESS];
         let transactions = await runUntilProfitV3({connection, inAmount, owner, token1, token2, wrappedOwner, wallet});
 
         let signers: Signer[] = [owner];
@@ -469,13 +470,13 @@ import {
   
   const main = async () => {
       
-    await routeOutput();
+    //await routeOutput();
 
     //await routeOutputV2();
     
     //await raydiumSwap({});
 
-    //await routeOutputV3();
+    await routeOutputV3();
 
     //await orcaTest();
 

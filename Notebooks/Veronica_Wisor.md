@@ -146,3 +146,11 @@ https://blog.chain.link/levels-of-data-aggregation-in-chainlink-price-feeds/
   - there were out of bounds errors that were causing "nulls" which threw errors
   - additionally, we were trying to swap with a token that jupiter no longer supports, so when trying to retrieve price routes using that token the returned object would be null
   - now the transactions work atomically and it can loop several times looking for profitable routes with Orca and Raydium
+
+**April 20, 2022**
+- overnight (19th to 20th) I ran the transaction code to see what would happen
+  - after about 3hours, got kicked from the public node for making too many requests
+  - also, all transactions that went through failed due to problems with the wSOL account
+- met with TA and professor and discussed the progress we've made
+- fixed the wSOL problem I was having
+- worked with Grant to close wSOL account at end of transaction run

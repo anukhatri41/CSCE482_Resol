@@ -124,3 +124,12 @@ Meeting with Dr.Huang and Laren
 Made Graph its own component  
 Working on passing props to component and rendering dynamically  
 Working on auto-updating graph (having trouble with this)  
+  
+# 4/18/22  
+Graph working  
+Working on start/stop button  
+  
+# 4/20/22  
+Meeting with Dr.Huang and Laren  
+Got transaction function to work  
+Trying to make button work becasue we are getting an FS error  

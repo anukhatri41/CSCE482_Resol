@@ -281,3 +281,9 @@ Today we worked on getting our atmoic swaps working. After collecting the data t
 We also spoke with Laren, and told him some of the thing we had discovered this weekend, and why we were doing the thigns we were doing.
 
 Currently we are stuck on a really stupid error, basically our for loop keeps going out of bounds. We can't quite figure out why, as there should be litterally zero reasons this should happen, but hopefully we can get it resolved soon.
+
+<h4>4/20/22</h4>
+
+Today, we were able to show Laren & Dr. Huang our working code! This was super exciting! 
+
+We narrowed down the AMM's we were swapping with to Orca and Raydium, as well as finding profitable trading pairs, then continually checking their prices. This allowed us to make pretty small amounts, but over time, they add up! So far, we have made roughly 3 cents ($0.029). This is only after running the code for a little over 4 hours. I ran it last night to test it out, but got a socket hang up error which stopped it 4 hours in. Then, when we ran it during our meeting with Dr. Huang and Laren, it made some profit. It just goes to show that there are tons of oppurtunities out there, so we need to be running it all the time and collecting data.

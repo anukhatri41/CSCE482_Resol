@@ -13,7 +13,6 @@ import {
   import { executeJupiterSwap, retrieveJupRoutes, runUntilProfit, runUntilProfitV2, runUntilProfitV3 } from "./utils/jupiterSwap";
   import { fetchWalletBalance, createWSolAccount, createWSolAccountWallet } from "./utils/shared";
   import { raydiumSwap } from "./utils/raydiumSwap";
-  import { Wallet } from "@project-serum/anchor";
   import bs58 from "bs58";
   import {
     closeAccount
@@ -367,10 +366,10 @@ import {
     const WALLET_PRIVATE_KEY = details.secret
     const USER_PRIVATE_KEY = bs58.decode(WALLET_PRIVATE_KEY);
     const owner = Keypair.fromSecretKey(USER_PRIVATE_KEY);
-    const wrappedOwner = new PublicKey("72rqCZRbzJY27CnMeAV1tgV4YbfvgSo99cb7i81SEGU5");
+    //const wrappedOwner = new PublicKey("72rqCZRbzJY27CnMeAV1tgV4YbfvgSo99cb7i81SEGU5");
     const env = details.ENV;
-    const wallet = new Wallet(Keypair.fromSecretKey(USER_PRIVATE_KEY));
-    console.log(wallet.payer);
+    // const wallet = new Wallet(Keypair.fromSecretKey(USER_PRIVATE_KEY));
+    // console.log(wallet.payer);
   
     const RPC = details._RPC;
     const devnet = 'https://api.devnet.solana.com';
@@ -395,10 +394,14 @@ import {
     let negativeSwaps = 0;
     let swapsErr = 0;
 
-    while (totSwaps < 500) {
+    let wSOLAccount = await createWSolAccount({connection, owner});
+
+    while (totSwaps < 1) {
       try {
 
-        await createWSolAccount({connection, owner});
+        if (totSwaps != 0) {
+         wSOLAccount = await createWSolAccount({connection, owner});
+        }
 
         totSwaps++;
         initSOLBalance = await connection.getBalance(owner.publicKey);
@@ -416,7 +419,7 @@ import {
           OXY_MINT_ADDRESS,
           mSOL_MINT_ADDRESS,
           stSOL_MINT_ADDRESS];
-        let transactions = await runUntilProfitV3({connection, inAmount, owner, token1, token2, wrappedOwner, wallet});
+        let transactions = await runUntilProfitV3({connection, inAmount, owner, token1, token2});
 
         let signers: Signer[] = [owner];
 
@@ -472,6 +475,9 @@ import {
         console.warn(err);
       }
     }
+
+    await closeAccount(connection, owner, wSOLAccount, owner.publicKey, owner);
+
     const endingSOLBalance = await connection.getBalance(owner.publicKey);
 
     console.log("FINAL META: ");
@@ -482,7 +488,7 @@ import {
     console.log("Negative Swaps: ", negativeSwaps);
     console.log("Beginning Balance: ",beginningSOLBal/LAMPORTS_PER_SOL);
     console.log("Ending Balance: ",endingSOLBalance/LAMPORTS_PER_SOL);
-    console.log("Total Profit: ", totalProfit);
+    console.log("Total Profit: ", (endingSOLBalance-initSOLBalance)/LAMPORTS_PER_SOL);
   }
   
   const main = async () => {

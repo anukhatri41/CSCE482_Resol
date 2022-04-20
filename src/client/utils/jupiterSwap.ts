@@ -595,10 +595,9 @@ export const runUntilProfitV3 = async ({
   connection,
   inAmount,
   owner,
-  slippage = 0.05,
+  slippage = 0.02,
   token1, // This should be the token you are starting with.
   token2,
-  wallet,
   wrappedOwner,
 }: {
   connection: Connection;
@@ -607,8 +606,7 @@ export const runUntilProfitV3 = async ({
   slippage?: number;
   token1: string;
   token2: string[];
-  wallet: Wallet;
-  wrappedOwner: PublicKey;
+  wrappedOwner?: PublicKey;
 }) => {
 
   // Retrieve token list

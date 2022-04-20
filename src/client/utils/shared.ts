@@ -17,6 +17,8 @@ import {
   Token as TokenSPL,
   TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
+const spltoken2_0 = require("@solana/spl-token2.0");
+const spltoken1_8 = require("@solana/spl-token1.8");
 import { Wallet } from "@project-serum/anchor";
 
 
@@ -44,25 +46,23 @@ export const fetchWalletBalance = async ({
   // wsol account
 export const createWSolAccountWallet = async ({
   connection,
-  owner,
-  wallet
+  owner
 }: {
   connection: Connection;
   owner: Keypair;
-  wallet: Wallet;
 }) => {
   const wsolAddress = await TokenSPL.getAssociatedTokenAddress(
     ASSOCIATED_TOKEN_PROGRAM_ID,
     TOKEN_PROGRAM_ID,
     new PublicKey(SOL_MINT_ADDRESS),
-    wallet.publicKey
+    owner.publicKey
   );
 
   const wsolAccount = await connection.getAccountInfo(wsolAddress);
 
   if (!wsolAccount) {
     const transaction = new Transaction({
-      feePayer: wallet.publicKey,
+      feePayer: owner.publicKey,
     });
     const instructions = [];
 
@@ -72,17 +72,17 @@ export const createWSolAccountWallet = async ({
         TOKEN_PROGRAM_ID,
         new PublicKey(SOL_MINT_ADDRESS),
         wsolAddress,
-        wallet.publicKey,
-        wallet.publicKey
+        owner.publicKey,
+        owner.publicKey
       )
     );
 
     // fund 1 sol to the account
     instructions.push(
       SystemProgram.transfer({
-        fromPubkey: wallet.publicKey,
+        fromPubkey: owner.publicKey,
         toPubkey: wsolAddress,
-        lamports: 1_000_000_000/4, // 1 sol
+        lamports: 1_000_000_000, // 1 sol
       })
     );
 
@@ -95,9 +95,9 @@ export const createWSolAccountWallet = async ({
     transaction.recentBlockhash = await (
       await connection.getRecentBlockhash()
     ).blockhash;
-    transaction.partialSign(wallet.payer);
+    transaction.partialSign(owner);
     const result = await connection.sendTransaction(transaction, [
-      wallet.payer,
+      owner,
     ]);
     console.log({ result });
   }
@@ -143,7 +143,7 @@ export const createWSolAccount = async ({
       SystemProgram.transfer({
         fromPubkey: owner.publicKey,
         toPubkey: wsolAddress,
-        lamports: 1_000_000_000/4, // 1 sol
+        lamports: 1_000_000_000, // 1 sol
       })
     );
 
@@ -163,5 +163,5 @@ export const createWSolAccount = async ({
     console.log({ result });
   }
 
-  return wsolAccount;
+  return wsolAddress;
 };

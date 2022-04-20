@@ -132,3 +132,17 @@ https://blog.chain.link/levels-of-data-aggregation-in-chainlink-price-feeds/
 - met with TA and Prof
 - worked with Grant to try getting raydium swaps with SOL and STEP working
 - showed Grant how to parse code
+
+**April 18, 2022**
+- worked with Grant to try to fix some bugs in the transaction code
+- ran into some issues with the code when trying to run it on my end
+- we decided to stick to Raydium and Orca swaps on Jupiter because that is what Grant has found to be profitable and less prone to bugs
+
+**April 19, 2022**
+- fixed the bugs that I was running into on my end
+  - ended up changing a command from "getAccount" to a "getOrCreateAccount"
+  - the "getAccount" wouldnt work on my end because my wallet didnt have a token account already existing
+- also fixed the bugs that Grant and I were running into yesterday
+  - there were out of bounds errors that were causing "nulls" which threw errors
+  - additionally, we were trying to swap with a token that jupiter no longer supports, so when trying to retrieve price routes using that token the returned object would be null
+  - now the transactions work atomically and it can loop several times looking for profitable routes with Orca and Raydium

@@ -90,19 +90,26 @@ export class InstructionParser {
 
       return {
         pubkey,
-        isSigner: accountKey!.signer,
-        isWritable: accountKey!.writable,
+        isSigner: accountKey?.signer ?? false,
+        isWritable: accountKey?.writable ?? false,
       };
     });
 
     const ix = this.coder.instruction.decode(instruction.data, "base58");
+    if (!ix)
+    {
+        return null;
+    }
 
-    if (!Object.keys(accountNamesMapping).includes(ix!.name)) {
+    if (!Object.keys(accountNamesMapping).includes(ix.name)) {
       return null;
     }
 
     const format = this.coder.instruction.format(ix, accountMetas);
-
+    if (!format)
+    {
+        return null;
+    }
     return this.extractSenderAndReceiverTokenAccounts(ix, format);
   }
 
@@ -110,25 +117,25 @@ export class InstructionParser {
     ix: Instruction,
     format: InstructionDisplay
   ) {
-    const accountMapping = accountNamesMapping[ix.name];
+    const accountMapping = accountNamesMapping[ix.name as keyof typeof accountNamesMapping];
     if (!accountMapping) {
       return null;
     }
 
     let source: PublicKey;
     let destination: PublicKey;
-
+    let a = new PublicKey("2Nocd3ihAoAzNuvnVKAn9NHU6ieeDiv3eWMAQUHXiUmY")
     // Serum destination token account depends on the source token account
     if (ix.name === "serumSwap") {
       source = format.accounts.find(
-        ({ name }) => name === accountMapping["source"]
-      ).pubkey;
+        ({ name }) => name === accountMapping["source" as keyof typeof accountMapping]
+      )?.pubkey ?? a;
       let coin = format.accounts.find(
-        ({ name }) => name === accountMapping["coin"]
-      ).pubkey;
+        ({ name }) => name === accountMapping["coin" as keyof typeof accountMapping]
+      )?.pubkey ?? a;
       let pc = format.accounts.find(
-        ({ name }) => name === accountMapping["pc"]
-      ).pubkey;
+        ({ name }) => name === accountMapping["pc" as keyof typeof accountMapping]
+        )?.pubkey ?? a;
 
       destination = coin.equals(source) ? pc : coin;
     } else if (ix.name === "aldrinV2Swap" || ix.name == "aldrinSwap") {
@@ -136,18 +143,18 @@ export class InstructionParser {
       let destinationKey = (ix.data as any).side.bid ? "base" : "quote";
 
       source = format.accounts.find(
-        ({ name }) => name === accountMapping[sourceKey]
-      ).pubkey;
+        ({ name }) => name === accountMapping[sourceKey as keyof typeof accountMapping]
+      )?.pubkey ?? a;
       destination = format.accounts.find(
-        ({ name }) => name === accountMapping[destinationKey]
-      ).pubkey;
+        ({ name }) => name === accountMapping[destinationKey as keyof typeof accountMapping]
+      )?.pubkey ?? a;
     } else {
       source = format.accounts.find(
-        ({ name }) => name === accountMapping["source"]
-      ).pubkey;
+        ({ name }) => name === accountMapping["source" as keyof typeof accountMapping]
+      )?.pubkey ?? a;
       destination = format.accounts.find(
-        ({ name }) => name === accountMapping["destination"]
-      ).pubkey;
+        ({ name }) => name === accountMapping["destination" as keyof typeof accountMapping]
+      )?.pubkey ?? a;
     }
 
     if (!source || !destination) {

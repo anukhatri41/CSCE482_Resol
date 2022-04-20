@@ -652,18 +652,28 @@ export const runUntilProfitV3 = async ({
 
     let routeInfo1: RouteInfo;
     let routeInfo2: RouteInfo;
+    let route1Found = false;
+    let route2Found = false;
 
-    let p = 0;
-    // console.log("******************")
-    // console.log(i)
-    // console.log(routes1!.routesInfos.length)
-    // console.log(routes1!.routesInfos[p]!.marketInfos);
-    if (routes1!.routesInfos[p]!.marketInfos) {
-      while (routes1!.routesInfos[p]!.marketInfos!.length != 1 && routes1!.routesInfos[p]!.marketInfos[0]!.amm!.id.length > 44) {
-        p++
+    //console.log(routes1!.routesInfos!);
+    for (var rInfo of routes1!.routesInfos!){
+      if (rInfo!.marketInfos[0]!.amm!.label == "Orca" || rInfo!.marketInfos[0]!.amm!.label == "Raydium") {
+        route1Found = true;
+        routeInfo1 = rInfo;
+
+        console.log(rInfo!.marketInfos[0]!.amm!.label);
+        console.log(rInfo);
+
+        break;
       }
+      console.log("#############################",rInfo!.marketInfos[0]!.amm!.label);
+
     }
-    routeInfo1 = routes1!.routesInfos[p];
+    if (!route1Found) {
+      i++;
+      continue;
+    }
+
     inputToken = tokens.find((t) => t.address == token2[i%amtOfTok2]);
     outputToken = tokens.find((t) => t.address == token1);
 
@@ -673,24 +683,35 @@ export const runUntilProfitV3 = async ({
       jupiter,
       inputToken,
       outputToken,
-      inputAmount: (routeInfo1.outAmountWithSlippage/LAMPORTS_PER_SOL), // 1 unit in UI
+      inputAmount: (routeInfo1!.outAmountWithSlippage/LAMPORTS_PER_SOL), // 1 unit in UI
       slippage: slippage, // 1% slippage
       directOnly: true,
     });
-    p = 0;
-    console.log(routes2!.routesInfos[p]!.marketInfos[0]!.amm!.id.length);
-    while (routes2!.routesInfos[p]!.marketInfos!.length != 1 && routes2!.routesInfos[p]!.marketInfos[0]!.amm!.id.length > 44) {
-      p++
+    
+    for (var rInfo of routes2!.routesInfos!){
+      if (rInfo!.marketInfos[0]!.amm!.label == "Orca" || rInfo!.marketInfos[0]!.amm!.label == "Raydium") {
+        route2Found = true;
+        routeInfo2 = rInfo;
+
+        console.log(rInfo!.marketInfos[0]!.amm!.label);
+        console.log(rInfo);
+
+        break;
+      }
+      console.log("#############################",rInfo!.marketInfos[0]!.amm!.label);
     }
-    routeInfo2 = routes2!.routesInfos[p];
+    if (!route2Found) {
+      i++;
+      continue;
+    }
 
     const { transactions: transactions1 } = await jupiter.exchange({
-      routeInfo: routeInfo1,
+      routeInfo: routeInfo1!,
       wrapUnwrapSOL: false,
     });
 
     const { transactions: transactions2 } = await jupiter.exchange({
-      routeInfo: routeInfo2,
+      routeInfo: routeInfo2!,
       wrapUnwrapSOL: false
     });
 
@@ -714,7 +735,7 @@ export const runUntilProfitV3 = async ({
     }
 
     // Calculate spread
-    inAm = (routeInfo1.inAmount + (0.000005  * LAMPORTS_PER_SOL))/LAMPORTS_PER_SOL;
+    inAm = (routeInfo1!.inAmount + (0.000005  * LAMPORTS_PER_SOL))/LAMPORTS_PER_SOL;
     // Explicit type conversion of string to number
     let outAm: number  = +outAmString;
     // Adjusting decimal places.
@@ -723,8 +744,8 @@ export const runUntilProfitV3 = async ({
     }
     outAm = outAm/DECIMAL_PLACES;
     spread = outAm - inAm;
-    console.log(routeInfo1.marketInfos[0].amm.label);
-    console.log(routeInfo2.marketInfos[0].amm.label);
+    console.log(routeInfo1!.marketInfos[0].amm.label);
+    console.log(routeInfo2!.marketInfos[0].amm.label);
     console.log("I: ", inAm);
     console.log("O: ", outAm);
     console.log("S: ", spread);

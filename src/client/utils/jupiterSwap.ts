@@ -231,7 +231,7 @@ export const retrieveJupRoutes = async ({
   // Retrieve token list
   const tokens: Token[] = await (await fetch(TOKEN_LIST_URL[ENV])).json();
 
-  console.log(tokens);
+  
 
   //  Load Jupiter
   const jupiter = await Jupiter.load({
@@ -641,7 +641,7 @@ export const runUntilProfitV3 = async ({
     inputToken = tokens.find((t) => t.address == token1);
     outputToken = tokens.find((t) => t.address == token2[i%amtOfTok2]);
 
-    const routes1 = await getRoutes({
+    let routes1 = await getRoutes({
       jupiter,
       inputToken,
       outputToken,
@@ -655,18 +655,16 @@ export const runUntilProfitV3 = async ({
     let route1Found = false;
     let route2Found = false;
 
-    //console.log(routes1!.routesInfos!);
     for (var rInfo of routes1!.routesInfos!){
       if (rInfo!.marketInfos[0]!.amm!.label == "Orca" || rInfo!.marketInfos[0]!.amm!.label == "Raydium") {
         route1Found = true;
         routeInfo1 = rInfo;
 
         console.log(rInfo!.marketInfos[0]!.amm!.label);
-        console.log(rInfo);
 
         break;
       }
-      console.log("#############################",rInfo!.marketInfos[0]!.amm!.label);
+      // console.log("#############################",rInfo!.marketInfos[0]!.amm!.label);
 
     }
     if (!route1Found) {
@@ -677,9 +675,8 @@ export const runUntilProfitV3 = async ({
     inputToken = tokens.find((t) => t.address == token2[i%amtOfTok2]);
     outputToken = tokens.find((t) => t.address == token1);
 
-    // console.log(routeInfo1.marketInfos.length);
-    // console.log(routeInfo2.marketInfos.length);
-    const routes2 = await getRoutes({
+
+    let routes2 = await getRoutes({
       jupiter,
       inputToken,
       outputToken,
@@ -694,17 +691,16 @@ export const runUntilProfitV3 = async ({
         routeInfo2 = rInfo;
 
         console.log(rInfo!.marketInfos[0]!.amm!.label);
-        console.log(rInfo);
 
         break;
       }
-      console.log("#############################",rInfo!.marketInfos[0]!.amm!.label);
+      // console.log("#############################",rInfo!.marketInfos[0]!.amm!.label);
     }
     if (!route2Found) {
       i++;
       continue;
     }
-
+    
     const { transactions: transactions1 } = await jupiter.exchange({
       routeInfo: routeInfo1!,
       wrapUnwrapSOL: false,

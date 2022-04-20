@@ -12,7 +12,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { StartStop } from "components/StartStop";
+import StartStop  from "components/StartStop";
 
 // import React from 'react';
 import React, { useState, Component } from 'react'
@@ -23,8 +23,7 @@ import Dropdown from 'react-bootstrap/Dropdown'
 import {WalletChart} from "components/WalletChart"
 
 
-
-import {ret_t, get_end_bal, get_init_bal, get_tot_prof, routeOutput} from '../tsx.js';
+import {ret_t_2, routeOutputV3} from '../tsx';
 
 
 
@@ -55,37 +54,6 @@ interface balanceType {
 interface PropType {
   balanceData: balanceType[]
 }
-
-
-// class App extends Component {  
-
-//   state = {
-//       readDataLoaded: true
-//   }
-
-
-//   constructor(){  
-//       super();
-
-//       this.state = {  
-//           readDataLoaded: false  
-//       }
-//   }
-
-//   readData = async () =>{
-//       const response = await fetch('http://localhost:4000/S2S')
-//       const balanceData = await response.json()
-//       this.setState({readDataLoaded: true})
-//       return balanceData;
-//   }
-
-//   render(){
-//       return(
-//           <h1>sdsfd</h1>
-//       )
-//   }
-
-// }
 
 // export const data = {
 //   labels,
@@ -175,7 +143,14 @@ function Basics ({balanceData}) {
       <h1 className="text-center text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
         Basics
       </h1>
-      <StartStop />
+
+
+      <button
+                className="px-8 m-2 btn animate-pulse bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 ..."
+                // onClick={routeOutputV3}
+      >
+                {/* <span>{`${status ? "Stop Trading" : "Start Trading"}`} </span> */}
+      </button>
 
       <div className="flex items-center justify-center p-5 space-x-5">
 
@@ -241,31 +216,17 @@ export async function getServerSideProps(){
   const response = await fetch('http://localhost:4000/S2S')
   const balanceData = await response.json()
 
-  console.log(balanceData);
-
-  console.log(get_end_bal(balanceData))
-
+  // console.log(balanceData);
   
-  routeOutput()
-  .then(() => {
+  // routeOutputV3()
+  // .then(() => {
 
-    console.log("Done");
-  })
-  .catch((e) => {
-    console.error(e);
-  });
+  //   console.log("Done");
+  // })
+  // .catch((e) => {
+  //   console.error(e);
+  // });
 
-
-//   axios.post('http://localhost:4000/S2S', {
-//     id: 6,
-//     first_name: 'Fred',
-//     last_name: 'Blair',
-//     email: 'freddyb34@gmail.com'
-// }).then(resp => {
-//     console.log(resp.data);
-// }).catch(error => {
-//     console.log(error);
-// });
 
   return {
     props: {

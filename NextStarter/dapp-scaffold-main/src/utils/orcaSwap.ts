@@ -15,7 +15,7 @@ export const executeOrcaSwap = async ({
     tokenIn: string;
     tokenOut: string;
     inAmount: number;
-  }) => {
+  }) => { 
     const orca = getOrca(connection);
   
     try {
@@ -51,20 +51,22 @@ export const executeOrcaSwap = async ({
       console.log(`Swap ${Amount.toString()} OXY for at least ${outAmount.toNumber()} SOL`);
       const swapPayload = await orcaSolPool.swap(owner, IN_TOKEN, Amount, outAmount);
       // console.log('orcaSolPool.swap: ');
-      // console.log(swapPayload.transaction);
+      console.log(swapPayload.transaction);
+      console.log(swapPayload.signers)
 
       const signature: string = await sendAndConfirmTransaction(connection, swapPayload.transaction, swapPayload.signers);
       console.log("tx: ", signature);
     } else {
       console.log("This token pair is not setup for transactions.")
     }
+    return "success";
   
     } catch (err) {
       console.warn(err);
-      return -1
+      return "failure";
     }
   };
-
+  
   export const getOrcaQuote = async ({
     connection,
     tokenIn,
@@ -101,5 +103,45 @@ export const executeOrcaSwap = async ({
     }
     return quoteInfo.toNumber();
 
-
   };
+
+  export const orcaTwoWayTrade = async({
+    connection,
+    token1,
+    token2,
+    inAmount,
+    owner
+  }: {
+    connection: Connection;
+    token1: string;
+    token2: string;
+    inAmount: number;
+    owner: Keypair;
+  }) => {
+    const orca = getOrca(connection);
+
+    const orcaPool = orca.getPool(OrcaPoolConfig.STEP_SOL);
+
+    const OUT_TOKEN = orcaPool.getTokenA();
+    const IN_TOKEN = orcaPool.getTokenB();
+    const AmountIN = new Decimal(inAmount);
+    const quoteIN = await orcaPool.getQuote(IN_TOKEN, AmountIN);
+    const outAmount1 = quoteIN.getMinOutputAmount();
+    
+
+    const quoteOUT = await orcaPool.getQuote(OUT_TOKEN, outAmount1);
+    const outAmount2 = quoteOUT.getMinOutputAmount();
+
+    console.log("SOL -> STEP: ",outAmount1.toNumber());
+    console.log("STEP -> SOL: ",outAmount2.toNumber());
+
+    const swapPayload1 = await orcaPool.swap(owner, IN_TOKEN, AmountIN, outAmount1);
+    const swapPayload2 = await orcaPool.swap(owner, OUT_TOKEN, outAmount1, outAmount2);
+
+    // console.log(swapPayload1.transaction);
+    // console.log(swapPayload2.transaction);
+
+    return {swapPayload1, swapPayload2}
+
+
+  }

@@ -33,6 +33,17 @@ export const OUTPUT_MINT_ADDRESS =
 export const SOL_MINT_ADDRESS = "So11111111111111111111111111111111111111112";
 export const USDC_MINT_ADDRESS = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
 export const OXY_MINT_ADDRESS = "z3dn17yLaGMKffVogeFHQ9zWVcXgqgf3PQnDsNs2g6M";
+export const mSOL_MINT_ADDRESS = "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So";
+export const STEP_MINT_ADDRESS = "StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT";
+export const stSOL_MINT_ADDRESS = "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj";
+export const RAY_MINT_ADDRESS = "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R";
+export const oneSOL_MINT_ADDRESS = "4ThReWAbAVZjNVgs5Ui9Pk3cZ5TYaD9u6Y89fp6EFzoF";
+export const ALL_MINT_ADDRESS = "7ScYHk4VDgSRnQngAUtQk4Eyf7fGat8P4wXq6e2dkzLj";
+export const SHDW_MINT_ADDRESS = "SHDWyBxihqiCj6YekG2GUr7wqKLeLAMK1gHZck9pL6y";
+export const sRLY_MINT_ADDRESS = "RLYv2ubRMDLcGG2UyvPmnPmkfuQTsMbg4Jtygc7dmnq";
+export const USDT_MINT_ADDRESS = "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB";
+export const UXP_MINT_ADDRESS = "UXPhBoR3qG4UCiGNJfV7MqhHyFqKN68g45GoYvAeL2M";
+export const soETH_MINT_ADDRESS = "2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk";
 // Interface
 export interface Token {
   chainId: number; // 101,

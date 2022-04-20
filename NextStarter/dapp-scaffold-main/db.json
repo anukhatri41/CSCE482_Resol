@@ -1,4 +1,9 @@
 {
+  "wallet_secret": [
+    {
+      "ws": ""
+    }
+  ],
   "S2S": [
     {
       "total_swaps": 2,

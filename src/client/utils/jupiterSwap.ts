@@ -10,7 +10,10 @@ import {
   OXY_MINT_ADDRESS,
   mSOL_MINT_ADDRESS,
   Token,
-  USDC_MINT_ADDRESS
+  USDC_MINT_ADDRESS,
+  oneSOL_MINT_ADDRESS,
+  USDT_MINT_ADDRESS,
+  soETH_MINT_ADDRESS
 } from "../constants";
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -630,7 +633,8 @@ export const runUntilProfitV3 = async ({
   let outAm = 0;
   let outAmString = "";
   let DECIMAL_PLACES = LAMPORTS_PER_SOL;
-  const diffThresh = 0.0001;
+  let NUMBER_OF_DECIMAL_PLACES = 9;
+  const diffThresh = inAmount * LAMPORTS_PER_SOL;
   let spread = outAm - inAm;
   console.log("######################################")
 
@@ -661,12 +665,12 @@ export const runUntilProfitV3 = async ({
         route1Found = true;
         routeInfo1 = rInfo;
 
-        console.log(rInfo!.marketInfos[0]!.amm!.label);
-        console.log(rInfo);
+        // console.log(rInfo!.marketInfos[0]!.amm!.label);
+        // console.log(rInfo);
 
         break;
       }
-      console.log("#############################",rInfo!.marketInfos[0]!.amm!.label);
+      // console.log("#############################",rInfo!.marketInfos[0]!.amm!.label);
 
     }
     if (!route1Found) {
@@ -679,11 +683,29 @@ export const runUntilProfitV3 = async ({
 
     // console.log(routeInfo1.marketInfos.length);
     // console.log(routeInfo2.marketInfos.length);
+
+    DECIMAL_PLACES = LAMPORTS_PER_SOL;
+    // Adjusting decimal places.
+    NUMBER_OF_DECIMAL_PLACES = inputToken.decimals;
+    // console.log(NUMBER_OF_DECIMAL_PLACES);
+    DECIMAL_PLACES = LAMPORTS_PER_SOL/(10**(9 - inputToken.decimals));
+    // console.log(DECIMAL_PLACES);
+
+    // 6 Decimal Places
+    // if ((token2[i%amtOfTok2] == USDC_MINT_ADDRESS) || (token2[i%amtOfTok2] == soETH_MINT_ADDRESS) ||
+    // (token2[i%amtOfTok2] == OXY_MINT_ADDRESS) || (token2[i%amtOfTok2] == USDT_MINT_ADDRESS)) {
+    //   DECIMAL_PLACES = LAMPORTS_PER_SOL/1000;
+    // }
+    // // 8 Decimal Places
+    // if ((token2[i%amtOfTok2] == oneSOL_MINT_ADDRESS)) {
+    //   DECIMAL_PLACES = LAMPORTS_PER_SOL/10;
+    // }
+
     const routes2 = await getRoutes({
       jupiter,
       inputToken,
       outputToken,
-      inputAmount: (routeInfo1!.outAmountWithSlippage/LAMPORTS_PER_SOL), // 1 unit in UI
+      inputAmount: (routeInfo1!.outAmountWithSlippage/DECIMAL_PLACES), // 1 unit in UI
       slippage: slippage, // 1% slippage
       directOnly: true,
     });
@@ -693,8 +715,8 @@ export const runUntilProfitV3 = async ({
         route2Found = true;
         routeInfo2 = rInfo;
 
-        console.log(rInfo!.marketInfos[0]!.amm!.label);
-        console.log(rInfo);
+        // console.log(rInfo!.marketInfos[0]!.amm!.label);
+        // console.log(rInfo);
 
         break;
       }
@@ -738,11 +760,10 @@ export const runUntilProfitV3 = async ({
     inAm = (routeInfo1!.inAmount + (0.000005  * LAMPORTS_PER_SOL))/LAMPORTS_PER_SOL;
     // Explicit type conversion of string to number
     let outAm: number  = +outAmString;
-    // Adjusting decimal places.
-    if (token2[i%amtOfTok2] == USDC_MINT_ADDRESS) {
-      DECIMAL_PLACES = LAMPORTS_PER_SOL/1000;
-    }
+
+    DECIMAL_PLACES = LAMPORTS_PER_SOL;
     outAm = outAm/DECIMAL_PLACES;
+    
     spread = outAm - inAm;
     console.log(routeInfo1!.marketInfos[0].amm.label);
     console.log(routeInfo2!.marketInfos[0].amm.label);

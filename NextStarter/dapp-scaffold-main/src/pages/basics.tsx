@@ -24,7 +24,7 @@ import {WalletChart} from "components/WalletChart"
 
 
 
-import { ret_t} from '../tsx.js';
+import {ret_t, get_end_bal, get_init_bal, get_tot_prof, routeOutput} from '../tsx.js';
 
 
 
@@ -243,8 +243,17 @@ export async function getServerSideProps(){
 
   console.log(balanceData);
 
-  console.log(ret_t())
+  console.log(get_end_bal(balanceData))
 
+  
+  routeOutput()
+  .then(() => {
+
+    console.log("Done");
+  })
+  .catch((e) => {
+    console.error(e);
+  });
 
 
 //   axios.post('http://localhost:4000/S2S', {

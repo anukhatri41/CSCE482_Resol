@@ -17,6 +17,7 @@ import {
   Token as TokenSPL,
   TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
+const spltoken = require("@solana/spl-token2.0")
 import { Wallet } from "@project-serum/anchor";
 
 
@@ -112,14 +113,17 @@ export const createWSolAccount = async ({
   connection: Connection;
   owner: Keypair;
 }) => {
-  const wsolAddress = await TokenSPL.getAssociatedTokenAddress(
-    ASSOCIATED_TOKEN_PROGRAM_ID,
-    TOKEN_PROGRAM_ID,
+  console.log(ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID);
+  const wsolAddress = await spltoken.getOrCreateAssociatedTokenAccount(
+    connection,
+    owner,
     new PublicKey(SOL_MINT_ADDRESS),
     owner.publicKey
   );
 
-  const wsolAccount = await connection.getAccountInfo(wsolAddress);
+  // console.log(wsolAddress);
+  // let wsolAccount;
+  const wsolAccount = await connection.getAccountInfo(wsolAddress.address);
 
   if (!wsolAccount) {
     const transaction = new Transaction({

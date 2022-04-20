@@ -654,13 +654,16 @@ export const runUntilProfitV3 = async ({
     let routeInfo2: RouteInfo;
 
     let p = 0;
-    console.log(routes1!.routesInfos[p]!.marketInfos[0]!.amm!.id);
-    if (routes1!.routesInfos[i]!.marketInfos) {
-      while (routes1!.routesInfos[i]!.marketInfos!.length != 1 && routes1!.routesInfos[p]!.marketInfos[0]!.amm!.id.length > 44) {
+    // console.log("******************")
+    // console.log(i)
+    // console.log(routes1!.routesInfos.length)
+    // console.log(routes1!.routesInfos[p]!.marketInfos);
+    if (routes1!.routesInfos[p]!.marketInfos) {
+      while (routes1!.routesInfos[p]!.marketInfos!.length != 1 && routes1!.routesInfos[p]!.marketInfos[0]!.amm!.id.length > 44) {
         p++
       }
     }
-    routeInfo1 = routes1!.routesInfos[i];
+    routeInfo1 = routes1!.routesInfos[p];
     inputToken = tokens.find((t) => t.address == token2[i%amtOfTok2]);
     outputToken = tokens.find((t) => t.address == token1);
 
@@ -676,7 +679,7 @@ export const runUntilProfitV3 = async ({
     });
     p = 0;
     console.log(routes2!.routesInfos[p]!.marketInfos[0]!.amm!.id.length);
-    while (routes2!.routesInfos[i]!.marketInfos!.length != 1 && routes2!.routesInfos[p]!.marketInfos[0]!.amm!.id.length > 44) {
+    while (routes2!.routesInfos[p]!.marketInfos!.length != 1 && routes2!.routesInfos[p]!.marketInfos[0]!.amm!.id.length > 44) {
       p++
     }
     routeInfo2 = routes2!.routesInfos[p];

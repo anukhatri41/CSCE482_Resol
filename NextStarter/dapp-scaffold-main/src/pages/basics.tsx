@@ -16,13 +16,17 @@ import { StartStop } from "components/StartStop";
 
 // import React from 'react';
 import React, { useState, Component } from 'react'
-import 'bootstrap/dist/css/bootstrap.css';
+// import 'bootstrap/dist/css/bootstrap.css';
 
 import Dropdown from 'react-bootstrap/Dropdown'
 
 import {WalletChart} from "components/WalletChart"
 
-// import React, {Component} from 'react';
+
+
+import { ret_t} from '../tsx.js';
+
+
 
 const axios = require('axios');
 
@@ -238,6 +242,8 @@ export async function getServerSideProps(){
   const balanceData = await response.json()
 
   console.log(balanceData);
+
+  console.log(ret_t())
 
 
 

@@ -40,10 +40,15 @@ const bn = require("bn.js")
     directOnly?: boolean;
   }) => {
     try {
+
+      let inputTokenSymbol;
+      let outputTokenSymbol;
       if (!inputToken || !outputToken) {
         return null;
       }
-  
+      
+      inputTokenSymbol = inputToken.symbol;
+      outputTokenSymbol = outputToken.symbol;
       console.log(
         `Getting routes for ${inputAmount} ${inputToken.symbol} -> ${outputToken.symbol}...`
       );
@@ -69,7 +74,7 @@ const bn = require("bn.js")
         //   routes.routesInfos[0].outAmount / 10 ** outputToken.decimals,
         //   `(${outputToken.symbol})`
         // );
-        return routes;
+        return {routes, inputAmount, inputTokenSymbol, outputTokenSymbol};
       } else {
         return null;
       }
@@ -459,7 +464,7 @@ export const runUntilProfitV2 = async ({
   inputToken = tokens.find((t) => t.address == token1);
   outputToken = tokens.find((t) => t.address == token2);
 
-  const routes1 = await getRoutes({
+  const { routes: routes1 } = await getRoutes({
     jupiter,
     inputToken,
     outputToken,
@@ -591,6 +596,10 @@ export const runUntilProfitV2 = async ({
   return{ transactions1, transactions2 };
 }
 
+
+
+
+////// Function we are using to perform swaps.
 export const runUntilProfitV3 = async ({
   connection,
   inAmount,
@@ -598,7 +607,6 @@ export const runUntilProfitV3 = async ({
   slippage = 0.05,
   token1, // This should be the token you are starting with.
   token2,
-  wallet,
   wrappedOwner,
 }: {
   connection: Connection;
@@ -607,8 +615,7 @@ export const runUntilProfitV3 = async ({
   slippage?: number;
   token1: string;
   token2: string[];
-  wallet: Wallet;
-  wrappedOwner: PublicKey;
+  wrappedOwner?: PublicKey;
 }) => {
 
   // Retrieve token list
@@ -640,12 +647,23 @@ export const runUntilProfitV3 = async ({
 
   let transactions1;
   let transactions2;
+  const stop_response = await fetch('http://localhost:4000/tsx_params/1')
+  let stop_flag = await stop_response.json();
+  let stop_flag_triggered = false;
 
-  while (true) {
+  while (!stop_flag_triggered) {
+    stop_flag = await stop_response.json();
+
+    // If we click stop, we want the code to break, then
+    if(stop_flag.stop == true){
+      stop_flag_triggered = true;
+      continue;
+    }
+
     inputToken = tokens.find((t) => t.address == token1);
     outputToken = tokens.find((t) => t.address == token2[i%amtOfTok2]);
 
-    const routes1 = await getRoutes({
+    const { routes: routes1, inputAmount: inputAmount1 , inputTokenSymbol: inputTokenSymbol1, outputTokenSymbol: outputTokenSymbol1 } = await getRoutes({
       jupiter,
       inputToken,
       outputToken,
@@ -661,11 +679,11 @@ export const runUntilProfitV3 = async ({
 
     //console.log(routes1!.routesInfos!);
     for (var rInfo of routes1!.routesInfos!){
-      if (rInfo!.marketInfos[0]!.amm!.label == "Orca" || rInfo!.marketInfos[0]!.amm!.label == "Raydium") {
+      // console.log(rInfo!.marketInfos[0]!.amm!.label);
+      if (rInfo!.marketInfos[0]!.amm!.label == "Orca" || rInfo!.marketInfos[0]!.amm!.label == "Raydium" || rInfo!.marketInfos[0]!.amm!.label == "Aldrin") {
         route1Found = true;
         routeInfo1 = rInfo;
 
-        // console.log(rInfo!.marketInfos[0]!.amm!.label);
         // console.log(rInfo);
 
         break;
@@ -701,7 +719,7 @@ export const runUntilProfitV3 = async ({
     //   DECIMAL_PLACES = LAMPORTS_PER_SOL/10;
     // }
 
-    const routes2 = await getRoutes({
+    const { routes: routes2, inputAmount: inputAmount2 , inputTokenSymbol: inputTokenSymbol2, outputTokenSymbol: outputTokenSymbol2 } = await getRoutes({
       jupiter,
       inputToken,
       outputToken,
@@ -711,7 +729,7 @@ export const runUntilProfitV3 = async ({
     });
     
     for (var rInfo of routes2!.routesInfos!){
-      if (rInfo!.marketInfos[0]!.amm!.label == "Orca" || rInfo!.marketInfos[0]!.amm!.label == "Raydium") {
+      if (rInfo!.marketInfos[0]!.amm!.label == "Orca" || rInfo!.marketInfos[0]!.amm!.label == "Raydium" || rInfo!.marketInfos[0]!.amm!.label == "Aldrin") {
         route2Found = true;
         routeInfo2 = rInfo;
 
@@ -720,7 +738,7 @@ export const runUntilProfitV3 = async ({
 
         break;
       }
-      console.log("#############################",rInfo!.marketInfos[0]!.amm!.label);
+      console.log("#############################", rInfo!.marketInfos[0]!.amm!.label);
     }
     if (!route2Found) {
       i++;
@@ -776,7 +794,7 @@ export const runUntilProfitV3 = async ({
     }
     console.log("######################################")
     if (spread > 0) {
-      return{ transactions1, transactions2 };
+      return{ transactions1, transactions2, stop_flag_triggered };
     }
     i++;
     DECIMAL_PLACES = LAMPORTS_PER_SOL;
@@ -784,5 +802,5 @@ export const runUntilProfitV3 = async ({
 
   //return routes;
   // Changed this to return the route with the proper transaction stuff.
-  return{ transactions1, transactions2 };
+  return{ transactions1, transactions2, stop_flag_triggered };
 }

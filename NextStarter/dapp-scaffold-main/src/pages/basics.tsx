@@ -166,7 +166,7 @@ function Basics ({balanceData}) {
         />
 
 
-      <h3>Number of iteratoins: </h3>
+      <h3>Number of iteratoins (Enter 'inf' for &#8734; number of runs): </h3>
         <input
           type="text" 
           value={iterations}

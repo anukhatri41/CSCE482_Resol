@@ -6,7 +6,7 @@
   ],
   "tsx_params": [
     {
-      "iterations": "20",
+      "iterations": "3",
       "amount": "1",
       "stop": true,
       "id": 1

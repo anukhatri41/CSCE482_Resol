@@ -10,7 +10,7 @@ import {
     Transaction
    } from "@solana/web3.js";
   import { executeOrcaSwap, getOrcaQuote, orcaTwoWayTrade } from "./utils/orcaSwap";
-  import { executeJupiterSwap, retrieveJupRoutes, runUntilProfit, runUntilProfitV2, runUntilProfitV3 } from "./utils/jupiterSwap";
+  import { runUntilProfitV3 } from "./utils/jupiterSwap";
   import { fetchWalletBalance, createWSolAccount, createWSolAccountWallet } from "./utils/shared";
   import { raydiumSwap } from "./utils/raydiumSwap";
   import { Wallet } from "@project-serum/anchor";

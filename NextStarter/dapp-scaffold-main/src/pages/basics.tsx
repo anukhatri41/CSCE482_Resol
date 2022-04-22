@@ -14,17 +14,13 @@ import {
 } from 'chart.js';
 import StartStop  from "components/StartStop";
 
-// import React from 'react';
 import React, { useState, Component } from 'react'
 // import 'bootstrap/dist/css/bootstrap.css';
+
 
 import Dropdown from 'react-bootstrap/Dropdown'
 
 import {WalletChart} from "components/WalletChart"
-
-
-import {ret_t_2, routeOutputV3} from '../tsx';
-
 
 
 const axios = require('axios');
@@ -100,10 +96,11 @@ interface PropType {
 // };
 
 
-
 function Basics ({balanceData}) {
 
-  const [param,setParam] = useState()
+  const [amount, setAmount] = useState("");
+
+  const [iterations, setIterations] = useState("");
 
 
   var param_options = Object.keys(balanceData[0])
@@ -160,10 +157,27 @@ function Basics ({balanceData}) {
         Basics
       </h1>
 
+        <h3>Amount of SOL per transaction: </h3>
+        <input
+          type="text" 
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          style={{backgroundColor: "black", width: "20%", textAlign: "center" }}
+        />
+
+
+      <h3>Number of iteratoins: </h3>
+        <input
+          type="text" 
+          value={iterations}
+          onChange={(e) => setIterations(e.target.value)}
+          style={{backgroundColor: "black", width: "20%", textAlign: "center"}}
+        />
+
 
       <button
                 className="px-8 m-2 btn animate-pulse bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 ..."
-                onClick={() => openTab(0.002,1)}
+                onClick={() => openTab(iterations,amount)}
       >
                 <span>{`${"Start Trading"}`} </span>
       </button>
@@ -231,18 +245,6 @@ export async function getServerSideProps(){
   console.log("howdy");
   const response = await fetch('http://localhost:4000/S2S')
   const balanceData = await response.json()
-
-  // console.log(balanceData);
-  
-  // routeOutputV3()
-  // .then(() => {
-
-  //   console.log("Done");
-  // })
-  // .catch((e) => {
-  //   console.error(e);
-  // });
-
 
   return {
     props: {

@@ -83,12 +83,12 @@ function Trading ({tsx_params}) {
       <h1 className="text-center text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
         Trading currently running
       </h1>
-        <h2>SOL per trade: {tsx_params[0].amount}</h2>
-        <h2>Number of iterations: {tsx_params[0].iterations} </h2>
+        <h2>SOL per trade: {tsx_params.amount}</h2>
+        <h2>Number of iterations: {tsx_params.iterations} </h2>
 
       <button
                 className="px-8 m-2 btn animate-pulse bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 ..."
-                onClick={() => closeTab(tsx_params[0].iterations, tsx_params[0].amount )}
+                onClick={() => closeTab(tsx_params.iterations, tsx_params.amount )}
       >
                 <span>{`${"Stop Trading" }`} </span>
       </button>
@@ -136,21 +136,21 @@ export default Trading;
 
 export async function getServerSideProps(){
   console.log("howdy");
-  const response = await fetch('http://localhost:4000/tsx_params')
+  const response = await fetch('http://localhost:4000/tsx_params/1')
   const tsx_params = await response.json()
 
   console.log("-------TRADING---------");
 
-  console.log(tsx_params[0])
+  console.log(tsx_params)
   
-//   routeOutputV3()
-//   .then(() => {
+  routeOutputV3()
+  .then(() => {
 
-//     console.log("Done");
-//   })
-//   .catch((e) => {
-//     console.error(e);
-//   });
+    console.log("Done");
+  })
+  .catch((e) => {
+    console.error(e);
+  });
 
 
   return {

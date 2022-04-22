@@ -4,6 +4,14 @@
       "ws": ""
     }
   ],
+  "tsx_params": [
+    {
+      "iterations": 0.002,
+      "amount": 1,
+      "stop": true,
+      "id": 1
+    }
+  ],
   "S2S": [
     {
       "total_swaps": 2,

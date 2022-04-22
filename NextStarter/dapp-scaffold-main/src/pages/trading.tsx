@@ -1,7 +1,4 @@
-import type { NextPage } from "next";
 import Head from "next/head";
-
-import {Line} from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,39 +9,36 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import StartStop  from "components/StartStop";
 
-// import React from 'react';
+import StartStop  from "components/StartStop";
 import React, { useState, Component } from 'react'
 // import 'bootstrap/dist/css/bootstrap.css';
-
-import Dropdown from 'react-bootstrap/Dropdown'
-
-import {WalletChart} from "components/WalletChart"
-
 
 import {ret_t_2, routeOutputV3} from '../tsx';
 
 
+import { Triangle } from "react-loader-spinner";
 
 const axios = require('axios');
 
-const openTab = (iter,amo) => {
 
-  axios.put('http://localhost:4000/tsx_params/1', {
-    iterations: iter,
-    amount: amo,
-    stop: false
-  
-  }).then(resp => {
-    console.log(resp.data);
-  }).catch(error => {
-    console.log(error);
-  });
+const closeTab = async (iter, amo) => {
+    await axios.put('http://localhost:4000/tsx_params/1', {
+        iterations: iter,
+        amount: amo,
+        stop: true
+      
+      }).then(resp => {
+        console.log(resp.data);
+      }).catch(error => {
+        console.log(error);
+      });
+    
+    // await new Promise(r => setTimeout(r, 1000));
 
-
-  window.open('http://localhost:3000/trading')
-};
+    window.open("about:blank", "_self");
+    window.close();
+  };
 
 
 ChartJS.register(
@@ -71,78 +65,8 @@ interface PropType {
   balanceData: balanceType[]
 }
 
-// export const data = {
-//   labels,
-//   datasets: [
-//     {
-//       label: 'Wallet Balance',
-//       data: endBal,
-//       borderColor: 'rgb(255, 99, 132)',
-//       backgroundColor: 'rgba(255, 99, 132, 0.5)',
-//     }
-//   ],
-//   options: {
-//     scales: {
-//       yAxes: [{
-//         scaleLabel: {
-//           display: true,
-//           labelString: 'SOL Balance'
-//         }
-//       }],
-//       xAxes: [{
-//         scaleLabel: {
-//           display: true,
-//           labelString: 'Transaction Iteration'
-//         }
-//       }],
-//     }     
-//   }
-// };
 
-
-
-function Basics ({balanceData}) {
-
-  const [param,setParam] = useState()
-
-
-  var param_options = Object.keys(balanceData[0])
-
-  var endBal = []
-  for (let i = 0; i < balanceData.length ; i++) {endBal.push(balanceData[i].end_bal)}
-  var labels = []
-  for (let i = 1; i <= balanceData.length; i++) {labels.push(i)}
-  var differenceColor = ((balanceData[balanceData.length - 1].end_bal - balanceData[0].init_bal) > 0) ? 'rgb(99, 255, 222, 0.5)' : 'rgb(255, 99, 132, 0.5)';
-  
-
-  // const data = {
-  //   labels,
-  //   datasets: [
-  //     {
-  //       label: 'Wallet Balance',
-  //       data: endBal,
-  //       borderColor: differenceColor,
-  //       backgroundColor: differenceColor,
-  //     }
-  //   ],
-  //   options: {
-  //     scales: {
-  //       yAxes: [{
-  //         scaleLabel: {
-  //           display: true,
-  //           labelString: 'SOL Balance'
-  //         }
-  //       }],
-  //       xAxes: [{
-  //         scaleLabel: {
-  //           display: true,
-  //           labelString: 'Transaction Iteration'
-  //         }
-  //       }],
-  //     }     
-  //   }
-  // };
-
+function Trading ({tsx_params}) {
 
   return (
     <div>
@@ -157,16 +81,20 @@ function Basics ({balanceData}) {
 
     <div className="md:hero-content flex flex-col">
       <h1 className="text-center text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
-        Basics
+        Trading currently running
       </h1>
-
+        <h2>SOL per trade: {tsx_params[0].amount}</h2>
+        <h2>Number of iterations: {tsx_params[0].iterations} </h2>
 
       <button
                 className="px-8 m-2 btn animate-pulse bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 ..."
-                onClick={() => openTab(0.002,1)}
+                onClick={() => closeTab(tsx_params[0].iterations, tsx_params[0].amount )}
       >
-                <span>{`${"Start Trading"}`} </span>
+                <span>{`${"Stop Trading" }`} </span>
       </button>
+
+
+      <Triangle color="#99ffcc" height={200} width={200} />
 
       <div className="flex items-center justify-center p-5 space-x-5">
 
@@ -194,28 +122,7 @@ function Basics ({balanceData}) {
               </clipPath>
             </defs>
           </svg>
-        <div className="flex flex-col space-y-2">
-          <h2 className="text-lg font-black text-gray-500">Solana</h2>
-          <p className="text-sm text-gray-500">$ 42770</p>
-        </div>
 
-        <Dropdown onSelect={function(evt){console.log(evt)}}> 
-          <Dropdown.Toggle variant="success" id="dropdown-basic">
-            Parameter
-          </Dropdown.Toggle>
-
-          <Dropdown.Menu>
-            {param_options.map(item => <Dropdown.Item value = "3"> {item}</Dropdown.Item>)}
-          </Dropdown.Menu>
-        </Dropdown>
-        
-    
-
-
-      </div>
-
-      <div>
-        <WalletChart balanceData={balanceData}/>
       </div>
 
     </div> 
@@ -224,29 +131,31 @@ function Basics ({balanceData}) {
   );
 };
 
-export default Basics;
+export default Trading;
 
 
 export async function getServerSideProps(){
   console.log("howdy");
-  const response = await fetch('http://localhost:4000/S2S')
-  const balanceData = await response.json()
+  const response = await fetch('http://localhost:4000/tsx_params')
+  const tsx_params = await response.json()
 
-  // console.log(balanceData);
+  console.log("-------TRADING---------");
+
+  console.log(tsx_params[0])
   
-  // routeOutputV3()
-  // .then(() => {
+//   routeOutputV3()
+//   .then(() => {
 
-  //   console.log("Done");
-  // })
-  // .catch((e) => {
-  //   console.error(e);
-  // });
+//     console.log("Done");
+//   })
+//   .catch((e) => {
+//     console.error(e);
+//   });
 
 
   return {
     props: {
-      balanceData,
+      tsx_params,
     }
   }
 }

@@ -144,7 +144,7 @@ export const createWSolAccount = async ({
       SystemProgram.transfer({
         fromPubkey: owner.publicKey,
         toPubkey: wsolAddress,
-        lamports: 1_000_000_000/4, // 1 sol
+        lamports: 1_000_000_000, // 1 sol
       })
     );
 
@@ -164,5 +164,5 @@ export const createWSolAccount = async ({
     console.log({ result });
   }
 
-  return wsolAccount;
+  return wsolAddress;
 };

@@ -36,7 +36,9 @@ import {
     sRLY_MINT_ADDRESS,
     USDT_MINT_ADDRESS,
     UXP_MINT_ADDRESS,
-    soETH_MINT_ADDRESS
+    soETH_MINT_ADDRESS,
+    UST_MINT_ADDRESS,
+    PRT_MINT_ADDRESS
   } from "./constants";
 
 

@@ -60,6 +60,8 @@ const routeOutputV3 = async () => {
     const response = await fetch('http://localhost:4000/tsx_params/1')
     const tsx_params = await response.json()
 
+    console.log(tsx_params)
+
     var iter = tsx_params.iterations
 
     for (let i = 0; i < iter; i++) {

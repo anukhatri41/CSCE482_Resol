@@ -19,6 +19,7 @@ import {ret_t_2, routeOutputV3} from '../tsx';
 
 import { Triangle } from "react-loader-spinner";
 
+
 const axios = require('axios');
 
 
@@ -35,7 +36,8 @@ const closeTab = async (iter, amo) => {
       });
     
     // await new Promise(r => setTimeout(r, 1000));
-
+    // var location = 'http://localhost:3000/basics'
+    window.location.reload();
     window.open("about:blank", "_self");
     window.close();
   };
@@ -66,7 +68,11 @@ interface PropType {
 }
 
 
+
+
 function Trading ({tsx_params}) {
+
+
 
   return (
     <div>
@@ -85,6 +91,8 @@ function Trading ({tsx_params}) {
       </h1>
         <h2>SOL per trade: {tsx_params.amount}</h2>
         <h2>Number of iterations: {tsx_params.iterations} </h2>
+
+
 
       <button
                 className="px-8 m-2 btn animate-pulse bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 ..."
@@ -143,14 +151,14 @@ export async function getServerSideProps(){
 
   console.log(tsx_params)
   
-  routeOutputV3()
-  .then(() => {
+//   routeOutputV3()
+//   .then(() => {
 
-    console.log("Done");
-  })
-  .catch((e) => {
-    console.error(e);
-  });
+//     console.log("Done");
+//   })
+//   .catch((e) => {
+//     console.error(e);
+//   });
 
 
   return {

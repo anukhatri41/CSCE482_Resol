@@ -1,15 +1,31 @@
 {
-  "wallet_secret": [
-    {
-      "ws": ""
-    }
-  ],
   "tsx_params": [
     {
-      "iterations": "3",
-      "amount": "1",
-      "stop": true,
+      "iterations": "5",
+      "amount": ".01",
+      "stop": false,
+      "walletSecret": "123456",
       "id": 1
+    }
+  ],
+  "tsx_log": [
+    {
+      "id": 1,
+      "firstSwap": {
+        "amm1": "",
+        "inputAmount1": "",
+        "inputTokenSymbol1": "",
+        "outputTokenSymbol1": ""
+      },
+      "secondSwap": {
+        "amm2": "",
+        "inputAmount2": "",
+        "inputTokenSymbol2": "",
+        "outputTokenSymbol2": ""
+      },
+      "totalIn": "",
+      "totalOut": "",
+      "spread": ""
     }
   ],
   "S2S": [

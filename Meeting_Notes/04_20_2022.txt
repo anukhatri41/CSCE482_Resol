@@ -1,0 +1,42 @@
+04_20_2022 - Meeting Notes
+
+10 Minutes Presentation/Demo + 5 minutes Q&A
+Record 5 minute video of demo
+Deadline - 9:30am Monday
+Final Presentation - 2-4pm 
+
+Refined the strategy
+8/14 transactions successful - made $0.012
+See what makes those 8 successful and what they have in common
+
+Identify which slippage is unreliable
+Fails when slippage exceeds than quoted, not because it's not profitable
+
+Orca & Raydium are the 2 reliable exchanges where the transaction will follow through
+Tried UXP, but didn't really work
+
+Higher amounts are not necessarily equaling higher profits
+Possibly take out the "too good to be true" check 
+
+Tried multiple terminals at once, but because it's a public RPC node, it said too many requests and would time out
+QuickNode - private RPC node
+
+Pricing on public node
+Transactions on private node
+
+Successful Demo
+- Give 1 minute transaction time and see if can do about 10 transactions
+- Show monitoring and then open up solscan to show the transactions
+- Make some charts of past data of the last week of transactions since harder to show during the demo since so short
+- Talk about lessons learned
+- What is the best idea of your trading strategy - show the key insights from what you learned in the process
+- What is our advantage and what makes our arbitrage better than others - we got some atomicity going (before were losing a lot more)
+
+Successful Project Meaning
+- Non-stakeholders are impressed
+
+
+Add information about the team on the website
+Show metrics on website of how much made, etc.
+
+Get the routes from Jupiter Aggregator and filter to only get Orca/Raydium and use those paths

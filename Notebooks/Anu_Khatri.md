@@ -117,3 +117,29 @@ Individual Notebook - Anu Khatri
 4/11/2022
 - Worked with Robert to get data from JSON and use real data for the graphs
 
+4/12/2022
+- Created 9th week's report and turned into repository
+
+4/13
+- Had meeting with professor and TA, took meeting notes
+- Worked with Robert again to try to get realtime updates for the graphs in the UI - was unsuccessful, so we decided to try our own approaches during the weekend
+
+4/17/2022
+- Tried another approach to get real-time updates on the graph using setState, but was unsuccessful
+
+4/18/2022
+- Discussed with team what is the highest priority on what needs to be accomplished by demo
+- Determined we should focus on start/stop trading from UI and integrating both parts of the application
+- Had issues with running the app (package.json/node/etc.), so was unable to start integration
+
+4/19/2022
+- Created the 10th week's repository and turned into repository
+- Tried to get the app running again to start integration, but faced more issues as the application would not load
+
+4/20/2022
+- Had meeting with professor and TA, took meeting notes
+- Finally got my node and package.json to work so that I could work on code myself
+- Worked with Robert to try to connect the transaction code to frontend
+- Had to use a different approach so that the transaction running goes to a different page
+
+

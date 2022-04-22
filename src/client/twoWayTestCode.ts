@@ -35,7 +35,9 @@ import {
     sRLY_MINT_ADDRESS,
     USDT_MINT_ADDRESS,
     UXP_MINT_ADDRESS,
-    soETH_MINT_ADDRESS
+    soETH_MINT_ADDRESS,
+    UST_MINT_ADDRESS,
+    PRT_MINT_ADDRESS
   } from "./constants";
   const sleep = require('./sleep');
   
@@ -211,7 +213,7 @@ import {
     let negativeSwaps = 0;
     let swapsErr = 0;
 
-    while (totSwaps < 5) {
+    while (totSwaps < 10) {
       try {
 
         totSwaps++;
@@ -352,6 +354,14 @@ import {
   }
 
   const routeOutputV3 = async () => {
+
+    // Taking In CLI Args, setting amount to trade.
+
+    var args = process.argv.slice(2);
+
+    // console.log(args)
+
+    let inAmount: number = +args[0];
   
     require('dotenv').config()
     const details = {
@@ -378,9 +388,9 @@ import {
   
     // 2. Initialize Orca object with mainnet connection
     const connectionRPC = new Connection(RPC);
-    const connection = new Connection(SOLANA_RPC_ENDPOINT);
+    const connection = new Connection(mainnet);
 
-    let inAmount = 0.01;
+    //let inAmount = 0.1;
     let tokenIn = 'SOL';
     let tokenOut = 'SOL';
     let cont = true;
@@ -396,7 +406,7 @@ import {
 
     let wSOLAccount = await createWSolAccount({connection, owner});
 
-    while (totSwaps < 1) {
+    while (totSwaps < 15) {
       try {
 
         if (totSwaps != 0) {
@@ -411,15 +421,18 @@ import {
           STEP_MINT_ADDRESS, 
           SHDW_MINT_ADDRESS, 
           sRLY_MINT_ADDRESS, 
-          oneSOL_MINT_ADDRESS, 
+          oneSOL_MINT_ADDRESS,
+          ALL_MINT_ADDRESS, 
           UXP_MINT_ADDRESS, 
           USDC_MINT_ADDRESS, 
           USDT_MINT_ADDRESS,
           soETH_MINT_ADDRESS,
           OXY_MINT_ADDRESS,
           mSOL_MINT_ADDRESS,
-          stSOL_MINT_ADDRESS];
-        let transactions = await runUntilProfitV3({connection, inAmount, owner, token1, token2});
+          stSOL_MINT_ADDRESS,
+          UST_MINT_ADDRESS,
+          PRT_MINT_ADDRESS];
+        let transactions = await runUntilProfitV3({connection: connectionRPC, inAmount, owner, token1, token2});
 
         let signers: Signer[] = [owner];
 
@@ -446,7 +459,7 @@ import {
         /////////// COMMENT OUT BETWEEN TO STOP SWAP ////////////////////////////////////////////////////
         
         const finalSOLBalance = await connection.getBalance(owner.publicKey);
-        console.log("Final SOL Balance: ", finalSOLBalance/LAMPORTS_PER_SOL);
+        console.log("SOL Balance After Most Recent Swap: ", finalSOLBalance/LAMPORTS_PER_SOL);
         console.log("Profit?: ", (finalSOLBalance-initSOLBalance)/LAMPORTS_PER_SOL);
         if ((finalSOLBalance-initSOLBalance)/LAMPORTS_PER_SOL > 0) {
           positiveSwaps++;
@@ -461,7 +474,7 @@ import {
     
       } catch(err) {
         const finalSOLBalance = await connection.getBalance(owner.publicKey);
-        console.log("Final SOL Balance: ", finalSOLBalance/LAMPORTS_PER_SOL);
+        console.log("SOL Balance After Most Recent Swap: ", finalSOLBalance/LAMPORTS_PER_SOL);
         console.log("Profit?: ", (finalSOLBalance-initSOLBalance)/LAMPORTS_PER_SOL);
         totalProfit += (finalSOLBalance-initSOLBalance)/LAMPORTS_PER_SOL;
         if ((finalSOLBalance-initSOLBalance)/LAMPORTS_PER_SOL > 0) {

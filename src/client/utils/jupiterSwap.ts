@@ -595,7 +595,7 @@ export const runUntilProfitV3 = async ({
   connection,
   inAmount,
   owner,
-  slippage = 0.02,
+  slippage = 0.05,
   token1, // This should be the token you are starting with.
   token2,
   wrappedOwner,
@@ -659,11 +659,11 @@ export const runUntilProfitV3 = async ({
 
     //console.log(routes1!.routesInfos!);
     for (var rInfo of routes1!.routesInfos!){
-      if (rInfo!.marketInfos[0]!.amm!.label == "Orca" || rInfo!.marketInfos[0]!.amm!.label == "Raydium") {
+      // console.log(rInfo!.marketInfos[0]!.amm!.label);
+      if (rInfo!.marketInfos[0]!.amm!.label == "Orca" || rInfo!.marketInfos[0]!.amm!.label == "Raydium" || rInfo!.marketInfos[0]!.amm!.label == "Aldrin") {
         route1Found = true;
         routeInfo1 = rInfo;
 
-        // console.log(rInfo!.marketInfos[0]!.amm!.label);
         // console.log(rInfo);
 
         break;
@@ -709,7 +709,7 @@ export const runUntilProfitV3 = async ({
     });
     
     for (var rInfo of routes2!.routesInfos!){
-      if (rInfo!.marketInfos[0]!.amm!.label == "Orca" || rInfo!.marketInfos[0]!.amm!.label == "Raydium") {
+      if (rInfo!.marketInfos[0]!.amm!.label == "Orca" || rInfo!.marketInfos[0]!.amm!.label == "Raydium" || rInfo!.marketInfos[0]!.amm!.label == "Aldrin") {
         route2Found = true;
         routeInfo2 = rInfo;
 

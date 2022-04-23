@@ -43,23 +43,16 @@ import {
   import fetch from "isomorphic-fetch";
 import { exec } from "child_process";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import { route } from "next/dist/server/router";
+import { AES, enc } from 'crypto-ts';
 
-
-  const axios = require('axios');
+const axios = require('axios');
 
 
 
 const routeOutputV3 = async () => {
   
     require('dotenv').config()
-    // const details = {
-    //     sender_keypair: process.env.SENDER_KEY as string,
-    //     secret: process.env.SENDER_SECRET as string,
-    //     reciever: process.env.DEFAULT_RECEIVER_PUBKEY as string,
-    //     _RPC: process.env.RPC_ENDPOINT as string, // named _RPC because functions were throwing a fit when passing in details.RPC
-    //     ENV: process.env.NODE_ENV as string
-    //   };
-
 
     let response = await fetch('http://localhost:4000/tsx_params/1')
     let tsx_params = await response.json()
@@ -67,36 +60,23 @@ const routeOutputV3 = async () => {
     var iter = tsx_params.iterations;
     var amountToTrade = tsx_params.amount;
 
-    // for (let i = 0; i < iter; i++) {
-    //   const stop_response = await fetch('http://localhost:4000/tsx_params/1')
-    //   const stop_flag = await stop_response.json();
-
-    //   if(stop_flag.stop == true){
-    //     break;
-    //   }
-    //}
-
     let inAmount: number = +amountToTrade;
     let iterations: number = +iter;
   
     require('dotenv').config()
-    // const details = {
-    //     sender_keypair: process.env.SENDER_KEY as string,
-    //     secret: process.env.SENDER_SECRET as string,
-    //     reciever: process.env.DEFAULT_RECEIVER_PUBKEY as string,
-    //     _RPC: process.env.RPC_ENDPOINT as string, // named _RPC because functions were throwing a fit when passing in details.RPC
-    //     ENV: process.env.NODE_ENV as string
-    //   };
   
     // if secret key is in .env:
-    const WALLET_PRIVATE_KEY = "4m931s47cehpTu24sVifJza3nEHD4jLKRAqDQiciNiVeqWeAMjGFmwNhYGJRmhjkNws7AcAVLpXyL2CiKFicy3px";
+    console.log("here");
+    // var decryptedSec = AES.decrypt(tsx_params.walletSecret, 'secret key crypto').toString(enc.Utf8);
+    // let WALLET_PRIVATE_KEY = JSON.parse(decryptedSec);
+    // console.log({ WALLET_PRIVATE_KEY })
+    // WALLET_PRIVATE_KEY = WALLET_PRIVATE_KEY.walletSecret;
+    const WALLET_PRIVATE_KEY = tsx_params.walletSecret;
+    // const WALLET_PRIVATE_KEY = AES.decrypt(tsx_params.walletSecret.toString(), 'crypto').toString();
+    console.log(WALLET_PRIVATE_KEY);
     const USER_PRIVATE_KEY = bs58.decode(WALLET_PRIVATE_KEY);
     const owner = Keypair.fromSecretKey(USER_PRIVATE_KEY);
-    //const wrappedOwner = new PublicKey("72rqCZRbzJY27CnMeAV1tgV4YbfvgSo99cb7i81SEGU5");
-    //const env = details.ENV;
-    // const wallet = new Wallet(Keypair.fromSecretKey(USER_PRIVATE_KEY));
-    // console.log(wallet.payer);
-  
+
     const RPC = "https://still-red-tree.solana-mainnet.quiknode.pro/4824354cd8b2aa36d1b297cf55b13096b022a5e9/";
     const devnet = 'https://api.devnet.solana.com';
     const mainnet = 'https://api.mainnet-beta.solana.com';
@@ -247,7 +227,11 @@ const routeOutputV3 = async () => {
     console.log("Negative Swaps: ", negativeSwaps);
     console.log("Beginning Balance: ",beginningSOLBal/LAMPORTS_PER_SOL);
     console.log("Ending Balance: ",endingSOLBalance/LAMPORTS_PER_SOL);
+
     console.log("Total Profit: ", (endingSOLBalance-beginningSOLBal)/LAMPORTS_PER_SOL);
+
+    // If it gets to the end of the loop, it starts back over.
+    routeOutputV3();
   }
   
-export { routeOutputV3};
+export { routeOutputV3 };

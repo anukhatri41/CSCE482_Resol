@@ -17,6 +17,7 @@ import StartStop  from "components/StartStop";
 import React, { useState, Component } from 'react'
 // import 'bootstrap/dist/css/bootstrap.css';
 
+import { AES } from 'crypto-ts';
 
 import Dropdown from 'react-bootstrap/Dropdown'
 
@@ -25,7 +26,7 @@ import {WalletChart} from "components/WalletChart"
 
 const axios = require('axios');
 
-const openTab = (iter,amo, walSec) => {
+const openTab = (iter, amo, walSec) => {
 
   axios.put('http://localhost:4000/tsx_params/1', {
     iterations: iter,

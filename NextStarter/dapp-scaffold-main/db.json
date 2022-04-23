@@ -2,9 +2,9 @@
   "tsx_params": [
     {
       "iterations": "5",
-      "amount": ".01",
-      "walletSecret": "123456",
-      "stop": true,
+      "amount": ".05",
+      "stop": false,
+      "walletSecret": "U2FsdGVkX1+17jM6TDn+uDrz/hz7+v6UTRtjvZuK5ea1IFQDCszBumLVrO1sPbv3PqHfdoV67akkxNzmgce4/zJEFRYit5XhXxZ9Rk5AmEUGJQVYMAHanLW6XSnatEhYWn4OSzMQes4IvqK7OTRw4A==",
       "id": 1
     }
   ],
@@ -30,6 +30,31 @@
       "id": 1
     }
   ],
+  "transactions_log": [
+    {
+      "priorBalance": "",
+      "afterBalance": "",
+      "difference": "",
+      "txId": ""
+    }
+  ],
+  "graph_data": [
+    {
+      "transaction": "",
+      "totalBalance": ""
+    }
+  ],
+  "transactions_meta": [
+    {
+      "total_swaps": 2,
+      "pos_swaps": 0,
+      "err_swaps": 2,
+      "neg_swaps": 0,
+      "init_bal": 0.035052831,
+      "end_bal": 0.035052831,
+      "tot_prof": 0
+    }
+  ],
   "S2S": [
     {
       "total_swaps": 2,
@@ -38,258 +63,6 @@
       "neg_swaps": 0,
       "init_bal": 0.035052831,
       "end_bal": 0.035052831,
-      "tot_prof": 0
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 0,
-      "err_swaps": 2,
-      "neg_swaps": 0,
-      "init_bal": 0.035052831,
-      "end_bal": 0.035052831,
-      "tot_prof": 0
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 0,
-      "err_swaps": 1,
-      "neg_swaps": 1,
-      "init_bal": 0.047173192,
-      "end_bal": 0.033089632,
-      "tot_prof": -0.01408356
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 1,
-      "err_swaps": 1,
-      "neg_swaps": 0,
-      "init_bal": 0.033089632,
-      "end_bal": 0.045123912,
-      "tot_prof": 0.01203428
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 0,
-      "err_swaps": 2,
-      "neg_swaps": 0,
-      "init_bal": 0.045123912,
-      "end_bal": 0.045123912,
-      "tot_prof": 0
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 0,
-      "err_swaps": 2,
-      "neg_swaps": 0,
-      "init_bal": 0.045123912,
-      "end_bal": 0.045123912,
-      "tot_prof": 0
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 0,
-      "err_swaps": 2,
-      "neg_swaps": 0,
-      "init_bal": 0.045123912,
-      "end_bal": 0.045123912,
-      "tot_prof": 0
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 0,
-      "err_swaps": 2,
-      "neg_swaps": 0,
-      "init_bal": 0.045123912,
-      "end_bal": 0.045123912,
-      "tot_prof": 0
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 0,
-      "err_swaps": 2,
-      "neg_swaps": 0,
-      "init_bal": 0.045123912,
-      "end_bal": 0.045123912,
-      "tot_prof": 0
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 0,
-      "err_swaps": 2,
-      "neg_swaps": 0,
-      "init_bal": 0.045123912,
-      "end_bal": 0.045123912,
-      "tot_prof": 0
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 0,
-      "err_swaps": 2,
-      "neg_swaps": 0,
-      "init_bal": 0.071297268,
-      "end_bal": 0.071297268,
-      "tot_prof": 0
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 0,
-      "err_swaps": 1,
-      "neg_swaps": 1,
-      "init_bal": 0.071297268,
-      "end_bal": 0.059252988,
-      "tot_prof": -0.01204428
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 0,
-      "err_swaps": 2,
-      "neg_swaps": 0,
-      "init_bal": 0.071287268,
-      "end_bal": 0.071287268,
-      "tot_prof": 0
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 0,
-      "err_swaps": 2,
-      "neg_swaps": 0,
-      "init_bal": 0.071287268,
-      "end_bal": 0.071287268,
-      "tot_prof": 0
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 0,
-      "err_swaps": 2,
-      "neg_swaps": 0,
-      "init_bal": 0.071287268,
-      "end_bal": 0.071287268,
-      "tot_prof": 0
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 1,
-      "err_swaps": 1,
-      "neg_swaps": 0,
-      "init_bal": 0.071287268,
-      "end_bal": 0.071314315,
-      "tot_prof": 0.000027047
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 0,
-      "err_swaps": 2,
-      "neg_swaps": 0,
-      "init_bal": 0.071314315,
-      "end_bal": 0.071314315,
-      "tot_prof": 0
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 0,
-      "err_swaps": 2,
-      "neg_swaps": 0,
-      "init_bal": 0.071314315,
-      "end_bal": 0.071314315,
-      "tot_prof": 0
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 0,
-      "err_swaps": 2,
-      "neg_swaps": 0,
-      "init_bal": 0.071314315,
-      "end_bal": 0.071314315,
-      "tot_prof": 0
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 0,
-      "err_swaps": 2,
-      "neg_swaps": 0,
-      "init_bal": 0.071309315,
-      "end_bal": 0.071309315,
-      "tot_prof": 0
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 0,
-      "err_swaps": 2,
-      "neg_swaps": 0,
-      "init_bal": 0.071309315,
-      "end_bal": 0.071309315,
-      "tot_prof": 0
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 0,
-      "err_swaps": 2,
-      "neg_swaps": 0,
-      "init_bal": 0.071309315,
-      "end_bal": 0.071309315,
-      "tot_prof": 0
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 0,
-      "err_swaps": 2,
-      "neg_swaps": 0,
-      "init_bal": 0.071309315,
-      "end_bal": 0.071309315,
-      "tot_prof": 0
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 0,
-      "err_swaps": 2,
-      "neg_swaps": 0,
-      "init_bal": 0.071309315,
-      "end_bal": 0.071309315,
-      "tot_prof": 0
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 0,
-      "err_swaps": 2,
-      "neg_swaps": 0,
-      "init_bal": 0.071309315,
-      "end_bal": 0.071309315,
-      "tot_prof": 0
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 0,
-      "err_swaps": 2,
-      "neg_swaps": 0,
-      "init_bal": 0.071309315,
-      "end_bal": 0.071309315,
-      "tot_prof": 0
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 0,
-      "err_swaps": 2,
-      "neg_swaps": 0,
-      "init_bal": 0.071309315,
-      "end_bal": 0.071309315,
-      "tot_prof": 0
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 0,
-      "err_swaps": 2,
-      "neg_swaps": 0,
-      "init_bal": 0.071309315,
-      "end_bal": 0.071309315,
-      "tot_prof": 0
-    },
-    {
-      "total_swaps": 2,
-      "pos_swaps": 0,
-      "err_swaps": 2,
-      "neg_swaps": 0,
-      "init_bal": 0.071309315,
-      "end_bal": 0.051309315,
       "tot_prof": 0
     }
   ]

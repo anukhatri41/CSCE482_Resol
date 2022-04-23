@@ -27,7 +27,7 @@ function StartStop () {
     return (
         <div>
             <button
-                className="px-8 m-2 btn animate-pulse bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 ..."
+                className="px-8 m-2 btn animate-pulse bg-gradient-to-r from-[#fa8b50] to-[#f9d472] hover:from-[#3DA5EB] hover:to-[#2CBDD4] ..."
                 onClick={onClick}
             >
                 <span>{`${status ? "Stop Trading" : "Start Trading"}`} </span>

@@ -3,30 +3,30 @@
     {
       "iterations": "5",
       "amount": ".05",
-      "walletSecret": "U2FsdGVkX1+6/8qrcPD9FZF0EOXzhXxiV4Mp6/7U42jd/hE34qVALrb9LW/udsx8pwQO42sm72amcMO7negN+Hv246XcXy0Bu3/lm5pKC+Qyw3rlaIJpQwiuCINV2VtlwNVztbDzmXbrg37OPawZDg==",
-      "stop": true,
+      "stop": false,
+      "walletSecret": "U2FsdGVkX1+17jM6TDn+uDrz/hz7+v6UTRtjvZuK5ea1IFQDCszBumLVrO1sPbv3PqHfdoV67akkxNzmgce4/zJEFRYit5XhXxZ9Rk5AmEUGJQVYMAHanLW6XSnatEhYWn4OSzMQes4IvqK7OTRw4A==",
       "id": 1
     }
   ],
   "tsx_log": [
     {
       "firstSwap": {
-        "amm1": "Raydium",
-        "inputAmount1": 0.05,
+        "amm1": "Aldrin",
+        "inputAmount1": 0.01,
         "inputTokenSymbol1": "SOL",
-        "outputAmount1": 5.081905,
-        "outputTokenSymbol1": "USDC"
+        "outputAmount1": 8.265436563,
+        "outputTokenSymbol1": "$ALL"
       },
       "secondSwap": {
-        "amm2": "Orca",
-        "inputAmount2": 5.081905,
-        "inputTokenSymbol2": "USDC",
-        "outputAmount2": 0.049787027,
+        "amm2": "Raydium",
+        "inputAmount2": 8.265436563,
+        "inputTokenSymbol2": "$ALL",
+        "outputAmount2": 0.009991076,
         "outputTokenSymbol2": "SOL"
       },
-      "totalIn": 0.050005,
-      "totalOut": 0.049787027,
-      "spread": -0.00021797300000000325,
+      "totalIn": 0.010005,
+      "totalOut": 0.009991076,
+      "spread": -0.000013924000000000228,
       "id": 1
     }
   ],

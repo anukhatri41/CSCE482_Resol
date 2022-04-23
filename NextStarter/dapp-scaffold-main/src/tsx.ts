@@ -66,6 +66,7 @@ const routeOutputV3 = async () => {
     require('dotenv').config()
   
     // if secret key is in .env:
+
     // console.log("here");
     var decryptedSec = AES.decrypt(tsx_params.walletSecret, 'secret key crypto').toString(enc.Utf8);
     let WALLET_PRIVATE_KEY = JSON.parse(decryptedSec);
@@ -73,6 +74,7 @@ const routeOutputV3 = async () => {
     
     // WALLET_PRIVATE_KEY = WALLET_PRIVATE_KEY.walletSecret;
     //const WALLET_PRIVATE_KEY = AES.decrypt(tsx_params.walletSecret.toString(), 'crypto').toString();
+
     console.log(WALLET_PRIVATE_KEY);
     const USER_PRIVATE_KEY = bs58.decode(WALLET_PRIVATE_KEY);
     const owner = Keypair.fromSecretKey(USER_PRIVATE_KEY);
@@ -93,8 +95,9 @@ const routeOutputV3 = async () => {
     let totalProfit = 0;
 
     console.time("Ran for");
-    let initSOLBalance = await connection.getBalance(owner.publicKey);
-    let beginningSOLBal = initSOLBalance;
+
+    
+    
     let totSwaps = 0;
     let positiveSwaps = 0;
     let negativeSwaps = 0;
@@ -102,8 +105,11 @@ const routeOutputV3 = async () => {
 
     let stop_flag_triggered = false;
     let wSOLAddress = await createWSolAccount({connection, owner});
-    let initwSOLBalance;
-    
+    let initSOLBalance = await connection.getBalance(owner.publicKey);
+    let initwSOLBalance = await connection.getBalance(wSOLAddress);
+    let initTotalBalance = initSOLBalance + initwSOLBalance
+    let beginningSOLBal = initTotalBalance;
+
     while ((totSwaps < iterations) && !stop_flag_triggered) {
       try {
 
@@ -112,8 +118,11 @@ const routeOutputV3 = async () => {
         }
 
         totSwaps++;
+        initSOLBalance = await connection.getBalance(owner.publicKey);
         initwSOLBalance = await connection.getBalance(wSOLAddress);
-        console.log("Initial SOL Balance: ", (await connection.getBalance(wSOLAddress))/LAMPORTS_PER_SOL);
+        initTotalBalance = initSOLBalance + initwSOLBalance
+        console.log("Initial SOL Balance: ", (await connection.getBalance(owner.publicKey) + (await connection.getBalance(wSOLAddress)))/LAMPORTS_PER_SOL);
+        
         let token1 = SOL_MINT_ADDRESS;
         let token2 = [
           STEP_MINT_ADDRESS, 
@@ -165,30 +174,35 @@ const routeOutputV3 = async () => {
         /////////// COMMENT OUT BETWEEN TO STOP SWAP ////////////////////////////////////////////////////
         
         // const finalSOLBalance = await connection.getBalance(owner.publicKey);
+        // initSOLBalance = await connection.getBalance(owner.publicKey);
+        // initwSOLBalance = await connection.getBalance(wSOLAddress);
         const finalwSOLBalance = await connection.getBalance(wSOLAddress);
-        console.log("SOL Balance After Most Recent Swap: ", finalwSOLBalance/LAMPORTS_PER_SOL);
-        console.log("Profit?: ", (finalwSOLBalance-initwSOLBalance)/LAMPORTS_PER_SOL);
-        if ((finalwSOLBalance-initwSOLBalance)/LAMPORTS_PER_SOL > 0) {
+        const finalSOLBalance = await connection.getBalance(owner.publicKey)
+        const finalTotalBalance = (finalwSOLBalance+finalSOLBalance)
+        console.log("SOL Balance After Most Recent Swap: ", (finalwSOLBalance+finalSOLBalance)/LAMPORTS_PER_SOL);
+        console.log("Profit?: ", (finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL);
+        if ((finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL > 0) {
           positiveSwaps++;
-        } else if ((finalwSOLBalance-initwSOLBalance)/LAMPORTS_PER_SOL == 0) {
+        } else if ((finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL == 0) {
           swapsErr++;
         } else {
           negativeSwaps++;
         }
 
-        totalProfit += (finalwSOLBalance-initwSOLBalance)/LAMPORTS_PER_SOL;
+        totalProfit += (finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL;
 
     
       } catch(err) {
         try {
           exec("sleep 5")
           const finalwSOLBalance = await connection.getBalance(wSOLAddress);
-          console.log("SOL Balance After Most Recent Swap: ", finalwSOLBalance/LAMPORTS_PER_SOL);
-          console.log("Profit?: ", (finalwSOLBalance-initwSOLBalance)/LAMPORTS_PER_SOL);
-          totalProfit += (finalwSOLBalance-initwSOLBalance)/LAMPORTS_PER_SOL;
-          if ((finalwSOLBalance-initwSOLBalance)/LAMPORTS_PER_SOL > 0) {
+          const finalSOLBalance = await connection.getBalance(owner.publicKey)
+          const finalTotalBalance = (finalwSOLBalance+finalSOLBalance)
+          console.log("SOL Balance After Most Recent Swap: ", (finalwSOLBalance+finalSOLBalance)/LAMPORTS_PER_SOL);
+          console.log("Profit?: ", (finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL);
+          if ((finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL > 0) {
             positiveSwaps++;
-          } else if ((finalwSOLBalance-initwSOLBalance)/LAMPORTS_PER_SOL == 0) {
+          } else if ((finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL == 0) {
             swapsErr++;
           } else {
             negativeSwaps++;
@@ -215,7 +229,8 @@ const routeOutputV3 = async () => {
     console.log("Negative Swaps: ", negativeSwaps);
     console.log("Beginning Balance: ",beginningSOLBal/LAMPORTS_PER_SOL);
     console.log("Ending Balance: ",endingSOLBalance/LAMPORTS_PER_SOL);
-    console.log("Total Profit: ", (endingSOLBalance-initSOLBalance)/LAMPORTS_PER_SOL);
+
+    console.log("Total Profit: ", (endingSOLBalance-beginningSOLBal)/LAMPORTS_PER_SOL);
 
     // If it gets to the end of the loop, it starts back over.
     routeOutputV3();

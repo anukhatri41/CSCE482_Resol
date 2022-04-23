@@ -48,7 +48,7 @@
         },
         "blockSize": 4
       },
-      "stop": true,
+      "stop": false,
       "id": 1
     }
   ],

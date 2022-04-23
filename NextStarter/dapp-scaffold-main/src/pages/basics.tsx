@@ -27,10 +27,9 @@ import {WalletChart} from "components/WalletChart"
 const axios = require('axios');
 
 const openTab = (iter, amo, walSec) => {
-
-  const encryptedSec = AES.encrypt(walSec, 'secret key crypto').toString();
-
-  console.log(encryptedSec);
+  console.log("wallet secret",walSec)
+  const encryptedSec = AES.encrypt(JSON.stringify(walSec), 'secret key crypto');
+  console.log("encrypted secret",encryptedSec);
 
   axios.put('http://localhost:4000/tsx_params/1', {
     iterations: iter,

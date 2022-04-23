@@ -2,9 +2,9 @@
   "tsx_params": [
     {
       "iterations": "5",
-      "amount": "0.05",
-      "stop": true,
+      "amount": ".01",
       "walletSecret": "123456",
+      "stop": true,
       "id": 1
     }
   ],
@@ -12,21 +12,21 @@
     {
       "firstSwap": {
         "amm1": "Raydium",
-        "inputAmount1": 0.05,
+        "inputAmount1": 0.01,
         "inputTokenSymbol1": "SOL",
-        "outputAmount1": 45.399505557,
-        "outputTokenSymbol1": "$ALL"
+        "outputAmount1": 9.003389263,
+        "outputTokenSymbol1": "STEP"
       },
       "secondSwap": {
-        "amm2": "Aldrin",
-        "inputAmount2": 45.399505557,
-        "inputTokenSymbol2": "$ALL",
-        "outputAmount2": 0.049907224,
+        "amm2": "Orca",
+        "inputAmount2": 9.003389263,
+        "inputTokenSymbol2": "STEP",
+        "outputAmount2": 0.009937811,
         "outputTokenSymbol2": "SOL"
       },
-      "totalIn": 0.050005,
-      "totalOut": 0.049907224,
-      "spread": -0.0000977760000000008,
+      "totalIn": 0.010005,
+      "totalOut": 0.009937811,
+      "spread": -0.00006718900000000048,
       "id": 1
     }
   ],

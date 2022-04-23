@@ -14,7 +14,7 @@ import StartStop  from "components/StartStop";
 import React, { useState, Component } from 'react'
 // import 'bootstrap/dist/css/bootstrap.css';
 
-import {ret_t_2, routeOutputV3} from '../tsx';
+import {routeOutputV3} from '../tsx';
 
 
 import { Triangle } from "react-loader-spinner";

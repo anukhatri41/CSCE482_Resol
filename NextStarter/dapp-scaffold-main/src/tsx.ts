@@ -238,4 +238,4 @@ const routeOutputV3 = async () => {
     console.log("Total Profit: ", (endingSOLBalance-initSOLBalance)/LAMPORTS_PER_SOL);
   }
   
-export {ret_t_2, routeOutputV3};
+export { routeOutputV3};

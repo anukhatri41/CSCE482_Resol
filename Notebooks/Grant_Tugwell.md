@@ -287,3 +287,11 @@ Currently we are stuck on a really stupid error, basically our for loop keeps go
 Today, we were able to show Laren & Dr. Huang our working code! This was super exciting! 
 
 We narrowed down the AMM's we were swapping with to Orca and Raydium, as well as finding profitable trading pairs, then continually checking their prices. This allowed us to make pretty small amounts, but over time, they add up! So far, we have made roughly 3 cents ($0.029). This is only after running the code for a little over 4 hours. I ran it last night to test it out, but got a socket hang up error which stopped it 4 hours in. Then, when we ran it during our meeting with Dr. Huang and Laren, it made some profit. It just goes to show that there are tons of oppurtunities out there, so we need to be running it all the time and collecting data.
+
+<h4>4/22/22</h4>
+
+Today, we all met up and worked on our integration. We are getting really close, and hopefully after a full day tomorrow, we can get it finished up.
+
+We have our algorithm working fine, making roughly 15 cents per day.
+
+We just need to finish integrating it, then pack it all into a nice package, potentially using docker.

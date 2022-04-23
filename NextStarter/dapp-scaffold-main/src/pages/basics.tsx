@@ -25,12 +25,13 @@ import {WalletChart} from "components/WalletChart"
 
 const axios = require('axios');
 
-const openTab = (iter,amo) => {
+const openTab = (iter,amo, walSec) => {
 
   axios.put('http://localhost:4000/tsx_params/1', {
     iterations: iter,
     amount: amo,
-    stop: false
+    stop: false,
+    walletSecret: walSec
   
   }).then(resp => {
     console.log(resp.data);
@@ -39,7 +40,7 @@ const openTab = (iter,amo) => {
   });
 
 
-  window.open('http://localhost:3000/trading')
+  window.open('http://localhost:3000/trading_2')
 };
 
 
@@ -98,9 +99,11 @@ interface PropType {
 
 function Basics ({balanceData}) {
 
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState(".01");
 
-  const [iterations, setIterations] = useState("");
+  const [iterations, setIterations] = useState("5");
+
+  const [walletSecret, setWalletSecret] = useState("123456");
 
 
   var param_options = Object.keys(balanceData[0])
@@ -166,7 +169,7 @@ function Basics ({balanceData}) {
         />
 
 
-      <h3>Number of iteratoins (Enter 'inf' for &#8734; number of runs): </h3>
+      <h3>Number of iterations (Enter 'inf' for &#8734; number of runs): </h3>
         <input
           type="text" 
           value={iterations}
@@ -175,9 +178,18 @@ function Basics ({balanceData}) {
         />
 
 
+      <h3>Wallet Secret: </h3>
+        <input
+          type="text" 
+          value={walletSecret}
+          onChange={(e) => setWalletSecret(e.target.value)}
+          style={{backgroundColor: "black", width: "50%", textAlign: "center"}}
+        />
+
+
       <button
                 className="px-8 m-2 btn animate-pulse bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 ..."
-                onClick={() => openTab(iterations,amount)}
+                onClick={() => openTab(iterations,amount, walletSecret)}
       >
                 <span>{`${"Start Trading"}`} </span>
       </button>
@@ -245,6 +257,7 @@ export async function getServerSideProps(){
   console.log("howdy");
   const response = await fetch('http://localhost:4000/S2S')
   const balanceData = await response.json()
+
 
   return {
     props: {

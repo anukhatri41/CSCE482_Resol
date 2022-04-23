@@ -1,14 +1,10 @@
 {
-  "wallet_secret": [
-    {
-      "ws": ""
-    }
-  ],
   "tsx_params": [
     {
       "iterations": "5",
       "amount": "0.05",
       "stop": true,
+      "walletSecret": "123456",
       "id": 1
     }
   ],

@@ -45,9 +45,8 @@ import { exec } from "child_process";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 
 
-function ret_t_2() {
-    return 'returning from file';
-}
+  const axios = require('axios');
+
 
 
 const routeOutputV3 = async () => {
@@ -75,12 +74,6 @@ const routeOutputV3 = async () => {
     //   if(stop_flag.stop == true){
     //     break;
     //   }
-      
-    //   else{
-    //     console.log('TRADE', i)        
-    //     await new Promise(r => setTimeout(r, 2000));
-    //   }
-
     //}
 
     let inAmount: number = +amountToTrade;

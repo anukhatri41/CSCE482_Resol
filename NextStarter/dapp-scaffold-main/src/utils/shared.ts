@@ -119,7 +119,7 @@ export const createWSolAccount = async ({
     new PublicKey(SOL_MINT_ADDRESS),
     owner.publicKey
   );
-
+  let SOLBalance = await connection.getBalance(owner.publicKey);
   const wsolAccount = await connection.getAccountInfo(wsolAddress);
 
   if (!wsolAccount) {
@@ -144,7 +144,7 @@ export const createWSolAccount = async ({
       SystemProgram.transfer({
         fromPubkey: owner.publicKey,
         toPubkey: wsolAddress,
-        lamports: 1_000_000_000/4, // 1 sol
+        lamports: SOLBalance * (49/100), // 1 sol
       })
     );
 
@@ -161,8 +161,9 @@ export const createWSolAccount = async ({
     const result = await connection.sendTransaction(transaction, [
       owner,
     ]);
+    
     console.log({ result });
   }
 
-  return wsolAccount;
+  return wsolAddress;
 };

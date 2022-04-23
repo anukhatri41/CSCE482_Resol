@@ -23,6 +23,7 @@ import {
 import { Wallet } from "@project-serum/anchor";
 import { InstructionParser } from "./instruction-parser";
 const bn = require("bn.js")
+const axios = require('axios');
 
   const getRoutes = async ({
     jupiter,
@@ -40,10 +41,15 @@ const bn = require("bn.js")
     directOnly?: boolean;
   }) => {
     try {
+
+      let inputTokenSymbol;
+      let outputTokenSymbol;
       if (!inputToken || !outputToken) {
         return null;
       }
-  
+      
+      inputTokenSymbol = inputToken.symbol;
+      outputTokenSymbol = outputToken.symbol;
       console.log(
         `Getting routes for ${inputAmount} ${inputToken.symbol} -> ${outputToken.symbol}...`
       );
@@ -69,7 +75,7 @@ const bn = require("bn.js")
         //   routes.routesInfos[0].outAmount / 10 ** outputToken.decimals,
         //   `(${outputToken.symbol})`
         // );
-        return routes;
+        return {routes, inputAmount, inputTokenSymbol, outputTokenSymbol};
       } else {
         return null;
       }
@@ -122,475 +128,8 @@ const bn = require("bn.js")
     }
   };
 
-export const executeJupiterSwap = async ({
-    connection,
-    owner,
-    tokenIn,
-    tokenOut,
-    inAmount
-  }: {
-    connection: Connection;
-    owner: Keypair;
-    tokenIn: string;
-    tokenOut: string;
-    inAmount: number;
-  }) => {
-    // try {
-    //   //const connection = new Connection(RPC); // Setup Solana RPC. RPC is our custome RPC from .env file.
-    //   const tokens: Token[] = await (await fetch(TOKEN_LIST_URL[ENV])).json(); // Fetch token list from Jupiter API
-    //   console.log("Established connection.")
-    //   //  Load Jupiter
-    //   const jupiter = await Jupiter.load({
-    //     connection,
-    //     cluster: ENV,
-    //     user: owner, // or public key
-    //   });
-    //   console.log("Jupiter Loaded")
-  
-    //   // If you know which input/output pair you want
-    //   let inputToken;
-    //   let outputToken;
-    //   if ( tokenIn == 'SOL' && tokenOut == 'OXY') {
-    //     inputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS); // USDC Mint Info
-    //     outputToken = tokens.find((t) => t.address == OXY_MINT_ADDRESS); // USDT Mint Info
-    //   } else if ( tokenIn == 'OXY' && tokenOut == 'SOL'){
-    //     inputToken = tokens.find((t) => t.address == OXY_MINT_ADDRESS); // USDC Mint Info
-    //     outputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS); // USDT Mint Info
-    //   } else {
-    //     throw("This token pair is not configured.")
-    //   }
-    //   // const inputToken = tokens.find((t) => t.address == OXY_MINT_ADDRESS); // USDC Mint Info
-    //   // const outputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS); // USDT Mint Info
-    //   // console.log("Established trade in & out (OXY -> SOL)");
 
-    //   let found = false
-    //   let route = 0
-    //   while (!found) {
-    //     const routes = await getRoutes({
-    //       jupiter,
-    //       inputToken,
-    //       outputToken,
-    //       inputAmount: inAmount, // 1 unit in UI
-    //       slippage: 1, // 1% slippage
-    //     });
-
-    //     if (outputToken && routes) {
-    //       for (let i = 0; i < routes!.routesInfos.length; i++)
-    //       {
-    //         if (routes!.routesInfos[i].marketInfos.length > 1)
-    //         {
-    //           // Changed to || so as long as the route isn't Orca x Orca
-    //           if (routes!.routesInfos[i].marketInfos[0].marketMeta.amm.label != 'Orca' || routes!.routesInfos[i].marketInfos[1].marketMeta.amm.label != 'Orca')
-    //           {
-    //             // console.log(routes!.routesInfos[i].marketInfos[0].marketMeta)
-    //             // console.log(routes!.routesInfos[i].marketInfos[1].marketMeta)
-    //             found = true;
-    //             route = i
-    //             console.log("Chosen route:", i)
-    //             // console.log(
-    //             //   "Quote: ",
-    //             //   routes.routesInfos[i].outAmount / 10 ** outputToken.decimals,
-    //             //   `(${outputToken.symbol})`
-    //             // );
-    //             break;
-    //           }
-    //         }
-    //       }
-        
-    //       if (found) {
-    //         // console.log("Got routes, running executeSwap.");
-    //         const result = await executeSwap({ jupiter, routeInfo: routes!.routesInfos[route] });
-    //         if (result.toString() == "failure"){
-    //           throw("failed in executeSwap");
-    //         }
-    //         // console.log(result);
-    //       }
-
-    //     }
-    //   }
-    //   return "success";
-    // } catch (error) {
-    //   console.log({ error });
-    //   return "failure";
-    // }
-};
-
-export const retrieveJupRoutes = async ({
-  connection,
-  inAmount,
-  owner,
-  slippage = 1,
-  tokenIn,
-  tokenOut
-}: {
-  connection: Connection;
-  inAmount: number;
-  owner: Keypair;
-  slippage?: number;
-  tokenIn: string;
-  tokenOut: string;
-}) => {
-
-  // Retrieve token list
-  const tokens: Token[] = await (await fetch(TOKEN_LIST_URL[ENV])).json();
-
-  console.log(tokens);
-
-  //  Load Jupiter
-  const jupiter = await Jupiter.load({
-    connection,
-    cluster: ENV,
-    user: owner, // or public key
-  });
-
-  // Find token mint addresses
-  let inputToken;
-  let outputToken;
-  if ( tokenIn == 'SOL' && tokenOut == 'OXY') {
-    inputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS);
-    outputToken = tokens.find((t) => t.address == OXY_MINT_ADDRESS);
-  } else if ( tokenIn == 'OXY' && tokenOut == 'SOL'){
-    inputToken = tokens.find((t) => t.address == OXY_MINT_ADDRESS); 
-    outputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS); 
-  } else if ( tokenIn == 'SOL' && tokenOut == 'SOL') {
-    inputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS); 
-    outputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS); 
-  }
-  else {
-    throw("This token pair is not configured.")
-  }
-
-  const routes = await getRoutes({
-    jupiter,
-    inputToken,
-    outputToken,
-    inputAmount: inAmount, // 1 unit in UI
-    slippage: slippage, // 1% slippage
-  });
-
-  //console.log("IN retrieveJupRoutes");
-  let routeInfo: RouteInfo = routes!.routesInfos[0];
-  console.log(routeInfo.marketInfos);
-  const { transactions } = await jupiter.exchange({
-    routeInfo,
-    userPublicKey: owner.publicKey,
-    feeAccount: owner.publicKey,
-    wrapUnwrapSOL: true,
-  });
-
-  // console.log(transactions);
-  // console.log("ADSADASDASDASDASDASDASDASDA")
-
-  //return routes;
-  // Changed this to return the route with the proper transaction stuff.
-  return transactions;
-}
-
-export const runUntilProfit = async ({
-  connection,
-  inAmount,
-  owner,
-  slippage = 0.1,
-  tokenIn,
-  tokenOut
-}: {
-  connection: Connection;
-  inAmount: number;
-  owner: Keypair;
-  slippage?: number;
-  tokenIn: string;
-  tokenOut: string;
-}) => {
-
-  // Retrieve token list
-  const tokens: Token[] = await (await fetch(TOKEN_LIST_URL[ENV])).json();
-
-  //  Load Jupiter
-  const jupiter = await Jupiter.load({
-    connection,
-    cluster: ENV,
-    user: owner, // or public key
-  });
-
-  // Find token mint addresses
-  let inputToken;
-  let outputToken;
-  if ( tokenIn == 'SOL' && tokenOut == 'OXY') {
-    inputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS);
-    outputToken = tokens.find((t) => t.address == OXY_MINT_ADDRESS);
-  } else if ( tokenIn == 'OXY' && tokenOut == 'SOL'){
-    inputToken = tokens.find((t) => t.address == OXY_MINT_ADDRESS); 
-    outputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS); 
-  } else if ( tokenIn == 'SOL' && tokenOut == 'SOL') {
-    inputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS); 
-    outputToken = tokens.find((t) => t.address == SOL_MINT_ADDRESS); 
-  }
-  else {
-    throw("This token pair is not configured.")
-  }
-
-  const routes = await getRoutes({
-    jupiter,
-    inputToken,
-    outputToken,
-    inputAmount: inAmount, // 1 unit in UI
-    slippage: slippage, // 1% slippage
-  });
-  let routeInfo: RouteInfo = routes!.routesInfos[0];
-  let inAm = routeInfo.inAmount + (0.000005  * LAMPORTS_PER_SOL);
-  let outAm = routeInfo.outAmountWithSlippage;
-  const diffThresh = inAmount/100;
-  let spread = outAm - inAm;
-  console.log("######################################");
-  console.log(routeInfo.marketInfos[0].amm.label);
-  console.log(routeInfo.marketInfos[1].amm.label);
-  console.log("I: ", inAm/LAMPORTS_PER_SOL);
-  console.log("O: ", outAm/LAMPORTS_PER_SOL);
-  console.log("S: ", spread/LAMPORTS_PER_SOL);
-  if ((spread/LAMPORTS_PER_SOL) > diffThresh) {
-    console.log("TGTBT");
-    spread = -1;
-  }
-  console.log("######################################");
-  while (spread < 0) {
-    const routes = await getRoutes({
-      jupiter,
-      inputToken,
-      outputToken,
-      inputAmount: inAmount, // 1 unit in UI
-      slippage: slippage, // 1% slippage
-    });
-
-    //console.log("IN retrieveJupRoutes");
-    routeInfo = routes!.routesInfos[0];
-    inAm = routeInfo.inAmount + (0.000005  * LAMPORTS_PER_SOL);
-    outAm = routeInfo.outAmountWithSlippage;
-    spread = outAm - inAm;
-    console.log(routeInfo.marketInfos[0].amm.label);
-    console.log(routeInfo.marketInfos[1].amm.label);
-    console.log("I: ", inAm/LAMPORTS_PER_SOL);
-    console.log("O: ", outAm/LAMPORTS_PER_SOL);
-    console.log("S: ", spread/LAMPORTS_PER_SOL);
-    if ((spread/LAMPORTS_PER_SOL) > diffThresh) {
-      console.log("TGTBT");
-      spread = -1;
-    }
-    console.log("######################################")
-  }
-
-  const { transactions } = await jupiter.exchange({
-    routeInfo,
-    userPublicKey: owner.publicKey,
-    feeAccount: owner.publicKey,
-    wrapUnwrapSOL: true,
-  });
-
-  console.log(transactions.swapTransaction.instructions)
-  for (let i in transactions.swapTransaction.instructions) {
-
-    const parser = new InstructionParser();
-    const ix = parser.coder.instruction.decode(transactions.swapTransaction.instructions[i].data, "base58");
-
-    console.log("IX:::::::::::::::::::::::::::::::::::::::::::::::::")
-    console.log(ix)
-    console.log(ix != null)
-    console.log("IX:::::::::::::::::::::::::::::::::::::::::::::::::")
-    if(ix != null) {
-      for (let i in ix.data) {
-        console.log(i)
-        if (ix.data[i as keyof typeof ix.data]) {
-          console.log(ix.data[i as keyof typeof ix.data]!.toString())
-          if (ix.data[i as keyof typeof ix.data].name == 'tokenSwap' && ix.data[i as keyof typeof ix.data].toString() != outAm.toString()) {
-            console.log("SOMETHING AINT RIGHT");
-            ix.data[i as keyof typeof ix.data] = new bn.BN(outAm);
-            console.log(ix.data[i as keyof typeof ix.data].toString())
-          }
-          // else if (ix.data[i as keyof typeof ix.data].name == 'CloseAccount') {
-          //   ix.data[i as keyof typeof ix.data] = new ;
-          // } 
-          else {
-            console.log("EVERYTHING SEEM ALRIGHT");
-          }
-
-        }
-      }
-    }
-  }
-  
-  // TRANSACTION META DATA
-  //console.log(transactions.swapTransaction.instructions);
-  // console.log("ADSADASDASDASDASDASDASDASDA")
-
-  //return routes;
-  // Changed this to return the route with the proper transaction stuff.
-  return transactions;
-}
-
-// This is a modification to runUntilProfit which finds only single routes, so we can put them in 1 transaction.
-export const runUntilProfitV2 = async ({
-  connection,
-  inAmount,
-  owner,
-  slippage = 0.06,
-  token1, // This should be the token you are starting with.
-  token2
-}: {
-  connection: Connection;
-  inAmount: number;
-  owner: Keypair;
-  slippage?: number;
-  token1: string;
-  token2: string;
-}) => {
-
-  // Retrieve token list
-  const tokens: Token[] = await (await fetch(TOKEN_LIST_URL[ENV])).json();
-
-  //  Load Jupiter
-  const jupiter = await Jupiter.load({
-    connection,
-    cluster: ENV,
-    user: owner, // or public key
-  });
-
-  // Find token mint addresses
-  let inputToken;
-  let outputToken;
-  inputToken = tokens.find((t) => t.address == token1);
-  outputToken = tokens.find((t) => t.address == token2);
-
-  const routes1 = await getRoutes({
-    jupiter,
-    inputToken,
-    outputToken,
-    inputAmount: inAmount, // 1 unit in UI
-    slippage: slippage, // 1% slippage
-    directOnly: true,
-  });
-
-
-  let routeInfo1: RouteInfo;
-  let routeInfo2: RouteInfo;
-  //console.log(routes1);
-  // let i = 0;
-  // while (routes1!.routesInfos[i]!.marketInfos!.length != 1 && routes1!.routesInfos[i]!.marketInfos[0]!.amm!.label) {
-  //   i++
-  // }
-  routeInfo1 = routes1!.routesInfos[0];
-  inputToken = tokens.find((t) => t.address == token2);
-  outputToken = tokens.find((t) => t.address == token1);
-
-  const routes2 = await getRoutes({
-    jupiter,
-    inputToken,
-    outputToken,
-    inputAmount: (routeInfo1.outAmountWithSlippage/LAMPORTS_PER_SOL), // 1 unit in UI
-    slippage: slippage, // 1% slippage
-    directOnly: true,
-  });
-  // i = 0;
-  // while (routes2!.routesInfos[i]!.marketInfos!.length != 1 && routes2!.routesInfos[i]!.marketInfos[0]!.amm!.label) {
-  //   i++
-  // }
-  routeInfo2 = routes2!.routesInfos[0];
-
-  // console.log("######################################");
-  // console.log(routeInfo1);
-  // console.log("######################################");
-  // console.log(routeInfo2);
-  // console.log("######################################");
-  
-  let inAm = routeInfo1.inAmount + (0.000005  * LAMPORTS_PER_SOL);
-  let outAm = routeInfo2.outAmountWithSlippage;
-  const diffThresh = 0.0001;
-  let spread = outAm - inAm;
-  console.log("######################################");
-  console.log(routeInfo1.marketInfos[0].amm.label);
-  console.log(routeInfo2.marketInfos[0].amm.label);
-  console.log("I: ", inAm/LAMPORTS_PER_SOL);
-  console.log("O: ", outAm/LAMPORTS_PER_SOL);
-  console.log("S: ", spread/LAMPORTS_PER_SOL);
-  if ((spread/LAMPORTS_PER_SOL) > diffThresh) {
-    console.log("TGTBT");
-    spread = -1;
-  }
-  console.log("######################################");
-  while (spread < 0) {
-    inputToken = tokens.find((t) => t.address == token1);
-    outputToken = tokens.find((t) => t.address == token2);
-
-    const routes1 = await getRoutes({
-      jupiter,
-      inputToken,
-      outputToken,
-      inputAmount: inAmount, // 1 unit in UI
-      slippage: slippage, // 1% slippage
-      directOnly: true,
-    });
-
-
-    let routeInfo1: RouteInfo;
-    let routeInfo2: RouteInfo;
-    // let i = 0;
-    // while (routes1!.routesInfos[i]!.marketInfos!.length != 1 && routes1!.routesInfos[i]!.marketInfos[0]!.amm!.label) {
-    //   i++
-    // }
-    routeInfo1 = routes1!.routesInfos[0];
-    inputToken = tokens.find((t) => t.address == token2);
-    outputToken = tokens.find((t) => t.address == token1);
-
-    const routes2 = await getRoutes({
-      jupiter,
-      inputToken,
-      outputToken,
-      inputAmount: (routeInfo1.outAmountWithSlippage/LAMPORTS_PER_SOL), // 1 unit in UI
-      slippage: slippage, // 1% slippage
-      directOnly: true,
-    });
-    // i = 0;
-    // while (routes2!.routesInfos[i]!.marketInfos!.length != 1 && routes2!.routesInfos[i]!.marketInfos[0]!.amm!.label) {
-    //   i++
-    // }
-    routeInfo2 = routes2!.routesInfos[0];
-    //console.log("IN retrieveJupRoutes");
-    inAm = routeInfo1.inAmount + (0.000005  * LAMPORTS_PER_SOL);
-    outAm = routeInfo2.outAmountWithSlippage;
-    spread = outAm - inAm;
-    console.log(routeInfo1.marketInfos[0].amm.label);
-    console.log(routeInfo2.marketInfos[0].amm.label);
-    console.log("I: ", inAm/LAMPORTS_PER_SOL);
-    console.log("O: ", outAm/LAMPORTS_PER_SOL);
-    console.log("S: ", spread/LAMPORTS_PER_SOL);
-    if ((spread/LAMPORTS_PER_SOL) > diffThresh) {
-      console.log("TGTBT");
-      spread = -1;
-    }
-    console.log("######################################")
-  }
-
-  const { transactions: transactions1 } = await jupiter.exchange({
-    routeInfo: routeInfo1,
-    userPublicKey: owner.publicKey,
-    feeAccount: owner.publicKey,
-    wrapUnwrapSOL: false,
-  });
-
-  const { transactions: transactions2 } = await jupiter.exchange({
-    routeInfo: routeInfo2,
-    userPublicKey: owner.publicKey,
-    feeAccount: owner.publicKey,
-    wrapUnwrapSOL: false
-  });
-  
-  // TRANSACTION META DATA
-  //console.log(transactions.swapTransaction.instructions);
-  // console.log("ADSADASDASDASDASDASDASDASDA")
-
-  //return routes;
-  // Changed this to return the route with the proper transaction stuff.
-  return{ transactions1, transactions2 };
-}
-
+////// Function we are using to perform swaps.
 export const runUntilProfitV3 = async ({
   connection,
   inAmount,
@@ -598,7 +137,6 @@ export const runUntilProfitV3 = async ({
   slippage = 0.05,
   token1, // This should be the token you are starting with.
   token2,
-  wallet,
   wrappedOwner,
 }: {
   connection: Connection;
@@ -607,8 +145,7 @@ export const runUntilProfitV3 = async ({
   slippage?: number;
   token1: string;
   token2: string[];
-  wallet: Wallet;
-  wrappedOwner: PublicKey;
+  wrappedOwner?: PublicKey;
 }) => {
 
   // Retrieve token list
@@ -640,12 +177,30 @@ export const runUntilProfitV3 = async ({
 
   let transactions1;
   let transactions2;
+  let amm1;
+  let amm2;
 
-  while (true) {
+  // console.log("#1")
+  let stop_response = await fetch('http://localhost:4000/tsx_params/1')
+  // console.log("#2")
+  let stop_flag = await stop_response.json();
+  let stop_flag_triggered = false;
+
+  while (!stop_flag_triggered) {
+    stop_response = await fetch('http://localhost:4000/tsx_params/1')
+    stop_flag = await stop_response.json();
+    // console.log("#2.2")
+
+    // If we click stop, we want the code to break, then
+    if(stop_flag.stop == true){
+      stop_flag_triggered = true;
+      continue;
+    }
+
     inputToken = tokens.find((t) => t.address == token1);
     outputToken = tokens.find((t) => t.address == token2[i%amtOfTok2]);
 
-    const routes1 = await getRoutes({
+    const { routes: routes1, inputAmount: inputAmount1 , inputTokenSymbol: inputTokenSymbol1, outputTokenSymbol: outputTokenSymbol1 } = await getRoutes({
       jupiter,
       inputToken,
       outputToken,
@@ -661,11 +216,11 @@ export const runUntilProfitV3 = async ({
 
     //console.log(routes1!.routesInfos!);
     for (var rInfo of routes1!.routesInfos!){
-      if (rInfo!.marketInfos[0]!.amm!.label == "Orca" || rInfo!.marketInfos[0]!.amm!.label == "Raydium") {
+      // console.log(rInfo!.marketInfos[0]!.amm!.label);
+      if (rInfo!.marketInfos[0]!.amm!.label == "Orca" || rInfo!.marketInfos[0]!.amm!.label == "Raydium" || rInfo!.marketInfos[0]!.amm!.label == "Aldrin") {
         route1Found = true;
         routeInfo1 = rInfo;
 
-        // console.log(rInfo!.marketInfos[0]!.amm!.label);
         // console.log(rInfo);
 
         break;
@@ -689,19 +244,8 @@ export const runUntilProfitV3 = async ({
     NUMBER_OF_DECIMAL_PLACES = inputToken.decimals;
     // console.log(NUMBER_OF_DECIMAL_PLACES);
     DECIMAL_PLACES = LAMPORTS_PER_SOL/(10**(9 - inputToken.decimals));
-    // console.log(DECIMAL_PLACES);
 
-    // 6 Decimal Places
-    // if ((token2[i%amtOfTok2] == USDC_MINT_ADDRESS) || (token2[i%amtOfTok2] == soETH_MINT_ADDRESS) ||
-    // (token2[i%amtOfTok2] == OXY_MINT_ADDRESS) || (token2[i%amtOfTok2] == USDT_MINT_ADDRESS)) {
-    //   DECIMAL_PLACES = LAMPORTS_PER_SOL/1000;
-    // }
-    // // 8 Decimal Places
-    // if ((token2[i%amtOfTok2] == oneSOL_MINT_ADDRESS)) {
-    //   DECIMAL_PLACES = LAMPORTS_PER_SOL/10;
-    // }
-
-    const routes2 = await getRoutes({
+    const { routes: routes2, inputAmount: inputAmount2 , inputTokenSymbol: inputTokenSymbol2, outputTokenSymbol: outputTokenSymbol2 } = await getRoutes({
       jupiter,
       inputToken,
       outputToken,
@@ -711,7 +255,7 @@ export const runUntilProfitV3 = async ({
     });
     
     for (var rInfo of routes2!.routesInfos!){
-      if (rInfo!.marketInfos[0]!.amm!.label == "Orca" || rInfo!.marketInfos[0]!.amm!.label == "Raydium") {
+      if (rInfo!.marketInfos[0]!.amm!.label == "Orca" || rInfo!.marketInfos[0]!.amm!.label == "Raydium" || rInfo!.marketInfos[0]!.amm!.label == "Aldrin") {
         route2Found = true;
         routeInfo2 = rInfo;
 
@@ -720,7 +264,7 @@ export const runUntilProfitV3 = async ({
 
         break;
       }
-      console.log("#############################",rInfo!.marketInfos[0]!.amm!.label);
+      console.log("#############################", rInfo!.marketInfos[0]!.amm!.label);
     }
     if (!route2Found) {
       i++;
@@ -763,20 +307,48 @@ export const runUntilProfitV3 = async ({
 
     DECIMAL_PLACES = LAMPORTS_PER_SOL;
     outAm = outAm/DECIMAL_PLACES;
-    
+    // console.log("#3")
     spread = outAm - inAm;
-    console.log(routeInfo1!.marketInfos[0].amm.label);
-    console.log(routeInfo2!.marketInfos[0].amm.label);
+    amm1 = routeInfo1!.marketInfos[0].amm.label;
+    amm2 = routeInfo2!.marketInfos[0].amm.label;
+    console.log(amm1);
+    console.log(amm2);
     console.log("I: ", inAm);
     console.log("O: ", outAm);
     console.log("S: ", spread);
+
+    // Writing to db
+    await axios.put('http://localhost:4000/tsx_log/1', {
+      firstSwap: {
+        amm1: amm1,
+        inputAmount1: inputAmount1,
+        inputTokenSymbol1: inputTokenSymbol1,
+        outputAmount1: inputAmount2,
+        outputTokenSymbol1: outputTokenSymbol1
+      },
+      secondSwap: {
+        amm2: amm2,
+        inputAmount2: inputAmount2,
+        inputTokenSymbol2: inputTokenSymbol2,
+        outputAmount2: outAm,
+        outputTokenSymbol2: outputTokenSymbol2
+      },
+      totalIn: inAm,
+      totalOut: outAm,
+      spread: spread
+    }).then(resp => {
+      console.log(resp.data);
+    }).catch(error => {
+      console.log(error);
+    });
+
     if (spread > diffThresh) {
       console.log("TGTBT");
       spread = -1;
     }
     console.log("######################################")
     if (spread > 0) {
-      return{ transactions1, transactions2 };
+      return{ transactions1, transactions2, stop_flag_triggered };
     }
     i++;
     DECIMAL_PLACES = LAMPORTS_PER_SOL;
@@ -784,5 +356,5 @@ export const runUntilProfitV3 = async ({
 
   //return routes;
   // Changed this to return the route with the proper transaction stuff.
-  return{ transactions1, transactions2 };
+  return{ transactions1, transactions2, stop_flag_triggered };
 }

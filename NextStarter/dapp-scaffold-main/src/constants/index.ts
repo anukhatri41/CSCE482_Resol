@@ -44,6 +44,9 @@ export const sRLY_MINT_ADDRESS = "RLYv2ubRMDLcGG2UyvPmnPmkfuQTsMbg4Jtygc7dmnq";
 export const USDT_MINT_ADDRESS = "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB";
 export const UXP_MINT_ADDRESS = "UXPhBoR3qG4UCiGNJfV7MqhHyFqKN68g45GoYvAeL2M";
 export const soETH_MINT_ADDRESS = "2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk";
+export const UST_MINT_ADDRESS = "9vMJfxuKxXBoEa7rM12mYLMwTacLMLDJqHozw96WQL8i";
+export const PRT_MINT_ADDRESS = "PRT88RkA4Kg5z7pKnezeNH4mafTvtQdfFgpQTGRjz44";
+
 // Interface
 export interface Token {
   chainId: number; // 101,

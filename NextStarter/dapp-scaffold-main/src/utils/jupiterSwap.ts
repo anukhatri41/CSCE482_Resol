@@ -176,11 +176,12 @@ export const runUntilProfitV3 = async ({
 
   let transactions1;
   let transactions2;
-  const stop_response = await fetch('http://localhost:4000/tsx_params/1')
+  let stop_response = await fetch('http://localhost:4000/tsx_params/1')
   let stop_flag = await stop_response.json();
   let stop_flag_triggered = false;
 
   while (!stop_flag_triggered) {
+    stop_response = await fetch('http://localhost:4000/tsx_params/1')
     stop_flag = await stop_response.json();
 
     // If we click stop, we want the code to break, then

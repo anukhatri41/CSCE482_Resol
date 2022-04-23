@@ -41,6 +41,8 @@ import {
     PRT_MINT_ADDRESS
   } from "./constants";
   import fetch from "isomorphic-fetch";
+import { exec } from "child_process";
+import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 
 
 function ret_t_2() {
@@ -125,19 +127,20 @@ const routeOutputV3 = async () => {
     let negativeSwaps = 0;
     let swapsErr = 0;
 
-    let wSOLAccount = await createWSolAccount({connection, owner});
     let stop_flag_triggered = false;
-
+    let wSOLAddress = await createWSolAccount({connection, owner});
+    let initwSOLBalance;
+    
     while ((totSwaps < iterations) && !stop_flag_triggered) {
       try {
 
         if (totSwaps != 0) {
-          wSOLAccount = await createWSolAccount({connection, owner});
+          wSOLAddress = await createWSolAccount({connection, owner});
         }
 
         totSwaps++;
-        initSOLBalance = await connection.getBalance(owner.publicKey);
-        console.log("Initial SOL Balance: ", initSOLBalance/LAMPORTS_PER_SOL);
+        initwSOLBalance = await connection.getBalance(wSOLAddress);
+        console.log("Initial SOL Balance: ", initwSOLBalance/LAMPORTS_PER_SOL);
         let token1 = SOL_MINT_ADDRESS;
         let token2 = [
           STEP_MINT_ADDRESS, 
@@ -154,68 +157,80 @@ const routeOutputV3 = async () => {
           stSOL_MINT_ADDRESS,
           UST_MINT_ADDRESS,
           PRT_MINT_ADDRESS];
+
         let transactions = await runUntilProfitV3({connection: connectionRPC, inAmount, owner, token1, token2});
         stop_flag_triggered = transactions.stop_flag_triggered;
         if (stop_flag_triggered == true) {
           continue;
         }
 
-        let signers: Signer[] = [owner];
+        if (transactions.transactions1.swapTransaction) {
 
-        console.log("Initial SOL Balance: ", initSOLBalance/LAMPORTS_PER_SOL);
+          let signers: Signer[] = [owner];
 
-        const payload = new Transaction();
+          console.log("Initial SOL Balance: ", initSOLBalance/LAMPORTS_PER_SOL);
 
-        console.log(transactions.transactions1.swapTransaction.instructions);
-        payload.add(transactions.transactions1.swapTransaction);
-        payload.add(transactions.transactions2.swapTransaction);
+          const payload = new Transaction();
 
-        /////////// COMMENT OUT BETWEEN TO STOP SWAP ////////////////////////////////////////////////////
-        for (let serializedTransaction of [payload].filter(Boolean)) {
-          // get transaction object from serialized transaction
-          if (serializedTransaction) {
-      
-            const txid = await connectionRPC.sendTransaction(serializedTransaction, signers, {
-              skipPreflight: true
-            })
-            await connectionRPC.confirmTransaction(txid)
-            console.log(`TX${serializedTransaction.toString()}: https://solscan.io/tx/${txid}`)
+          console.log(transactions.transactions1.swapTransaction.instructions);
+          payload.add(transactions.transactions1.swapTransaction);
+          payload.add(transactions.transactions2.swapTransaction);
+
+          /////////// COMMENT OUT BETWEEN TO STOP SWAP ////////////////////////////////////////////////////
+          for (let serializedTransaction of [payload].filter(Boolean)) {
+            // get transaction object from serialized transaction
+            if (serializedTransaction) {
+        
+              const txid = await connectionRPC.sendTransaction(serializedTransaction, signers, {
+                skipPreflight: true
+              })
+              await connectionRPC.confirmTransaction(txid)
+              console.log(`TX${serializedTransaction.toString()}: https://solscan.io/tx/${txid}`)
+            }
           }
         }
         /////////// COMMENT OUT BETWEEN TO STOP SWAP ////////////////////////////////////////////////////
         
-        const finalSOLBalance = await connection.getBalance(owner.publicKey);
-        console.log("SOL Balance After Most Recent Swap: ", finalSOLBalance/LAMPORTS_PER_SOL);
-        console.log("Profit?: ", (finalSOLBalance-initSOLBalance)/LAMPORTS_PER_SOL);
-        if ((finalSOLBalance-initSOLBalance)/LAMPORTS_PER_SOL > 0) {
+        // const finalSOLBalance = await connection.getBalance(owner.publicKey);
+        const finalwSOLBalance = await connection.getBalance(wSOLAddress);
+        console.log("SOL Balance After Most Recent Swap: ", finalwSOLBalance/LAMPORTS_PER_SOL);
+        console.log("Profit?: ", (finalwSOLBalance-initwSOLBalance)/LAMPORTS_PER_SOL);
+        if ((finalwSOLBalance-initwSOLBalance)/LAMPORTS_PER_SOL > 0) {
           positiveSwaps++;
-        } else if ((finalSOLBalance-initSOLBalance)/LAMPORTS_PER_SOL == 0) {
+        } else if ((finalwSOLBalance-initwSOLBalance)/LAMPORTS_PER_SOL == 0) {
           swapsErr++;
         } else {
           negativeSwaps++;
         }
 
-        totalProfit += (finalSOLBalance-initSOLBalance)/LAMPORTS_PER_SOL;
+        totalProfit += (finalwSOLBalance-initwSOLBalance)/LAMPORTS_PER_SOL;
 
     
       } catch(err) {
-        const finalSOLBalance = await connection.getBalance(owner.publicKey);
-        console.log("SOL Balance After Most Recent Swap: ", finalSOLBalance/LAMPORTS_PER_SOL);
-        console.log("Profit?: ", (finalSOLBalance-initSOLBalance)/LAMPORTS_PER_SOL);
-        totalProfit += (finalSOLBalance-initSOLBalance)/LAMPORTS_PER_SOL;
-        if ((finalSOLBalance-initSOLBalance)/LAMPORTS_PER_SOL > 0) {
-          positiveSwaps++;
-        } else if ((finalSOLBalance-initSOLBalance)/LAMPORTS_PER_SOL == 0) {
-          swapsErr++;
-        } else {
-          negativeSwaps++;
+        try {
+          exec("sleep 5")
+          const finalwSOLBalance = await connection.getBalance(wSOLAddress);
+          console.log("SOL Balance After Most Recent Swap: ", finalwSOLBalance/LAMPORTS_PER_SOL);
+          console.log("Profit?: ", (finalwSOLBalance-initwSOLBalance)/LAMPORTS_PER_SOL);
+          totalProfit += (finalwSOLBalance-initwSOLBalance)/LAMPORTS_PER_SOL;
+          if ((finalwSOLBalance-initwSOLBalance)/LAMPORTS_PER_SOL > 0) {
+            positiveSwaps++;
+          } else if ((finalwSOLBalance-initwSOLBalance)/LAMPORTS_PER_SOL == 0) {
+            swapsErr++;
+          } else {
+            negativeSwaps++;
+          }
+        }
+        catch (error) {
+          console.log("error error")
         }
 
         console.warn(err);
       }
     }
 
-    await closeAccount(connection, owner, wSOLAccount, owner.publicKey, owner);
+    console.log("closing account")
+    await closeAccount(connection, owner, wSOLAddress, owner.publicKey, owner);
 
     const endingSOLBalance = await connection.getBalance(owner.publicKey);
 

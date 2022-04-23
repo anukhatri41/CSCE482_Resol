@@ -187,7 +187,6 @@ export const runUntilProfitV3 = async ({
   let stop_flag_triggered = false;
 
   while (!stop_flag_triggered) {
-    // console.log("#2.1")
     stop_response = await fetch('http://localhost:4000/tsx_params/1')
     stop_flag = await stop_response.json();
     // console.log("#2.2")

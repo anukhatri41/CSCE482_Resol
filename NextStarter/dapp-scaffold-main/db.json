@@ -3,8 +3,8 @@
     {
       "iterations": "5",
       "amount": ".05",
-      "walletSecret": "U2FsdGVkX1+6/8qrcPD9FZF0EOXzhXxiV4Mp6/7U42jd/hE34qVALrb9LW/udsx8pwQO42sm72amcMO7negN+Hv246XcXy0Bu3/lm5pKC+Qyw3rlaIJpQwiuCINV2VtlwNVztbDzmXbrg37OPawZDg==",
-      "stop": true,
+      "stop": false,
+      "walletSecret": "U2FsdGVkX1+17jM6TDn+uDrz/hz7+v6UTRtjvZuK5ea1IFQDCszBumLVrO1sPbv3PqHfdoV67akkxNzmgce4/zJEFRYit5XhXxZ9Rk5AmEUGJQVYMAHanLW6XSnatEhYWn4OSzMQes4IvqK7OTRw4A==",
       "id": 1
     }
   ],

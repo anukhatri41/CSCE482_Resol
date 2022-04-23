@@ -28,15 +28,11 @@ const axios = require('axios');
 
 const openTab = (iter, amo, walSec) => {
 
-  const encryptedSec = AES.encrypt(walSec, 'secret key crypto').toString();
-
-  console.log(encryptedSec);
-
   axios.put('http://localhost:4000/tsx_params/1', {
     iterations: iter,
     amount: amo,
     stop: false,
-    walletSecret: encryptedSec
+    walletSecret: walSec
   
   }).then(resp => {
     console.log(resp.data);

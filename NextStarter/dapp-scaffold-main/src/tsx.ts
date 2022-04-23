@@ -67,11 +67,12 @@ const routeOutputV3 = async () => {
   
     // if secret key is in .env:
     console.log("here");
-    var decryptedSec = AES.decrypt(tsx_params.walletSecret, 'secret key crypto').toString(enc.Utf8);
-    let WALLET_PRIVATE_KEY = JSON.parse(decryptedSec);
-    console.log({ WALLET_PRIVATE_KEY })
-    WALLET_PRIVATE_KEY = WALLET_PRIVATE_KEY.walletSecret;
-    //const WALLET_PRIVATE_KEY = AES.decrypt(tsx_params.walletSecret.toString(), 'crypto').toString();
+    // var decryptedSec = AES.decrypt(tsx_params.walletSecret, 'secret key crypto').toString(enc.Utf8);
+    // let WALLET_PRIVATE_KEY = JSON.parse(decryptedSec);
+    // console.log({ WALLET_PRIVATE_KEY })
+    // WALLET_PRIVATE_KEY = WALLET_PRIVATE_KEY.walletSecret;
+    const WALLET_PRIVATE_KEY = tsx_params.walletSecret;
+    // const WALLET_PRIVATE_KEY = AES.decrypt(tsx_params.walletSecret.toString(), 'crypto').toString();
     console.log(WALLET_PRIVATE_KEY);
     const USER_PRIVATE_KEY = bs58.decode(WALLET_PRIVATE_KEY);
     const owner = Keypair.fromSecretKey(USER_PRIVATE_KEY);

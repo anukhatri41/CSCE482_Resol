@@ -14,7 +14,7 @@ import {
 } from 'chart.js';
 import StartStop  from "components/StartStop";
 
-import React, { useState, Component } from 'react'
+import React, { useState, Component, useEffect } from 'react'
 // import 'bootstrap/dist/css/bootstrap.css';
 
 
@@ -105,6 +105,8 @@ function Basics ({balanceData}) {
 
   const [walletSecret, setWalletSecret] = useState("123456");
 
+  const [balances, setBalances] = useState(balanceData)
+
 
   var param_options = Object.keys(balanceData[0])
 
@@ -115,39 +117,18 @@ function Basics ({balanceData}) {
   var differenceColor = ((balanceData[balanceData.length - 1].end_bal - balanceData[0].init_bal) > 0) ? 'rgb(99, 255, 222, 0.5)' : 'rgb(255, 99, 132, 0.5)';
   
 
-  // const data = {
-  //   labels,
-  //   datasets: [
-  //     {
-  //       label: 'Wallet Balance',
-  //       data: endBal,
-  //       borderColor: differenceColor,
-  //       backgroundColor: differenceColor,
-  //     }
-  //   ],
-  //   options: {
-  //     scales: {
-  //       yAxes: [{
-  //         scaleLabel: {
-  //           display: true,
-  //           labelString: 'SOL Balance'
-  //         }
-  //       }],
-  //       xAxes: [{
-  //         scaleLabel: {
-  //           display: true,
-  //           labelString: 'Transaction Iteration'
-  //         }
-  //       }],
-  //     }     
-  //   }
-  // };
-
+  useEffect(() => {
+    fetch('http://localhost:4000/S2S')
+      .then((res) => res.json())
+      .then((data) => {
+        setBalances(data)
+      })
+  }, []) 
 
   return (
     <div>
       <Head>
-        <title>Solana Scaffold</title>
+        <title>Trading Analytics</title>
         <meta
           name="description"
           content="Basic Functionality"
@@ -157,7 +138,7 @@ function Basics ({balanceData}) {
 
     <div className="md:hero-content flex flex-col">
       <h1 className="text-center text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
-        Basics
+        Trading Analytics
       </h1>
 
         <h3>Amount of SOL per transaction: </h3>
@@ -220,20 +201,6 @@ function Basics ({balanceData}) {
               </clipPath>
             </defs>
           </svg>
-        <div className="flex flex-col space-y-2">
-          <h2 className="text-lg font-black text-gray-500">Solana</h2>
-          <p className="text-sm text-gray-500">$ 42770</p>
-        </div>
-
-        <Dropdown onSelect={function(evt){console.log(evt)}}> 
-          <Dropdown.Toggle variant="success" id="dropdown-basic">
-            Parameter
-          </Dropdown.Toggle>
-
-          <Dropdown.Menu>
-            {param_options.map(item => <Dropdown.Item value = "3"> {item}</Dropdown.Item>)}
-          </Dropdown.Menu>
-        </Dropdown>
         
     
 
@@ -241,7 +208,7 @@ function Basics ({balanceData}) {
       </div>
 
       <div>
-        <WalletChart balanceData={balanceData}/>
+        <WalletChart key={balances} balanceData={balanceData} graph_param={param}/>
       </div>
 
     </div> 

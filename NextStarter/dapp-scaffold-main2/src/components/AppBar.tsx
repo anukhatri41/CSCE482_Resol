@@ -12,7 +12,7 @@ export const AppBar: FC = props => {
     <div>
 
       {/* NavBar / Header */}
-      <div className="navbar flex flex-row md:mb-2 shadow-lg bg-neutral text-neutral-content">
+      <div className="navbar flex flex-row md:mb-1 shadow-lg bg-neutral text-neutral-content">
         <div className="navbar-start">
           <label htmlFor="my-drawer" className="btn btn-square btn-ghost">
 
@@ -22,7 +22,16 @@ export const AppBar: FC = props => {
           </label>
         
           <div className="hidden sm:inline w-22 h-22 md:p-2">
-          <img src='/resol_logo.png' alt="Resol" width='55' height='55'/>
+            <div className="mx-auto  flex flex-row p-2 text-center items-center bg-neutral text-neutral-content">
+                <div className="grid-flow-col pr-1 gap-4 text-center">
+                  <img src='/resol_logo.png' alt="Resol" width='55' height='55'/>
+                </div>
+                <div >
+                  <h2 className='font-semibold text-lg pl-1'>Resol</h2>
+                </div>
+                
+              </div>
+          
           </div>
         </div>
 

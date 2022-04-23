@@ -51,6 +51,16 @@ const axios = require('axios');
 
 
 const routeOutputV3 = async () => {
+
+    while(true) {
+      let response = await fetch('http://localhost:4000/tsx_params/1')
+      let tsx_params = await response.json()
+
+      let stop = tsx_params.stop;
+      if (stop == false) {
+        break;
+      }
+    }
   
     require('dotenv').config()
 
@@ -83,7 +93,7 @@ const routeOutputV3 = async () => {
       totalIn: 0,
       totalOut: 0,
       spread: 0,
-      recent_transacton: {
+      recent_transaction: {
           priorBalance: -1,
           afterBalance: -1,
           difference: -1,
@@ -164,7 +174,7 @@ const routeOutputV3 = async () => {
 
     let txid;
 
-    while ((totSwaps < iterations) && !stop_flag_triggered) {
+    while (!stop_flag_triggered) {
       try {
 
         if (totSwaps != 0) {

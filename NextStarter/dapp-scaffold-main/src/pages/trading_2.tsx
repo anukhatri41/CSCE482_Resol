@@ -68,10 +68,10 @@ class Trading2 extends React.Component {
             this.setState({totalOut: tsx_log.totalOut})
             this.setState({spread: tsx_log.spread})
 
-            // this.setState({prio: tsx_log.recent_transaction.priorBalance})
-            // this.setState({afterBalance: tsx_log.recent_transaction.afterBalance})
-            // this.setState({differance: tsx_log.recent_transaction.differance})
-            // this.setState({txId: tsx_log.recent_transaction.txId})
+            this.setState({priorBalance: tsx_log.recent_transaction.priorBalance})
+            this.setState({afterBalance: tsx_log.recent_transaction.afterBalance})
+            this.setState({differance: tsx_log.recent_transaction.differance})
+            this.setState({txId: tsx_log.recent_transaction.txId})
 
             await new Promise(r => setTimeout(r, 1000));
         }

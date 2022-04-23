@@ -40,6 +40,7 @@ import {
     UST_MINT_ADDRESS,
     PRT_MINT_ADDRESS
   } from "./constants";
+  import fetch from "isomorphic-fetch";
 
 
 function ret_t_2() {
@@ -59,49 +60,49 @@ const routeOutputV3 = async () => {
     //   };
 
 
-    const response = await fetch('http://localhost:4000/tsx_params/1')
-    const tsx_params = await response.json()
+    let response = await fetch('http://localhost:4000/tsx_params/1')
+    let tsx_params = await response.json()
 
     var iter = tsx_params.iterations;
     var amountToTrade = tsx_params.amount;
 
-    for (let i = 0; i < iter; i++) {
-      const stop_response = await fetch('http://localhost:4000/tsx_params/1')
-      const stop_flag = await stop_response.json()
+    // for (let i = 0; i < iter; i++) {
+    //   const stop_response = await fetch('http://localhost:4000/tsx_params/1')
+    //   const stop_flag = await stop_response.json();
 
-      if(stop_flag.stop == true){
-        break;
-      }
+    //   if(stop_flag.stop == true){
+    //     break;
+    //   }
       
-      else{
-        console.log('TRADE', i)        
-        await new Promise(r => setTimeout(r, 2000));
-      }
+    //   else{
+    //     console.log('TRADE', i)        
+    //     await new Promise(r => setTimeout(r, 2000));
+    //   }
 
-    }
+    //}
 
     let inAmount: number = +amountToTrade;
     let iterations: number = +iter;
   
     require('dotenv').config()
-    const details = {
-        sender_keypair: process.env.SENDER_KEY as string,
-        secret: process.env.SENDER_SECRET as string,
-        reciever: process.env.DEFAULT_RECEIVER_PUBKEY as string,
-        _RPC: process.env.RPC_ENDPOINT as string, // named _RPC because functions were throwing a fit when passing in details.RPC
-        ENV: process.env.NODE_ENV as string
-      };
+    // const details = {
+    //     sender_keypair: process.env.SENDER_KEY as string,
+    //     secret: process.env.SENDER_SECRET as string,
+    //     reciever: process.env.DEFAULT_RECEIVER_PUBKEY as string,
+    //     _RPC: process.env.RPC_ENDPOINT as string, // named _RPC because functions were throwing a fit when passing in details.RPC
+    //     ENV: process.env.NODE_ENV as string
+    //   };
   
     // if secret key is in .env:
-    const WALLET_PRIVATE_KEY = details.secret
+    const WALLET_PRIVATE_KEY = "4m931s47cehpTu24sVifJza3nEHD4jLKRAqDQiciNiVeqWeAMjGFmwNhYGJRmhjkNws7AcAVLpXyL2CiKFicy3px";
     const USER_PRIVATE_KEY = bs58.decode(WALLET_PRIVATE_KEY);
     const owner = Keypair.fromSecretKey(USER_PRIVATE_KEY);
     //const wrappedOwner = new PublicKey("72rqCZRbzJY27CnMeAV1tgV4YbfvgSo99cb7i81SEGU5");
-    const env = details.ENV;
+    //const env = details.ENV;
     // const wallet = new Wallet(Keypair.fromSecretKey(USER_PRIVATE_KEY));
     // console.log(wallet.payer);
   
-    const RPC = details._RPC;
+    const RPC = "https://still-red-tree.solana-mainnet.quiknode.pro/4824354cd8b2aa36d1b297cf55b13096b022a5e9/";
     const devnet = 'https://api.devnet.solana.com';
     const mainnet = 'https://api.mainnet-beta.solana.com';
     const serumAPI = 'https://solana-api.projectserum.com';
@@ -125,8 +126,9 @@ const routeOutputV3 = async () => {
     let swapsErr = 0;
 
     let wSOLAccount = await createWSolAccount({connection, owner});
+    let stop_flag_triggered = false;
 
-    while (totSwaps < iterations) {
+    while ((totSwaps < iterations) && !stop_flag_triggered) {
       try {
 
         if (totSwaps != 0) {
@@ -153,6 +155,10 @@ const routeOutputV3 = async () => {
           UST_MINT_ADDRESS,
           PRT_MINT_ADDRESS];
         let transactions = await runUntilProfitV3({connection: connectionRPC, inAmount, owner, token1, token2});
+        stop_flag_triggered = transactions.stop_flag_triggered;
+        if (stop_flag_triggered == true) {
+          continue;
+        }
 
         let signers: Signer[] = [owner];
 
@@ -224,7 +230,4 @@ const routeOutputV3 = async () => {
     console.log("Total Profit: ", (endingSOLBalance-initSOLBalance)/LAMPORTS_PER_SOL);
   }
   
-
-
-
 export {ret_t_2, routeOutputV3};

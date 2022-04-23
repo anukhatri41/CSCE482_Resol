@@ -23,6 +23,7 @@ import {
 import { Wallet } from "@project-serum/anchor";
 import { InstructionParser } from "./instruction-parser";
 const bn = require("bn.js")
+const axios = require('axios');
 
   const getRoutes = async ({
     jupiter,
@@ -176,12 +177,20 @@ export const runUntilProfitV3 = async ({
 
   let transactions1;
   let transactions2;
-  const stop_response = await fetch('http://localhost:4000/tsx_params/1')
+  let amm1;
+  let amm2;
+
+  // console.log("#1")
+  let stop_response = await fetch('http://localhost:4000/tsx_params/1')
+  // console.log("#2")
   let stop_flag = await stop_response.json();
   let stop_flag_triggered = false;
 
   while (!stop_flag_triggered) {
+    // console.log("#2.1")
+    stop_response = await fetch('http://localhost:4000/tsx_params/1')
     stop_flag = await stop_response.json();
+    // console.log("#2.2")
 
     // If we click stop, we want the code to break, then
     if(stop_flag.stop == true){
@@ -236,17 +245,6 @@ export const runUntilProfitV3 = async ({
     NUMBER_OF_DECIMAL_PLACES = inputToken.decimals;
     // console.log(NUMBER_OF_DECIMAL_PLACES);
     DECIMAL_PLACES = LAMPORTS_PER_SOL/(10**(9 - inputToken.decimals));
-    // console.log(DECIMAL_PLACES);
-
-    // 6 Decimal Places
-    // if ((token2[i%amtOfTok2] == USDC_MINT_ADDRESS) || (token2[i%amtOfTok2] == soETH_MINT_ADDRESS) ||
-    // (token2[i%amtOfTok2] == OXY_MINT_ADDRESS) || (token2[i%amtOfTok2] == USDT_MINT_ADDRESS)) {
-    //   DECIMAL_PLACES = LAMPORTS_PER_SOL/1000;
-    // }
-    // // 8 Decimal Places
-    // if ((token2[i%amtOfTok2] == oneSOL_MINT_ADDRESS)) {
-    //   DECIMAL_PLACES = LAMPORTS_PER_SOL/10;
-    // }
 
     const { routes: routes2, inputAmount: inputAmount2 , inputTokenSymbol: inputTokenSymbol2, outputTokenSymbol: outputTokenSymbol2 } = await getRoutes({
       jupiter,
@@ -310,13 +308,41 @@ export const runUntilProfitV3 = async ({
 
     DECIMAL_PLACES = LAMPORTS_PER_SOL;
     outAm = outAm/DECIMAL_PLACES;
-    
+    // console.log("#3")
     spread = outAm - inAm;
-    console.log(routeInfo1!.marketInfos[0].amm.label);
-    console.log(routeInfo2!.marketInfos[0].amm.label);
+    amm1 = routeInfo1!.marketInfos[0].amm.label;
+    amm2 = routeInfo2!.marketInfos[0].amm.label;
+    console.log(amm1);
+    console.log(amm2);
     console.log("I: ", inAm);
     console.log("O: ", outAm);
     console.log("S: ", spread);
+
+    // Writing to db
+    await axios.put('http://localhost:4000/tsx_log/1', {
+      firstSwap: {
+        amm1: amm1,
+        inputAmount1: inputAmount1,
+        inputTokenSymbol1: inputTokenSymbol1,
+        outputAmount1: inputAmount2,
+        outputTokenSymbol1: outputTokenSymbol1
+      },
+      secondSwap: {
+        amm2: amm2,
+        inputAmount2: inputAmount2,
+        inputTokenSymbol2: inputTokenSymbol2,
+        outputAmount2: outAm,
+        outputTokenSymbol2: outputTokenSymbol2
+      },
+      totalIn: inAm,
+      totalOut: outAm,
+      spread: spread
+    }).then(resp => {
+      console.log(resp.data);
+    }).catch(error => {
+      console.log(error);
+    });
+
     if (spread > diffThresh) {
       console.log("TGTBT");
       spread = -1;

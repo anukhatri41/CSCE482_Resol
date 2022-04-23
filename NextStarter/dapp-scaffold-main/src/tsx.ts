@@ -40,9 +40,8 @@ import {
   } from "./constants";
 
 
-function ret_t_2() {
-    return 'returning from file';
-}
+  const axios = require('axios');
+
 
 
 const routeOutputV3 = async () => {
@@ -73,7 +72,33 @@ const routeOutputV3 = async () => {
       }
       
       else{
-        console.log('TRADE', i)        
+        console.log('TRADE', i)   
+        
+        
+        await axios.put('http://localhost:4000/tsx_log/1', {
+          firstSwap: {
+            amm1: i,
+            inputAmount1: i,
+            inputTokenSymbol1: i,
+            outputAmount1: i,
+            outputTokenSymbol1: i
+          },
+          secondSwap: {
+            amm2: i,
+            inputAmount2: i,
+            inputTokenSymbol2: i,
+            outputAmount2: i,
+            outputTokenSymbol2: i
+          },
+          totalIn: i,
+          totalOut: i,
+          spread: i
+        }).then(resp => {
+          console.log(resp.data);
+        }).catch(error => {
+          console.log(error);
+        });
+
         await new Promise(r => setTimeout(r, 2000));
       }
 
@@ -213,4 +238,4 @@ const routeOutputV3 = async () => {
 
 
 
-export {ret_t_2, routeOutputV3};
+export {routeOutputV3};

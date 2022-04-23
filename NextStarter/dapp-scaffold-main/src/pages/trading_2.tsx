@@ -2,7 +2,7 @@ import Head from "next/head";
 import React, { useState, Component } from 'react'
 // import 'bootstrap/dist/css/bootstrap.css';
 
-import {ret_t_2, routeOutputV3} from '../tsx';
+import {routeOutputV3} from '../tsx';
 
 
 import { Triangle } from "react-loader-spinner";
@@ -18,29 +18,56 @@ class Trading2 extends React.Component {
         this.state = {
             amount: tsx_params.amount,
             iterations: tsx_params.iterations,
-            walletSecret: tsx_params.walletSecret
+            walletSecret: tsx_params.walletSecret,
+            amm1: -1,
+            inputAmount1: -1,
+            inputTokenSymbol1: -1,
+            outputAmount1: -1,
+            outputTokenSymbol1: -1,
+            amm2: -1,
+            inputAmount2: -1,
+            inputTokenSymbol2: -1,
+            outputAmount2: -1,
+            outputTokenSymbol2: -1,
+            totalIn: -1,
+            totalOut: -1,
+            spread: -1,
+            "id": 1
          };
     }
 
     update_vals = async () => {
-
         // const response = await fetch('http://localhost:4000/tsx_log/1')
         // const tsx_log = await response.json()
-
-
-        for (let i = 0; i < 3; i++) {
         
+        // console.log(tsx_log)
+        // this.setState({amm1: tsx_log.amm1})
+        // this.setState({inputAmount1: tsx_log.inputAmount1})
+        // this.setState({inputTokenSymbol1: tsx_log.inputTokenSymbol1})
+        // this.setState({outputTokenSymbol1: tsx_log.outputTokenSymbol1})
+
+
+        for (let i = 0; i < 1000; i++) {
             this.setState({amount: i})
-            
-            await new Promise(r => setTimeout(r, 2000));
-    
+            const response = await fetch('http://localhost:4000/tsx_log/1')
+            const tsx_log = await response.json()
+        
+
+            this.setState({amm1: tsx_log.firstSwap.amm1})
+            this.setState({inputAmount1: tsx_log.firstSwap.inputAmount1})
+            this.setState({inputTokenSymbol1: tsx_log.firstSwap.inputTokenSymbol1})
+            this.setState({outputTokenSymbol1: tsx_log.firstSwap.outputTokenSymbol1})
+            await new Promise(r => setTimeout(r, 1000));
         }
+
+    
     
     };
 
     componentDidMount() {
+        console.log("sdkjnfklsjdfksdfkhjlbsadfkjlhbdsfkhjb")
         this.update_vals()
-      }
+    }
 
     closeTab = async () => {
         await axios.put('http://localhost:4000/tsx_params/1', {
@@ -77,9 +104,36 @@ class Trading2 extends React.Component {
               <h1 className="text-center text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
                 Trading currently running
               </h1>
-                <h2>SOL per trade: {this.state.amount}</h2>
-                <h2>Number of iterations: {this.state.iterations} </h2>
-        
+
+
+              <h1 className="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
+                SOL per trade: {this.state.amount}
+              </h1>
+              
+              <h1 className="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
+                Number of iterations: {this.state.iterations} 
+              </h1>
+
+              <h1 className="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
+                {this.state.amm1}: Route Found for {this.state.inputAmount1} {this.state.inputTokenSymbol1} -> {this.state.outputAmount1} {this.state.outputTokenSymbol1}
+              </h1>
+
+              <h1 className="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
+                 {this.state.amm2}: Route Found for {this.state.inputAmount2} {this.state.inputTokenSymbol2} -> {this.state.outputAmount2} {this.state.outputTokenSymbol2}
+              </h1>
+              
+              <h1 className="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
+                Amount In: {this.state.totalIn}
+              </h1>
+
+              <h1 className="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
+                Amount Out: {this.state.totalOut}
+              </h1>
+
+              <h1 className="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
+                Spread: {this.state.spread}
+              </h1>
+
         
         
               <button

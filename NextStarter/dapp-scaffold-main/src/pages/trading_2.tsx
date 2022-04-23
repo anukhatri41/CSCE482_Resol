@@ -19,6 +19,7 @@ class Trading2 extends React.Component {
             amount: tsx_params.amount,
             iterations: tsx_params.iterations,
             walletSecret: tsx_params.walletSecret,
+            stop: tsx_params.stop,
             amm1: -1,
             inputAmount1: -1,
             inputTokenSymbol1: -1,
@@ -37,20 +38,15 @@ class Trading2 extends React.Component {
     }
 
     update_vals = async () => {
-        // const response = await fetch('http://localhost:4000/tsx_log/1')
-        // const tsx_log = await response.json()
-        
-        // console.log(tsx_log)
-        // this.setState({amm1: tsx_log.amm1})
-        // this.setState({inputAmount1: tsx_log.inputAmount1})
-        // this.setState({inputTokenSymbol1: tsx_log.inputTokenSymbol1})
-        // this.setState({outputTokenSymbol1: tsx_log.outputTokenSymbol1})
-
 
         for (let i = 0; i < 1000; i++) {
-            const response = await fetch('http://localhost:4000/tsx_log/1')
-            const tsx_log = await response.json()
-        
+            const response_log = await fetch('http://localhost:4000/tsx_log/1')
+            const tsx_log = await response_log.json()
+
+            const response_params = await fetch('http://localhost:4000/tsx_params/1')
+            const tsx_params = await response_params.json()
+
+            this.setState({stop: tsx_params.stop})
 
             this.setState({amm1: tsx_log.firstSwap.amm1})
             this.setState({inputAmount1: tsx_log.firstSwap.inputAmount1})
@@ -83,12 +79,12 @@ class Trading2 extends React.Component {
         this.update_vals()
     }
 
-    closeTab = async () => {
+    tradingButton = async () => {
         await axios.put('http://localhost:4000/tsx_params/1', {
             iterations: this.state.iterations,
             amount: this.state.amount,
             walletSecret: this.state.walletSecret,
-            stop: true
+            stop: !this.state.stop
           
           }).then(resp => {
             console.log(resp.data);
@@ -96,8 +92,8 @@ class Trading2 extends React.Component {
             console.log(error);
           });
         
-        window.open("about:blank", "_self");
-        window.close();
+        // window.open("about:blank", "_self");
+        // window.close();
     };
     
 
@@ -148,14 +144,19 @@ class Trading2 extends React.Component {
                 Spread: {this.state.spread}
               </h1>
 
+              <h1 className="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
+                stop: {this.state.stop}
+              </h1>
+
         
         
               <button
-                        className="px-8 m-2 btn animate-pulse bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 ..."
-                        onClick={() => this.closeTab(this.state.iterations, this.state.amount)}
+                        // className={'${this.state.stop ? "px-8 m-2 btn animate-pulse bg-gradient-to-r  from-pink-500 to-yellow-500 hover:from-[#9945FF] hover:to-[#14F195] ..." : }'
+                        className={`${this.state.stop ? "px-8 m-2 btn animate-pulse bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:from-pink-500 hover:to-yellow-500  ..." : "px-8 m-2 btn animate-pulse bg-gradient-to-r  from-pink-500 to-yellow-500 hover:from-[#9945FF] hover:to-[#14F195] ..."}`}
+                        onClick={() => this.tradingButton(this.state.iterations, this.state.amount)}
                         // onClick={this.update_vals}
               >
-                        <span>{`${"Stop Trading" }`} </span>
+                        <span>{`${this.state.stop ? "Start Trading" : "Stop Trading"}`} </span>
               </button>
         
         
@@ -205,19 +206,20 @@ export async function getServerSideProps(){
     console.log("howdy");
     const response = await fetch('http://localhost:4000/tsx_params/1')
     const tsx_params = await response.json()
+    console.log(tsx_params.stop)
   
     console.log("-------TRADING222222---------");
   
     // console.log(tsx_params)
     
-    routeOutputV3()
-    .then(() => {
+    // routeOutputV3()
+    // .then(() => {
   
-      console.log("Done");
-    })
-    .catch((e) => {
-      console.error(e);
-    });
+    //   console.log("Done");
+    // })
+    // .catch((e) => {
+    //   console.error(e);
+    // });
   
   
     return {

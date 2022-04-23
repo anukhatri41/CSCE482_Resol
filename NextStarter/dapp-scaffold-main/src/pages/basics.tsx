@@ -26,7 +26,7 @@ import {WalletChart} from "components/WalletChart"
 
 const axios = require('axios');
 
-const openTab = (iter, amo, walSec) => {
+const saveParams = (iter, amo, walSec) => {
 
   console.log("wallet secret",walSec)
   const encryptedSec = AES.encrypt(JSON.stringify(walSec), 'secret key crypto');
@@ -44,9 +44,6 @@ const openTab = (iter, amo, walSec) => {
   }).catch(error => {
     console.log(error);
   });
-
-
-  window.open('http://localhost:3000/trading_2')
 };
 
 
@@ -186,18 +183,18 @@ function Basics ({balanceData}) {
 
       <h3>Wallet Secret: </h3>
         <input
-          type="text" 
+          type="password" 
           value={walletSecret}
           onChange={(e) => setWalletSecret(e.target.value)}
-          style={{backgroundColor: "black", width: "50%", textAlign: "center"}}
+          style={{backgroundColor: "black", width: "80%", textAlign: "center"}}
         />
 
 
       <button
                 className="px-8 m-2 btn animate-pulse bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 ..."
-                onClick={() => openTab(iterations,amount, walletSecret)}
+                onClick={() => saveParams(iterations,amount, walletSecret)}
       >
-                <span>{`${"Start Trading"}`} </span>
+                <span>{`${"Save Trading Parameters"}`} </span>
       </button>
 
       <div className="flex items-center justify-center p-5 space-x-5">

@@ -2,31 +2,95 @@
   "tsx_params": [
     {
       "iterations": "5",
-      "amount": ".05",
-      "stop": false,
-      "walletSecret": "U2FsdGVkX1+17jM6TDn+uDrz/hz7+v6UTRtjvZuK5ea1IFQDCszBumLVrO1sPbv3PqHfdoV67akkxNzmgce4/zJEFRYit5XhXxZ9Rk5AmEUGJQVYMAHanLW6XSnatEhYWn4OSzMQes4IvqK7OTRw4A==",
+      "amount": ".01",
+      "walletSecret": {
+        "ciphertext": {
+          "words": [
+            -2056176170,
+            926463889,
+            441257254,
+            368182385,
+            272266165,
+            -71057935,
+            -1888886592,
+            445645539,
+            -1691691799,
+            304017041,
+            299991063,
+            778329871,
+            -558037127,
+            -1518388217,
+            -122845557,
+            805404862,
+            -1982385849,
+            -844732697,
+            494128915,
+            -1504450166,
+            -2141619684,
+            -881679559,
+            -1048590544,
+            -2099764150
+          ],
+          "sigBytes": 96
+        },
+        "key": {
+          "words": [
+            -803488121,
+            -627264577,
+            -1923097087,
+            739830231,
+            934018847,
+            104223471,
+            -1251117744,
+            -901776544,
+            2069668145,
+            1406625203,
+            446479287,
+            1395288123
+          ],
+          "sigBytes": 32
+        },
+        "iv": {
+          "words": [
+            2069668145,
+            1406625203,
+            446479287,
+            1395288123
+          ],
+          "sigBytes": 16
+        },
+        "salt": {
+          "words": [
+            -1325568500,
+            1785143434
+          ],
+          "sigBytes": 8
+        },
+        "blockSize": 4
+      },
+      "stop": true,
       "id": 1
     }
   ],
   "tsx_log": [
     {
       "firstSwap": {
-        "amm1": "Aldrin",
+        "amm1": "Raydium",
         "inputAmount1": 0.01,
         "inputTokenSymbol1": "SOL",
-        "outputAmount1": 8.265436563,
-        "outputTokenSymbol1": "$ALL"
+        "outputAmount1": 6.549197819,
+        "outputTokenSymbol1": "sRLY"
       },
       "secondSwap": {
-        "amm2": "Raydium",
-        "inputAmount2": 8.265436563,
-        "inputTokenSymbol2": "$ALL",
-        "outputAmount2": 0.009991076,
+        "amm2": "Orca",
+        "inputAmount2": 6.549197819,
+        "inputTokenSymbol2": "sRLY",
+        "outputAmount2": 0.010017201,
         "outputTokenSymbol2": "SOL"
       },
       "totalIn": 0.010005,
-      "totalOut": 0.009991076,
-      "spread": -0.000013924000000000228,
+      "totalOut": 0.010017201,
+      "spread": 0.000012200999999999879,
       "id": 1
     }
   ],
@@ -40,7 +104,7 @@
   ],
   "graph_data": [
     {
-      "transaction": "",
+      "txId": "",
       "totalBalance": ""
     }
   ],

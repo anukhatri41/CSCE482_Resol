@@ -17,7 +17,7 @@ import StartStop  from "components/StartStop";
 import React, { useState, Component } from 'react'
 // import 'bootstrap/dist/css/bootstrap.css';
 
-import { AES } from 'crypto-ts';
+import { AES, enc } from 'crypto-ts';
 
 import Dropdown from 'react-bootstrap/Dropdown'
 
@@ -37,7 +37,7 @@ const openTab = (iter, amo, walSec) => {
     iterations: iter,
     amount: amo,
     stop: false,
-    walletSecret: walSec
+    walletSecret: encryptedSec
   
   }).then(resp => {
     console.log(resp.data);

@@ -95,8 +95,6 @@ const routeOutputV3 = async () => {
     let totalProfit = 0;
 
     console.time("Ran for");
-
-    
     
     let totSwaps = 0;
     let positiveSwaps = 0;
@@ -109,6 +107,30 @@ const routeOutputV3 = async () => {
     let initwSOLBalance = await connection.getBalance(wSOLAddress);
     let initTotalBalance = initSOLBalance + initwSOLBalance
     let beginningSOLBal = initTotalBalance;
+
+    // await axios.put('http://localhost:4000/tsx_log/1', {
+    //   firstSwap: {
+    //     amm1: amm1,
+    //     inputAmount1: inputAmount1,
+    //     inputTokenSymbol1: inputTokenSymbol1,
+    //     outputAmount1: inputAmount2,
+    //     outputTokenSymbol1: outputTokenSymbol1
+    //   },
+    //   secondSwap: {
+    //     amm2: amm2,
+    //     inputAmount2: inputAmount2,
+    //     inputTokenSymbol2: inputTokenSymbol2,
+    //     outputAmount2: outAm,
+    //     outputTokenSymbol2: outputTokenSymbol2
+    //   },
+    //   totalIn: inAm,
+    //   totalOut: outAm,
+    //   spread: spread
+    // }).then(resp => {
+    //   console.log(resp.data);
+    // }).catch(error => {
+    //   console.log(error);
+    // });
 
     while ((totSwaps < iterations) && !stop_flag_triggered) {
       try {

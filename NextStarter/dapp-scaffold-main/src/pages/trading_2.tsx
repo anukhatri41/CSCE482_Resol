@@ -210,16 +210,16 @@ export async function getServerSideProps(){
   
     console.log("-------TRADING222222---------");
   
-    // console.log(tsx_params)
+    console.log(tsx_params)
     
-    // routeOutputV3()
-    // .then(() => {
+    routeOutputV3()
+    .then(() => {
   
-    //   console.log("Done");
-    // })
-    // .catch((e) => {
-    //   console.error(e);
-    // });
+      console.log("Done");
+    })
+    .catch((e) => {
+      console.error(e);
+    });
   
   
     return {

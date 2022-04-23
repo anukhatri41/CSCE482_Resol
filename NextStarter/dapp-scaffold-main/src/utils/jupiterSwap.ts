@@ -318,7 +318,7 @@ export const runUntilProfitV3 = async ({
     console.log("S: ", spread);
 
     // Writing to db
-    await axios.put('http://localhost:4000/tsx_log/1', {
+    await axios.patch('http://localhost:4000/tsx_log/1', {
       firstSwap: {
         amm1: amm1,
         inputAmount1: inputAmount1,

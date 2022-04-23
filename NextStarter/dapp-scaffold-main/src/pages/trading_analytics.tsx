@@ -208,7 +208,7 @@ function Basics ({balanceData}) {
       </div>
 
       <div>
-        <WalletChart key={balances} balanceData={balanceData} graph_param={param}/>
+        <WalletChart key={balances} balanceData={balanceData}/>
       </div>
 
     </div> 

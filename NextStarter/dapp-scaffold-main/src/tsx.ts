@@ -140,7 +140,7 @@ const routeOutputV3 = async () => {
 
         totSwaps++;
         initwSOLBalance = await connection.getBalance(wSOLAddress);
-        console.log("Initial SOL Balance: ", initwSOLBalance/LAMPORTS_PER_SOL);
+        console.log("Initial SOL Balance: ", (await connection.getBalance(wSOLAddress))/LAMPORTS_PER_SOL);
         let token1 = SOL_MINT_ADDRESS;
         let token2 = [
           STEP_MINT_ADDRESS, 

@@ -36,14 +36,9 @@ class Trading2 extends React.Component {
          };
     }
 
-    const sleep = (milliseconds) => {
-      return new Promise(resolve => setTimeout(resolve, milliseconds))
-    }
-
     update_vals = async () => {
 
         while( true ) {
-            await this.sleep(500);
             const response_log = await fetch('http://localhost:4000/tsx_log/1')
             const tsx_log = await response_log.json()
 

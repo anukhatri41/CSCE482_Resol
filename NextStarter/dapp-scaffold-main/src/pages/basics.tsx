@@ -35,7 +35,7 @@ const saveParams = (amo, walSec) => {
 
   axios.put('http://localhost:4000/tsx_params/1', {
     amount: amo,
-    stop: false,
+    stop: true,
     walletSecret: encryptedSec
   
   }).then(resp => {

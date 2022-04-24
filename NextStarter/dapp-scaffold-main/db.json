@@ -77,19 +77,19 @@
         "amm1": "Orca",
         "inputAmount1": 0.05,
         "inputTokenSymbol1": "SOL",
-        "outputAmount1": 20.08356168,
-        "outputTokenSymbol1": "1SOL"
+        "outputAmount1": 44.665689801,
+        "outputTokenSymbol1": "STEP"
       },
       "secondSwap": {
-        "amm2": "Raydium",
-        "inputAmount2": 20.08356168,
-        "inputTokenSymbol2": "1SOL",
-        "outputAmount2": 0.049680255,
+        "amm2": "Orca",
+        "inputAmount2": 44.665689801,
+        "inputTokenSymbol2": "STEP",
+        "outputAmount2": 0.049641594,
         "outputTokenSymbol2": "SOL"
       },
       "totalIn": 0.050005,
-      "totalOut": 0.049680255,
-      "spread": -0.0003247450000000013,
+      "totalOut": 0.049641594,
+      "spread": -0.0003634060000000036,
       "recent_transaction": {
         "priorBalance": -1,
         "afterBalance": -1,

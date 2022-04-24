@@ -103,17 +103,18 @@ class Trading2 extends React.Component {
         return (
             <div>
               <Head>
-                <title>Resol</title>
+                <title>Resol Trading</title>
+                <link rel="icon" href="/favicon.ico"/>
                 <meta
-                  name="description"
-                  content="Basic Functionality"
+                  name="Trading"
+                  content="Swapping Tokens"
                 />
               </Head>
               <div className="md:hero mx-auto p-4">
         
             <div className="md:hero-content flex flex-col">
-              <h1 className="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
-                Trading currently running
+              <h1 className="text-center text-3xl pb-4 font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#fa7948] to-[#f9d573]">
+                Trading Currently Running
               </h1>
 
               <div>
@@ -144,7 +145,7 @@ class Trading2 extends React.Component {
               <div>
                 {this.state.priorBalance == -1
                   ? 
-                  <h1 className="text-center text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-pink-500 to-yellow-500">
+                  <h1 className="text-center text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#F23D3D] to-[#F25C69] ">
                     No Profitable Transaction Found
                   </h1>
 
@@ -156,7 +157,7 @@ class Trading2 extends React.Component {
 
                     ? 
                     <div>
-                      <h1 className="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
+                      <h1 className="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#0CE87E] to-[#01FF33]">
                         Transaction Found: 
                       </h1>
                       <div>
@@ -178,7 +179,7 @@ class Trading2 extends React.Component {
                     :
 
                     <div>
-                      <h1 className="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-pink-500 to-yellow-500">
+                      <h1 className="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#0CE87E] to-[#01FF33]">
                         Transaction Found: 
                       </h1>
                       <div>
@@ -209,7 +210,7 @@ class Trading2 extends React.Component {
 
       
               <button
-                        className={`${this.state.stop ? "px-8 m-2 btn animate-pulse bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:from-pink-500 hover:to-yellow-500  ..." : "px-8 m-2 btn animate-pulse bg-gradient-to-r  from-pink-500 to-yellow-500 hover:from-[#9945FF] hover:to-[#14F195] ..."}`}
+                        className={`${this.state.stop ? "px-8 m-2 btn animate-pulse bg-gradient-to-r from-[#f9d573] to-[#fa7948] hover:from-[#0CC7E8] hover:to-[#0CE87E]  ..." : "px-8 m-2 btn animate-pulse bg-gradient-to-r  from-pink-500 to-yellow-500 hover:from-[#9945FF] hover:to-[#14F195] ..."}`}
                         onClick={() => this.tradingButton(this.state.amount)}
 
               >
@@ -219,7 +220,7 @@ class Trading2 extends React.Component {
               <span>
                 {this.state.stop
                   ?<></>
-                  :<Triangle color="#99ffcc" height={200} width={200} /> 
+                  :<Triangle color="#f9ac60" height={200} width={200} /> 
                 
                 } 
                 </span>

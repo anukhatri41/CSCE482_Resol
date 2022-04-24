@@ -6,7 +6,8 @@ const Home: NextPage = (props) => {
   return (
     <div>
       <Head>
-        <title>Home</title>
+        <title>Resol Home</title>
+        <link rel="icon" href="/favicon.ico"/>
         <meta
           name="Resol"
           content="Capstone"

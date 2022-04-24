@@ -15,6 +15,7 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
         <>
           <Head>
             <title>Resol</title>
+            <link rel="icon" href="/favicon.ico"/>
           </Head>
 
           <ContextProvider>
@@ -32,3 +33,4 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
 };
 
 export default App;
+

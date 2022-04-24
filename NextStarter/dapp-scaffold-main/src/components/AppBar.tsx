@@ -23,31 +23,27 @@ export const AppBar: FC = props => {
           <div className="hidden sm:inline w-22 h-22 md:p-2">
             <div className="mx-auto  flex flex-row p-2 text-center items-center bg-neutral text-neutral-content">
                 <div className="grid-flow-col pr-1 gap-4 text-center">
-                  <img src='/resol_logo.png' alt="Resol" width='55' height='55'/>
+                  <img src='/resol_logo.png' alt="Resol" width='45' height='45'/>
                 </div>
                 <div >
                   <h2 className='font-semibold text-lg pl-1'>Resol</h2>
                 </div>
 
               </div>
-
           </div>
         </div>
 
         {/* Nav Links */}
         <div className="hidden md:inline md:navbar-center">
           <div className="flex items-stretch">
-            {/* <Link href="/">
+            <Link href="/">
               <a className="btn btn-ghost btn-sm rounded-btn">Home</a>
-            </Link> */}
-            <Link href="/basics">
+            </Link>
+            <Link href="/analytics">
               <a className="btn btn-ghost btn-sm rounded-btn">Analytics</a>
             </Link>
-            <Link href="/trading_2">
+            <Link href="/trading">
               <a className="btn btn-ghost btn-sm rounded-btn">Trade</a>
-            </Link>
-            <Link href="">
-              <a className="btn btn-ghost btn-sm rounded-btn">About Us</a>
             </Link>
           </div>
         </div>

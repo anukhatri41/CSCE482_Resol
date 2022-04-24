@@ -15,6 +15,7 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
         <>
           <Head>
             <title>Resol</title>
+            <link rel="icon" href="/favicon.ico"/>
           </Head>
 
           <ContextProvider>

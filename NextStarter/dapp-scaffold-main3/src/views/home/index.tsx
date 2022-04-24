@@ -3,40 +3,33 @@ import { FC, useEffect, useState } from 'react';
 import Link from 'next/link';
 
 // Wallet
-import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 
 // Components
-import { RequestAirdrop } from '../../components/RequestAirdrop';
 import pkg from '../../../package.json';
 
 // Store
-import useUserSOLBalanceStore from '../../stores/useUserSOLBalanceStore';
 
 export const HomeView: FC = ({ }) => {
-  const wallet = useWallet();
-  const { connection } = useConnection();
-
-  const balance = useUserSOLBalanceStore((s) => s.balance)
-  const { getUserSOLBalance } = useUserSOLBalanceStore()
-
-  useEffect(() => {
-    if (wallet.publicKey) {
-      console.log(wallet.publicKey.toBase58())
-      getUserSOLBalance(wallet.publicKey, connection)
-    }
-  }, [wallet.publicKey, connection, getUserSOLBalance])
 
   return (
 
     <div className="md:hero mx-auto p-4">
       <div className="md:hero-content flex flex-col">
-        <h1 className="text-center text-5xl md:pl-12 font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
-          Resol <span className='text-sm font-normal align-top text-slate-700'>v{pkg.version}</span>
-        </h1>      
-          <div className="text-center">
-          <RequestAirdrop />
-          {/* {wallet.publicKey && <p>Public Key: {wallet.publicKey.toBase58()}</p>} */}
-          {wallet && <p>SOL Balance: {(balance || 0).toLocaleString()}</p>}
+        <div className="text-center">
+          <img src='/resol_logo.png' alt="Resol" width='55' height='55'/>
+        </div>
+        <h1 className="text-center text-6xl p-4 font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#fa7948] to-[#f9d573]">
+          Resol
+        </h1>    
+        <div className="text-center text-4xl p-4">
+            A new way for arbitrage on the Solana Blockchain
+        </div>
+        <div className="text-center">
+          <Link href="/analytics">
+            <div className="px-8 m-2 btn animate-pulse bg-gradient-to-r from-[#f9d573] to-[#fa7948] hover:from-[#0CC7E8] hover:to-[#0CE87E] ...">
+              Launch App
+            </div>
+          </Link>
         </div>
       </div>
     </div>

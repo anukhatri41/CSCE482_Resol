@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --yellow: #f9d573; 
+  --yellow_orange: #f9ac60;
+  --orange: #fa7948;
+}
+
 html,
 body {
   padding: 0;

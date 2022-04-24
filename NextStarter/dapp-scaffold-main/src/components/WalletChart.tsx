@@ -55,12 +55,17 @@ export const WalletChart = (props) => {
 
     // }
 
-    var endBal = []
-    for (let i = 0; i < props.balanceData.length ; i++) {endBal.push(props.balanceData[i].end_bal)}
+    var bal = []
+    for (let i = 0; i < props.balanceData.length ; i++) {bal.push(props.balanceData[i].totalBalance)}
     var labels = []
     for (let i = 1; i <= props.balanceData.length; i++) {labels.push(i)}
 
-    var differenceColor = ((props.balanceData[props.balanceData.length - 1].end_bal - props.balanceData[0].init_bal) > 0) ? 'rgb(99, 255, 222, 0.5)' : 'rgb(255, 99, 132, 0.5)';
+    var differenceColor = ((props.balanceData[props.balanceData.length - 1].totalBalance - props.balanceData[0].totalBalance) > 0) ? 'rgb(99, 255, 222, 0.5)' : 'rgb(255, 99, 132, 0.5)';
+
+
+
+
+
 
 
     const data = {
@@ -68,7 +73,7 @@ export const WalletChart = (props) => {
     datasets: [
         {
         label: 'Wallet Balance',
-        data: endBal,
+        data: bal,
         borderColor: differenceColor,
         backgroundColor: differenceColor,
         }
@@ -93,7 +98,9 @@ export const WalletChart = (props) => {
 
     return (
         <div>
-            <h2>Wallet Balance</h2>
+            <br/>
+            <br/>
+            <br/>
             <Line
             data={data}
             width={400}

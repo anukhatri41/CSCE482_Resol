@@ -40,6 +40,8 @@ class Trading2 extends React.Component<any, any> {
     update_vals = async () => {
 
         while( true ) {
+          try {
+            await new Promise(r => setTimeout(r, 1500));
             const response_log = await fetch('http://localhost:4000/tsx_log/1')
             const tsx_log = await response_log.json()
 
@@ -70,7 +72,9 @@ class Trading2 extends React.Component<any, any> {
             this.setState({difference: tsx_log.recent_transaction.difference})
             this.setState({txId: tsx_log.recent_transaction.txId})
 
-            await new Promise(r => setTimeout(r, 1000));
+          } catch (error){
+            await new Promise(r => setTimeout(r, 1500));
+          }
         }
 
     

@@ -5,6 +5,7 @@
       "walletSecret": {
         "ciphertext": {
           "words": [
+<<<<<<< HEAD
             697234023,
             822772936,
             929384705,
@@ -29,11 +30,38 @@
             -489402554,
             1154212952,
             -1781654093
+=======
+            1337611387,
+            423878702,
+            -639690069,
+            -1898461171,
+            1347563072,
+            1881759492,
+            1252722334,
+            -685193846,
+            -189289201,
+            1618332913,
+            -491039337,
+            1068977604,
+            -1740977200,
+            124609548,
+            910678046,
+            723505417,
+            119140382,
+            -1999541738,
+            2053766936,
+            1829272068,
+            784186191,
+            1673817852,
+            -1006444115,
+            915146024
+>>>>>>> 3dd0e7fc7e17f8bb4de5329d837ccce10af9efa3
           ],
           "sigBytes": 96
         },
         "key": {
           "words": [
+<<<<<<< HEAD
             -222767901,
             -1864841970,
             -1593407843,
@@ -46,22 +74,48 @@
             -1453155372,
             -337779,
             -455201573
+=======
+            1761326474,
+            5389417,
+            1748836102,
+            1934756641,
+            -890072136,
+            667647229,
+            708230331,
+            -992858388,
+            -1239935609,
+            708347078,
+            1240899466,
+            1355618973
+>>>>>>> 3dd0e7fc7e17f8bb4de5329d837ccce10af9efa3
           ],
           "sigBytes": 32
         },
         "iv": {
           "words": [
+<<<<<<< HEAD
             288360244,
             -1453155372,
             -337779,
             -455201573
+=======
+            -1239935609,
+            708347078,
+            1240899466,
+            1355618973
+>>>>>>> 3dd0e7fc7e17f8bb4de5329d837ccce10af9efa3
           ],
           "sigBytes": 16
         },
         "salt": {
           "words": [
+<<<<<<< HEAD
             1505440900,
             1877905941
+=======
+            -1494700900,
+            1691711551
+>>>>>>> 3dd0e7fc7e17f8bb4de5329d837ccce10af9efa3
           ],
           "sigBytes": 8
         },
@@ -80,6 +134,7 @@
       },
       "id": 1,
       "firstSwap": {
+<<<<<<< HEAD
         "amm1": "Orca",
         "inputAmount1": 0.05,
         "inputTokenSymbol1": "SOL",
@@ -96,19 +151,48 @@
       "totalIn": 0.050005,
       "totalOut": 0.049641558,
       "spread": -0.00036344199999999854
+=======
+        "amm1": "Aldrin",
+        "inputAmount1": 0.05,
+        "inputTokenSymbol1": "SOL",
+        "outputAmount1": 41.354698791,
+        "outputTokenSymbol1": "$ALL"
+      },
+      "secondSwap": {
+        "amm2": "Raydium",
+        "inputAmount2": 41.354698791,
+        "inputTokenSymbol2": "$ALL",
+        "outputAmount2": 0.049854874,
+        "outputTokenSymbol2": "SOL"
+      },
+      "totalIn": 0.050005,
+      "totalOut": 0.049854874,
+      "spread": -0.00015012600000000043,
+      "recent_transaction": {
+        "priorBalance": -1,
+        "afterBalance": -1,
+        "difference": -1,
+        "txId": -1
+      },
+      "id": 1
+>>>>>>> 3dd0e7fc7e17f8bb4de5329d837ccce10af9efa3
     }
   ],
   "graph_data": [
     {
+<<<<<<< HEAD
       "txId": "",
       "totalBalance": ""
     },
     {
+=======
+>>>>>>> 3dd0e7fc7e17f8bb4de5329d837ccce10af9efa3
       "txId": null,
       "totalBalance": 1.070567269,
       "id": 1
     },
     {
+<<<<<<< HEAD
       "id": 2,
       "txId": "5pPhrScKwiUKAAnxRJfrEjvzRDriF5NYxjkV36KsJzSagwvD9JfvaDAMQPZ895EPFRmEKZuuBEA3dZ89SjWZFHGR",
       "totalBalance": 2103149899
@@ -120,6 +204,11 @@
     {
       "totalBalance": 2103129899,
       "id": 4
+=======
+      "txId": null,
+      "totalBalance": -1.08,
+      "id": 2
+>>>>>>> 3dd0e7fc7e17f8bb4de5329d837ccce10af9efa3
     }
   ],
   "transactions_meta": [

@@ -238,11 +238,11 @@ export async function getServerSideProps(){
     console.log("howdy");
     const response = await fetch('http://localhost:4000/tsx_params/1')
     const tsx_params = await response.json()
-    console.log(tsx_params.stop)
+
   
     console.log("-------TRADING222222---------");
   
-    console.log(tsx_params)
+
     
     routeOutputV3()
     .then(() => {

@@ -195,15 +195,9 @@ const routeOutputV3 = async () => {
           sRLY_MINT_ADDRESS, 
           oneSOL_MINT_ADDRESS,
           ALL_MINT_ADDRESS, 
-          UXP_MINT_ADDRESS, 
           USDC_MINT_ADDRESS, 
           USDT_MINT_ADDRESS,
-          soETH_MINT_ADDRESS,
-          OXY_MINT_ADDRESS,
-          mSOL_MINT_ADDRESS,
-          stSOL_MINT_ADDRESS,
-          UST_MINT_ADDRESS,
-          PRT_MINT_ADDRESS];
+          ];
 
         let transactions = await runUntilProfitV3({connection: connectionRPC, inAmount, owner, token1, token2});
         stop_flag_triggered = transactions.stop_flag_triggered;

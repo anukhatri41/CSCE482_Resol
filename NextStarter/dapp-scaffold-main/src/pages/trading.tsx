@@ -8,10 +8,11 @@ import { Triangle } from "react-loader-spinner";
 
 const axios = require('axios');
 
-
-class Trading2 extends React.Component {
-    constructor({tsx_params}) {
-        super();
+type MyProps = {};
+type MyState = {state: {} };
+class Trading2 extends React.Component<any, any> {
+    constructor({tsx_params}: any) {
+        super(tsx_params);
         this.state = {
             amount: tsx_params.amount,
             walletSecret: tsx_params.walletSecret,
@@ -82,6 +83,9 @@ class Trading2 extends React.Component {
     }
 
     tradingButton = async () => {
+
+        this.setState({stop: true})
+
         await axios.put('http://localhost:4000/tsx_params/1', {
             amount: this.state.amount,
             walletSecret: this.state.walletSecret,
@@ -131,11 +135,11 @@ class Trading2 extends React.Component {
                 </h1>
 
                 <h1 className="text-center text-xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
-                  {this.state.amm1}: Route Found for {this.state.inputAmount1} {this.state.inputTokenSymbol1} -> {this.state.outputAmount1} {this.state.outputTokenSymbol1}
+                  {this.state.amm1}: Route Found for {this.state.inputAmount1} {this.state.inputTokenSymbol1} {'->'} {this.state.outputAmount1} {this.state.outputTokenSymbol1}
                 </h1>
 
                 <h1 className="text-center text-xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
-                  {this.state.amm2}: Route Found for {this.state.inputAmount2} {this.state.inputTokenSymbol2} -> {this.state.outputAmount2} {this.state.outputTokenSymbol2}
+                  {this.state.amm2}: Route Found for {this.state.inputAmount2} {this.state.inputTokenSymbol2} {'->'} {this.state.outputAmount2} {this.state.outputTokenSymbol2}
                 </h1>
                 
                 <h1 className="text-center text-xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
@@ -219,7 +223,7 @@ class Trading2 extends React.Component {
       
               <button
                         className={`${this.state.stop ? "px-8 m-2 btn animate-pulse bg-gradient-to-r from-[#f9d573] to-[#fa7948] hover:from-[#0CC7E8] hover:to-[#0CE87E]  ..." : "px-8 m-2 btn animate-pulse bg-gradient-to-r  from-[#0CC7E8] to-[#0CE87E] hover:from-[#f9d573] hover:to-[#fa7948] ..."}`}
-                        onClick={() => this.tradingButton(this.state.amount)}
+                        onClick={() => this.tradingButton()}
 
               >
                         <span>{`${this.state.stop ? "Start Trading" : "Stop Trading"}`} </span>

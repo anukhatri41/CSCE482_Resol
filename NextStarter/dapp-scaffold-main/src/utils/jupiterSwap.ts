@@ -201,6 +201,7 @@ export const runUntilProfitV3 = async ({
     //console.log(routes1!.routesInfos!);
     for (var rInfo of routes1!.routesInfos!){
       // console.log(rInfo!.marketInfos[0]!.amm!.label);
+      console.log("error in here? v")
       if (rInfo!.marketInfos[0]!.amm!.label == "Orca" || rInfo!.marketInfos[0]!.amm!.label == "Raydium" || rInfo!.marketInfos[0]!.amm!.label == "Aldrin") {
         route1Found = true;
         routeInfo1 = rInfo;
@@ -212,6 +213,7 @@ export const runUntilProfitV3 = async ({
       // console.log("#############################",rInfo!.marketInfos[0]!.amm!.label);
 
     }
+    console.log("error in here? ^")
     if (!route1Found) {
       i++;
       continue;

@@ -130,7 +130,7 @@ class Trading2 extends React.Component {
 
               {this.state.stop
               ?
-              <h1 style={{padding: "5px"}} className="text-center text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
+              <h1 style={{padding: "5px"}} className="text-center text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
                 Not Currently Trading
               </h1>
               :

@@ -21,7 +21,7 @@ const NotificationList = () => {
       className={`z-20 fixed inset-0 flex items-end px-4 py-6 pointer-events-none sm:p-6`}
     >
       <div className={`flex flex-col w-full`}>
-        {reversedNotifications.map((n, idx) => (
+        {/* {reversedNotifications.map((n, idx) => (
           <Notification
             key={`${n.message}${idx}`}
             type={n.type}
@@ -38,7 +38,7 @@ const NotificationList = () => {
               });
             }}
           />
-        ))}
+        ))} */}
       </div>
     </div>
   );

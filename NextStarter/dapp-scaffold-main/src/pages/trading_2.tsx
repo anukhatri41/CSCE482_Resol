@@ -35,37 +35,42 @@ class Trading2 extends React.Component {
     update_vals = async () => {
 
         while( true ) {
-            const response_log = await fetch('http://localhost:4000/tsx_log/1')
-            const tsx_log = await response_log.json()
+          await new Promise(r => setTimeout(r, 1500));
+          try{ 
+              const response_log = await fetch('http://localhost:4000/tsx_log/1')
+              const tsx_log = await response_log.json()
 
-            const response_params = await fetch('http://localhost:4000/tsx_params/1')
-            const tsx_params = await response_params.json()
+              const response_params = await fetch('http://localhost:4000/tsx_params/1')
+              const tsx_params = await response_params.json()
 
-            this.setState({stop: tsx_params.stop})
+              this.setState({stop: tsx_params.stop})
 
-            this.setState({amm1: tsx_log.firstSwap.amm1})
-            this.setState({inputAmount1: tsx_log.firstSwap.inputAmount1})
-            this.setState({inputTokenSymbol1: tsx_log.firstSwap.inputTokenSymbol1})
-            this.setState({outputAmount1: tsx_log.firstSwap.outputAmount1})
-            this.setState({outputTokenSymbol1: tsx_log.firstSwap.outputTokenSymbol1})
+              this.setState({amm1: tsx_log!.firstSwap.amm1})
+              this.setState({inputAmount1: tsx_log.firstSwap.inputAmount1})
+              this.setState({inputTokenSymbol1: tsx_log.firstSwap.inputTokenSymbol1})
+              this.setState({outputAmount1: tsx_log.firstSwap.outputAmount1})
+              this.setState({outputTokenSymbol1: tsx_log.firstSwap.outputTokenSymbol1})
 
-            this.setState({amm2: tsx_log.secondSwap.amm2})
-            this.setState({inputAmount2: tsx_log.secondSwap.inputAmount2})
-            this.setState({inputTokenSymbol2: tsx_log.secondSwap.inputTokenSymbol2})
-            this.setState({outputAmount2: tsx_log.secondSwap.outputAmount2})
-            this.setState({outputTokenSymbol2: tsx_log.secondSwap.outputTokenSymbol2})
+              this.setState({amm2: tsx_log.secondSwap.amm2})
+              this.setState({inputAmount2: tsx_log.secondSwap.inputAmount2})
+              this.setState({inputTokenSymbol2: tsx_log.secondSwap.inputTokenSymbol2})
+              this.setState({outputAmount2: tsx_log.secondSwap.outputAmount2})
+              this.setState({outputTokenSymbol2: tsx_log.secondSwap.outputTokenSymbol2})
 
 
-            this.setState({totalIn: tsx_log.totalIn})
-            this.setState({totalOut: tsx_log.totalOut})
-            this.setState({spread: tsx_log.spread})
+              this.setState({totalIn: tsx_log.totalIn})
+              this.setState({totalOut: tsx_log.totalOut})
+              this.setState({spread: tsx_log.spread})
 
-            this.setState({priorBalance: tsx_log.recent_transaction.priorBalance})
-            this.setState({afterBalance: tsx_log.recent_transaction.afterBalance})
-            this.setState({difference: tsx_log.recent_transaction.difference})
-            this.setState({txId: tsx_log.recent_transaction.txId})
-
-            await new Promise(r => setTimeout(r, 1000));
+              this.setState({priorBalance: tsx_log.recent_transaction.priorBalance})
+              this.setState({afterBalance: tsx_log.recent_transaction.afterBalance})
+              this.setState({difference: tsx_log.recent_transaction.difference})
+              this.setState({txId: tsx_log.recent_transaction.txId})
+              console.log("in trading_2")
+          }
+          catch (error) {
+            await new Promise(r => setTimeout(r, 2000));
+          }
         }
 
     

@@ -246,6 +246,14 @@ class Trading2 extends React.Component<any, any> {
             
                 } 
               </div>
+              <div>
+                <h1 className="text-[#0CE87E] text-center text-xl font-medium text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
+                  Total Profit: {this.state.tot_prof}
+                </h1>
+                <h1 className="text-center text-xl font-medium text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
+                  Total Swaps: {this.state.total_swaps}
+                </h1>
+              </div>
 
 
 
@@ -262,7 +270,7 @@ class Trading2 extends React.Component<any, any> {
               <span>
                 {this.state.stop
                   ?<></>
-                  :<Triangle color="#f9ac60" height={150} width={150} /> 
+                  :<Triangle color="#f9ac60" height={100} width={100} /> 
                 
                 } 
                 </span>

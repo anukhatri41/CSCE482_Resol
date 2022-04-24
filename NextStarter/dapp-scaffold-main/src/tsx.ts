@@ -115,7 +115,7 @@ const routeOutputV3 = async () => {
     let initwSOLBalance = await connection.getBalance(wSOLAddress);
     let initTotalBalance = initSOLBalance + initwSOLBalance;
 
-    await axios.put('http://localhost:4000/transactions_meta/1', {
+    await axios.patch('http://localhost:4000/transactions_meta/1', {
       total_swaps: null,
       pos_swaps: null,
       err_swaps: null,
@@ -212,7 +212,7 @@ const routeOutputV3 = async () => {
 
         totalProfit += (finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL;
 
-        await axios.put('http://localhost:4000/transactions_meta/1', {
+        await axios.patch('http://localhost:4000/transactions_meta/1', {
           total_swaps: totSwaps,
           pos_swaps: positiveSwaps,
           err_swaps: swapsErr,
@@ -322,7 +322,7 @@ const routeOutputV3 = async () => {
 
     // console.log("Total Profit: ", (endingSOLBalance-beginningSOLBal)/LAMPORTS_PER_SOL);
 
-    await axios.put('http://localhost:4000/transactions_meta/1', {
+    await axios.patch('http://localhost:4000/transactions_meta/1', {
       end_bal: endingSOLBalance/LAMPORTS_PER_SOL
     }).then(resp => {
       console.log(resp.data);

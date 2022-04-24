@@ -3,6 +3,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { HomeView } from "../views";
 const axios = require('axios');
+let firstLoad = true;
 const Home: NextPage = (props) => {
   return (
     <div>
@@ -37,16 +38,19 @@ export default Home;
 
 export async function getServerSideProps(){
   console.log("howdy--------");
-  exec("yarn run json-server --watch db.json --port 4000")
-  await axios.put('http://localhost:4000/graph_data/1', {
-          txId: null,
-          totalBalance: 0,
-          id: 1
-        }).then(resp => {
-          console.log(resp.data);
-        }).catch(error => {
-          console.log(error);
-        });
+  exec("yarn run json-server --watch db.json --port 4000");
+  if (firstLoad) {
+    firstLoad = false;
+    await axios.put('http://localhost:4000/graph_data/1', {
+      txId: null,
+      totalBalance: 0,
+      id: 1
+    }).then(resp => {
+      console.log(resp.data);
+    }).catch(error => {
+      console.log(error);
+    });
+}
 
         return {
           props: {

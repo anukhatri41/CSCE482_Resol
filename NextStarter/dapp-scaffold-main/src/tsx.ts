@@ -2,53 +2,30 @@ import {
     Connection,
     Keypair, 
     LAMPORTS_PER_SOL, 
-    PublicKey, 
     Signer,
-    sendAndConfirmTransaction,
-    TokenAccountsFilter,
-    TransactionInstruction,
     Transaction
    } from "@solana/web3.js";
-  import { executeOrcaSwap, getOrcaQuote, orcaTwoWayTrade } from "./utils/orcaSwap";
   import { runUntilProfitV3 } from "./utils/jupiterSwap";
-  import { fetchWalletBalance, createWSolAccount, createWSolAccountWallet } from "./utils/shared";
-  import { raydiumSwap } from "./utils/raydiumSwap";
-  import { Wallet } from "@project-serum/anchor";
+  import { createWSolAccount } from "./utils/shared";
   import bs58 from "bs58";
   import {
     closeAccount
   } from "@solana/spl-token2.0";
   import {
-    ENV,
-    INPUT_MINT_ADDRESS,
-    OUTPUT_MINT_ADDRESS,
-    SOLANA_RPC_ENDPOINT,
     SOL_MINT_ADDRESS,
-    OXY_MINT_ADDRESS,
-    mSOL_MINT_ADDRESS,
     STEP_MINT_ADDRESS,
-    Token,
     USDC_MINT_ADDRESS,
-    stSOL_MINT_ADDRESS,
     oneSOL_MINT_ADDRESS,
     ALL_MINT_ADDRESS,
     SHDW_MINT_ADDRESS,
     sRLY_MINT_ADDRESS,
     USDT_MINT_ADDRESS,
-    UXP_MINT_ADDRESS,
-    soETH_MINT_ADDRESS,
-    UST_MINT_ADDRESS,
-    PRT_MINT_ADDRESS
   } from "./constants";
   import fetch from "isomorphic-fetch";
 import { exec } from "child_process";
-import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import { route } from "next/dist/server/router";
 import { AES, enc } from 'crypto-ts';
 
 const axios = require('axios');
-
-
 
 const routeOutputV3 = async () => {
 
@@ -108,15 +85,8 @@ const routeOutputV3 = async () => {
   
     // if secret key is in .env:
 
-    // console.log("here");
     var decryptedSec = AES.decrypt(tsx_params.walletSecret, 'secret key crypto').toString(enc.Utf8);
     let WALLET_PRIVATE_KEY = JSON.parse(decryptedSec);
-    console.log("private key", WALLET_PRIVATE_KEY)
-    
-    // WALLET_PRIVATE_KEY = WALLET_PRIVATE_KEY.walletSecret;
-    //const WALLET_PRIVATE_KEY = AES.decrypt(tsx_params.walletSecret.toString(), 'crypto').toString();
-
-    console.log(WALLET_PRIVATE_KEY);
     const USER_PRIVATE_KEY = bs58.decode(WALLET_PRIVATE_KEY);
     const owner = Keypair.fromSecretKey(USER_PRIVATE_KEY);
 
@@ -129,13 +99,9 @@ const routeOutputV3 = async () => {
     const connectionRPC = new Connection(RPC);
     const connection = new Connection(mainnet);
 
-    //let inAmount = 0.1;
-    let tokenIn = 'SOL';
-    let tokenOut = 'SOL';
-    let cont = true;
     let totalProfit = 0;
 
-    console.time("Ran for");
+    // console.time("Ran for");
     
     let totSwaps = 0;
     let positiveSwaps = 0;
@@ -186,7 +152,7 @@ const routeOutputV3 = async () => {
         initSOLBalance = await connection.getBalance(owner.publicKey);
         initwSOLBalance = await connection.getBalance(wSOLAddress);
         initTotalBalance = initSOLBalance + initwSOLBalance
-        console.log("Initial SOL Balance: ", (await connection.getBalance(owner.publicKey) + (await connection.getBalance(wSOLAddress)))/LAMPORTS_PER_SOL);
+        // console.log("Initial SOL Balance: ", (await connection.getBalance(owner.publicKey) + (await connection.getBalance(wSOLAddress)))/LAMPORTS_PER_SOL);
         
         let token1 = SOL_MINT_ADDRESS;
         let token2 = [
@@ -195,15 +161,9 @@ const routeOutputV3 = async () => {
           sRLY_MINT_ADDRESS, 
           oneSOL_MINT_ADDRESS,
           ALL_MINT_ADDRESS, 
-          UXP_MINT_ADDRESS, 
           USDC_MINT_ADDRESS, 
           USDT_MINT_ADDRESS,
-          soETH_MINT_ADDRESS,
-          OXY_MINT_ADDRESS,
-          mSOL_MINT_ADDRESS,
-          stSOL_MINT_ADDRESS,
-          UST_MINT_ADDRESS,
-          PRT_MINT_ADDRESS];
+          ];
 
         let transactions = await runUntilProfitV3({connection: connectionRPC, inAmount, owner, token1, token2});
         stop_flag_triggered = transactions.stop_flag_triggered;
@@ -215,11 +175,11 @@ const routeOutputV3 = async () => {
 
           let signers: Signer[] = [owner];
 
-          console.log("Initial SOL Balance: ", initSOLBalance/LAMPORTS_PER_SOL);
+          // console.log("Initial SOL Balance: ", initSOLBalance/LAMPORTS_PER_SOL);
 
           const payload = new Transaction();
 
-          console.log(transactions.transactions1.swapTransaction.instructions);
+          // console.log(transactions.transactions1.swapTransaction.instructions);
           payload.add(transactions.transactions1.swapTransaction);
           payload.add(transactions.transactions2.swapTransaction);
 
@@ -232,20 +192,17 @@ const routeOutputV3 = async () => {
                 skipPreflight: true
               })
               await connectionRPC.confirmTransaction(txid)
-              console.log(`TX${serializedTransaction.toString()}: https://solscan.io/tx/${txid}`)
+              // console.log(`TX${serializedTransaction.toString()}: https://solscan.io/tx/${txid}`)
             }
           }
         }
         /////////// COMMENT OUT BETWEEN TO STOP SWAP ////////////////////////////////////////////////////
         
-        // const finalSOLBalance = await connection.getBalance(owner.publicKey);
-        // initSOLBalance = await connection.getBalance(owner.publicKey);
-        // initwSOLBalance = await connection.getBalance(wSOLAddress);
         const finalwSOLBalance = await connection.getBalance(wSOLAddress);
         const finalSOLBalance = await connection.getBalance(owner.publicKey)
         const finalTotalBalance = (finalwSOLBalance+finalSOLBalance)
-        console.log("SOL Balance After Most Recent Swap: ", (finalwSOLBalance+finalSOLBalance)/LAMPORTS_PER_SOL);
-        console.log("Profit?: ", (finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL);
+        // console.log("SOL Balance After Most Recent Swap: ", (finalwSOLBalance+finalSOLBalance)/LAMPORTS_PER_SOL);
+        // console.log("Profit?: ", (finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL);
         if ((finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL > 0) {
           positiveSwaps++;
         } else if ((finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL == 0) {
@@ -294,12 +251,12 @@ const routeOutputV3 = async () => {
     
       } catch(err) {
         try {
-          exec("sleep 5")
+          await new Promise(r => setTimeout(r, 5000));
           const finalwSOLBalance = await connection.getBalance(wSOLAddress);
           const finalSOLBalance = await connection.getBalance(owner.publicKey)
           const finalTotalBalance = (finalwSOLBalance+finalSOLBalance)
-          console.log("SOL Balance After Most Recent Swap: ", (finalwSOLBalance+finalSOLBalance)/LAMPORTS_PER_SOL);
-          console.log("Profit?: ", (finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL);
+          // console.log("SOL Balance After Most Recent Swap: ", (finalwSOLBalance+finalSOLBalance)/LAMPORTS_PER_SOL);
+          // console.log("Profit?: ", (finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL);
           if ((finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL > 0) {
             positiveSwaps++;
           } else if ((finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL == 0) {
@@ -350,21 +307,21 @@ const routeOutputV3 = async () => {
       }
     }
 
-    console.log("closing account")
+    // console.log("closing account")
     await closeAccount(connection, owner, wSOLAddress, owner.publicKey, owner);
 
     const endingSOLBalance = await connection.getBalance(owner.publicKey);
 
-    console.log("FINAL META: ");
-    console.timeEnd("Ran for");
-    console.log("Total Swaps: ", totSwaps);
-    console.log("Positive Swaps: ", positiveSwaps);
-    console.log("Errored Swaps: ", swapsErr);
-    console.log("Negative Swaps: ", negativeSwaps);
-    console.log("Beginning Balance: ",beginningSOLBal/LAMPORTS_PER_SOL);
-    console.log("Ending Balance: ",endingSOLBalance/LAMPORTS_PER_SOL);
+    // console.log("FINAL META: ");
+    // // console.timeEnd("Ran for");
+    // console.log("Total Swaps: ", totSwaps);
+    // console.log("Positive Swaps: ", positiveSwaps);
+    // console.log("Errored Swaps: ", swapsErr);
+    // console.log("Negative Swaps: ", negativeSwaps);
+    // console.log("Beginning Balance: ",beginningSOLBal/LAMPORTS_PER_SOL);
+    // console.log("Ending Balance: ",endingSOLBalance/LAMPORTS_PER_SOL);
 
-    console.log("Total Profit: ", (endingSOLBalance-beginningSOLBal)/LAMPORTS_PER_SOL);
+    // console.log("Total Profit: ", (endingSOLBalance-beginningSOLBal)/LAMPORTS_PER_SOL);
 
     await axios.put('http://localhost:4000/transactions_meta/1', {
       end_bal: endingSOLBalance/LAMPORTS_PER_SOL

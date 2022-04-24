@@ -104,15 +104,24 @@ class Trading2 extends React.Component {
         });
     };
 
-    setupBeforeUnloadListener = () => {
-      window.addEventListener("beforeunload", (ev) => {
-          ev.preventDefault();
-          this.closeTab();
-      });
-    };
-    
-
     render() {
+
+
+      // window.addEventListener("beforeunload", function (e) {
+      //   await axios.put('http://localhost:4000/tsx_params/1', {
+      //     amount: this.state.amount,
+      //     walletSecret: this.state.walletSecret,
+      //     stop: true
+        
+      //   }).then(resp => {
+      //     console.log(resp.data);
+      //   }).catch(error => {
+      //     console.log(error);
+      //   });
+      //   for (var i = 0; i < 500000000; i++) { }
+      //     return undefined;
+      //   });
+  
 
         return (
             <div>
@@ -235,8 +244,11 @@ class Trading2 extends React.Component {
 
   
             </div> 
-          </div>
             </div>
+            </div>
+
+
+
           );
     }
 

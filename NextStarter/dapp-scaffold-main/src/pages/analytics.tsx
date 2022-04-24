@@ -132,7 +132,7 @@ function Basics ({balanceData, metaData}) {
         Analytics
       </h1>
 
-      <h1> fsdkflsdfs {totalSwaps}</h1>
+      {/* <h1> fsdkflsdfs {totalSwaps}</h1> */}
 
         <h3>Amount of SOL per transaction: </h3>
         <input
@@ -166,7 +166,8 @@ function Basics ({balanceData, metaData}) {
       </Link>
 
       <div>
-        <WalletChart balanceData={balanceData}/>
+        <WalletChart balanceData={balanceData} totalSwaps={totalSwaps} initBal={initBal} endBal={endBal} posSwaps={posSwaps} negSwaps={negSwaps} errSwaps={errSwaps} totProf={totProf} />
+
       </div>
 
     </div> 

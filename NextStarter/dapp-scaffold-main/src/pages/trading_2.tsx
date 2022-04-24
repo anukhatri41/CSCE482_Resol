@@ -31,7 +31,7 @@ class Trading2 extends React.Component {
             spread: -1,
             priorBalance: 1,
             afterBalance: -1,
-            differance: -1,
+            difference: -1,
             txId: -1
          };
     }
@@ -167,7 +167,7 @@ class Trading2 extends React.Component {
                         After Balance: {this.state.afterBalance}
                       </h1>
                       <h1 className="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
-                        Differance: {this.state.differance}
+                        Differance: {this.state.difference}
                       </h1>
                       <h1 className="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
                         Transaction: {this.state.txId}
@@ -188,7 +188,7 @@ class Trading2 extends React.Component {
                         After Balance: {this.state.afterBalance}
                       </h1>
                       <h1 className="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
-                        Differance: {this.state.differance}
+                        Differance: {this.state.difference}
                       </h1>
                       <h1 className="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
                         Transaction: {this.state.txId}

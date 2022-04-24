@@ -96,19 +96,6 @@ class Trading2 extends React.Component {
     };
 
 
-    closeTab = async () => {
-      await axios.put('http://localhost:4000/tsx_params/1', {
-          amount: this.state.amount,
-          walletSecret: this.state.walletSecret,
-          stop: true
-        
-        }).then(resp => {
-          console.log(resp.data);
-        }).catch(error => {
-          console.log(error);
-        });
-    };
-
     render() {
 
 

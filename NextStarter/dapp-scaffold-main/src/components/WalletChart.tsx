@@ -27,46 +27,17 @@ ChartJS.register(
 
 
 
-// export function render() {
-//     return(
-    
-//     <div>
-//         {this.state.readDataLoaded ? <h1>dasdas</h1> : null}
-//     </div>  
-       
-//     )
-//   }
-
-
-
-
-  
 
 
 //---------------------------------
 
 export const WalletChart = (props) => {
-
-//   var balance_data = readData();
-//   console.log(balance_data);
-
-    // if(this.state.readDataLoaded == true){
-    //     console.log('f')
-
-    // }
-
     var bal = []
     for (let i = 0; i < props.balanceData.length ; i++) {bal.push(props.balanceData[i].totalBalance)}
     var labels = []
     for (let i = 1; i <= props.balanceData.length; i++) {labels.push(i)}
 
     var differenceColor = ((props.balanceData[props.balanceData.length - 1].totalBalance - props.balanceData[0].totalBalance) > 0) ? 'rgb(99, 255, 222, 0.5)' : 'rgb(255, 99, 132, 0.5)';
-
-
-
-
-
-
 
     const data = {
     labels,

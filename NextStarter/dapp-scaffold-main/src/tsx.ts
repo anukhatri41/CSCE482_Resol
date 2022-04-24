@@ -130,14 +130,14 @@ const routeOutputV3 = async () => {
     });
 
     await axios.post('http://localhost:4000/graph_data', {
-          txId: null,
-          totalBalance: beginningSOLBal/LAMPORTS_PER_SOL,
-          id: 1
-        }).then(resp => {
-          console.log(resp.data);
-        }).catch(error => {
-          console.log(error);
-        });
+      txId: null,
+      totalBalance: beginningSOLBal/LAMPORTS_PER_SOL,
+      id: 2
+    }).then(resp => {
+      console.log(resp.data);
+    }).catch(error => {
+      console.log(error);
+    });
 
     let txid;
 
@@ -239,9 +239,9 @@ const routeOutputV3 = async () => {
         });
 
         await axios.post('http://localhost:4000/graph_data', {
-          id: (totSwaps + 1),
+          id: (totSwaps + 2),
           txId: txid,
-          totalBalance: finalTotalBalance
+          totalBalance: finalTotalBalance/LAMPORTS_PER_SOL
         }).then(resp => {
           console.log(resp.data);
         }).catch(error => {

@@ -1,17 +1,8 @@
 
 import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey, TokenAccountsFilter, Transaction, SystemProgram } from "@solana/web3.js";
-import { Jupiter, RouteInfo, TOKEN_LIST_URL, MarketInfo } from "@jup-ag/core";
-import fetch from "isomorphic-fetch";
 import {
-  ENV,
-  INPUT_MINT_ADDRESS,
-  OUTPUT_MINT_ADDRESS,
-  SOLANA_RPC_ENDPOINT,
+  NODE_ENV,
   SOL_MINT_ADDRESS,
-  OXY_MINT_ADDRESS,
-  mSOL_MINT_ADDRESS,
-  Token,
-  USDC_MINT_ADDRESS
 } from "../constants";
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,

@@ -9,12 +9,14 @@ import Notifications from '../components/Notification'
 
 require('@solana/wallet-adapter-react-ui/styles.css');
 require('../styles/globals.css');
+const axios = require('axios');
 
 const App: FC<AppProps> = ({ Component, pageProps }) => {
     return (
         <>
           <Head>
             <title>Resol</title>
+            <link rel="icon" href="/favicon.ico"/>
           </Head>
 
           <ContextProvider>
@@ -32,3 +34,4 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
 };
 
 export default App;
+

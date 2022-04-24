@@ -4,12 +4,9 @@ import React, { useState, Component } from 'react'
 
 import {routeOutputV3} from '../tsx';
 
-
 import { Triangle } from "react-loader-spinner";
 
-
 const axios = require('axios');
-
 
 
 class Trading2 extends React.Component {
@@ -39,9 +36,14 @@ class Trading2 extends React.Component {
          };
     }
 
+    const sleep = (milliseconds) => {
+      return new Promise(resolve => setTimeout(resolve, milliseconds))
+    }
+
     update_vals = async () => {
 
-        for (let i = 0; i < 1000; i++) {
+        while( true ) {
+            await this.sleep(500);
             const response_log = await fetch('http://localhost:4000/tsx_log/1')
             const tsx_log = await response_log.json()
 
@@ -69,7 +71,7 @@ class Trading2 extends React.Component {
 
             this.setState({priorBalance: tsx_log.recent_transaction.priorBalance})
             this.setState({afterBalance: tsx_log.recent_transaction.afterBalance})
-            this.setState({differance: tsx_log.recent_transaction.differance})
+            this.setState({difference: tsx_log.recent_transaction.difference})
             this.setState({txId: tsx_log.recent_transaction.txId})
 
             await new Promise(r => setTimeout(r, 1000));

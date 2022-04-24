@@ -269,8 +269,8 @@ const routeOutputV3 = async () => {
 
         await axios.patch('http://localhost:4000/tsx_log/1', {
           recent_transaction: {
-            priorBalance: initTotalBalance,
-            afterBalance: finalTotalBalance,
+            priorBalance: initTotalBalance/LAMPORTS_PER_SOL,
+            afterBalance: finalTotalBalance/LAMPORTS_PER_SOL,
             difference: (finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL,
             txId: txid
           }
@@ -320,8 +320,8 @@ const routeOutputV3 = async () => {
 
           await axios.put('http://localhost:4000/tsx_log/1', {
           recent_transaction: {
-            priorBalance: initTotalBalance,
-            afterBalance: finalTotalBalance,
+            priorBalance: initTotalBalance/LAMPORTS_PER_SOL,
+            afterBalance: finalTotalBalance/LAMPORTS_PER_SOL,
             difference: (finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL,
             txId: txid
           }

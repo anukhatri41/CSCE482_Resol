@@ -150,7 +150,7 @@ function Basics ({balanceData}) {
   return (
     <div>
       <Head>
-        <title>Solana Scaffold</title>
+        <title>Resol</title>
         <meta
           name="description"
           content="Basic Functionality"
@@ -160,7 +160,7 @@ function Basics ({balanceData}) {
 
     <div className="md:hero-content flex flex-col">
       <h1 className="text-center text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
-        Basics
+        Analytics
       </h1>
 
         <h3>Amount of SOL per transaction: </h3>

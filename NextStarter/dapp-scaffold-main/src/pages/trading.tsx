@@ -228,7 +228,7 @@ class Trading2 extends React.Component {
               <span>
                 {this.state.stop
                   ?<></>
-                  :<Triangle color="#f9ac60" height={200} width={200} /> 
+                  :<Triangle color="#f9ac60" height={150} width={150} /> 
                 
                 } 
                 </span>

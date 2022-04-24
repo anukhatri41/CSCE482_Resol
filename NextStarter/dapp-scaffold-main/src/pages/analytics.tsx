@@ -166,7 +166,7 @@ function Basics ({balanceData, metaData}) {
       </Link>
 
       <div>
-        <WalletChart balanceData={balanceData} totalSwaps={totalSwaps} initBal={initBal} endBal={endBal} posSwaps={posSwaps} negSwaps={negSwaps} errSwaps={errSwaps} totProf={totProf} />
+        <WalletChart balanceData={balanceData} totalSwaps={totalSwaps} posSwaps={posSwaps} negSwaps={negSwaps} errSwaps={errSwaps} totProf={totProf} />
 
       </div>
 

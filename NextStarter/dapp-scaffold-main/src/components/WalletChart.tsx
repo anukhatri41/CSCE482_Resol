@@ -100,11 +100,11 @@ export const WalletChart = (props: PropType) => {
             </div>
                         
             <div>
-                <div >
-                    Initial Balance: {props.initBal}
+                <div>
+                    Total Profit: {props.totProf}
                 </div>
                 <div>
-                    End Balance: {props.endBal}
+                    Total Swaps: {props.totalSwaps}
                 </div>
                 <div>
                     Positive Swaps: {props.posSwaps}
@@ -114,12 +114,6 @@ export const WalletChart = (props: PropType) => {
                 </div>
                 <div>
                     Error Swaps: {props.errSwaps}
-                </div>
-                <div>
-                    Total Swaps: {props.totalSwaps}
-                </div>
-                <div>
-                    Total Profit: {props.totProf}
                 </div>
             </div>
       </div>

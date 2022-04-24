@@ -4,6 +4,9 @@
   "license": "MIT",
   "private": false,
   "scripts": {
+    "resol": "npm run init-server && npm run init-resol",
+    "init-resol": "next dev &",
+    "init-server": "yarn run json-server --watch db.json --port 4000 &",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

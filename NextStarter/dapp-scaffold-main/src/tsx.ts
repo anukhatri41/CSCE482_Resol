@@ -53,10 +53,10 @@ const axios = require('axios');
 const routeOutputV3 = async () => {
 
     while(true) {
-      exec("sleep 1")
+      await new Promise(r => setTimeout(r, 1000));
       let response = await fetch('http://localhost:4000/tsx_params/1')
       let tsx_params = await response.json()
-
+      //console.log("in while tsx")
       let stop = tsx_params.stop;
       if (stop == false) {
         break;

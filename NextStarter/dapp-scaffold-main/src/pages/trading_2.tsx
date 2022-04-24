@@ -1,13 +1,9 @@
 import Head from "next/head";
 import React, { useState, Component } from 'react'
-// import 'bootstrap/dist/css/bootstrap.css';
-
 import {routeOutputV3} from '../tsx';
-
 import { Triangle } from "react-loader-spinner";
 
 const axios = require('axios');
-
 
 class Trading2 extends React.Component {
     constructor({tsx_params}) {
@@ -92,9 +88,28 @@ class Trading2 extends React.Component {
           }).catch(error => {
             console.log(error);
           });
+    };
+
+
+    closeTab = async () => {
+      await axios.put('http://localhost:4000/tsx_params/1', {
+          amount: this.state.amount,
+          walletSecret: this.state.walletSecret,
+          stop: true
         
-        // window.open("about:blank", "_self");
-        // window.close();
+        }).then(resp => {
+          console.log(resp.data);
+        }).catch(error => {
+          console.log(error);
+        });
+    };
+
+    setupBeforeUnloadListener = () => {
+      window.addEventListener("beforeunload", (ev) => {
+          ev.preventDefault();
+          alert("Are you sure you would like to close the tab? All trades will be suspended")
+          return this.closeTab();
+      });
     };
     
 
@@ -112,9 +127,18 @@ class Trading2 extends React.Component {
               <div className="md:hero mx-auto p-4">
         
             <div className="md:hero-content flex flex-col">
-              <h1 style={{padding: "4px"}} className="text-center text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
+
+              {this.state.stop
+              ?
+              <h1 style={{padding: "5px"}} className="text-center text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
+                Not Currently Trading
+              </h1>
+              :
+              <h1 style={{padding: "5px"}} className="text-center text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
                 Trading currently running
               </h1>
+
+              }
 
               <div>
                 <h1 className="text-center text-xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
@@ -147,9 +171,6 @@ class Trading2 extends React.Component {
                   <h1 className="text-center text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-pink-500 to-yellow-500">
                     No Profitable Transaction Found
                   </h1>
-
-
-
                   :
                   <div>
                     {this.state.difference >= 0
@@ -174,9 +195,7 @@ class Trading2 extends React.Component {
                         </h1>
                       </div>
                     </div>
-
                     :
-
                     <div>
                       <h1 className="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-pink-500 to-yellow-500">
                         Transaction Found: 
@@ -198,22 +217,13 @@ class Trading2 extends React.Component {
                     </div>
                   }
                   </div>
-
-
-            
                 } 
-              </div>
-
-
-
-
-      
+              </div>      
               <button
-                        className={`${this.state.stop ? "px-8 m-2 btn animate-pulse bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:from-pink-500 hover:to-yellow-500  ..." : "px-8 m-2 btn animate-pulse bg-gradient-to-r  from-pink-500 to-yellow-500 hover:from-[#9945FF] hover:to-[#14F195] ..."}`}
-                        onClick={() => this.tradingButton(this.state.amount)}
-
+                className={`${this.state.stop ? "px-8 m-2 btn animate-pulse bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:from-pink-500 hover:to-yellow-500  ..." : "px-8 m-2 btn animate-pulse bg-gradient-to-r  from-pink-500 to-yellow-500 hover:from-[#9945FF] hover:to-[#14F195] ..."}`}
+                onClick={() => this.tradingButton(this.state.amount)}
               >
-                        <span>{`${this.state.stop ? "Start Trading" : "Stop Trading"}`} </span>
+                <span>{`${this.state.stop ? "Start Trading" : "Stop Trading"}`} </span>
               </button>
         
               <span>

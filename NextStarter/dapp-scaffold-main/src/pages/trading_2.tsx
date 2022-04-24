@@ -1,5 +1,5 @@
 import Head from "next/head";
-import React, { useState, Component } from 'react'
+import React, { useState, Component, useEffect } from 'react'
 import {routeOutputV3} from '../tsx';
 import { Triangle } from "react-loader-spinner";
 
@@ -107,8 +107,7 @@ class Trading2 extends React.Component {
     setupBeforeUnloadListener = () => {
       window.addEventListener("beforeunload", (ev) => {
           ev.preventDefault();
-          alert("Are you sure you would like to close the tab? All trades will be suspended")
-          return this.closeTab();
+          this.closeTab();
       });
     };
     
@@ -234,7 +233,7 @@ class Trading2 extends React.Component {
                 } 
                 </span>
 
-        
+  
             </div> 
           </div>
             </div>

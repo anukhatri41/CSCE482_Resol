@@ -96,11 +96,25 @@ interface PropType {
 // };
 
 
-function Basics ({balanceData}) {
+function Basics ({balanceData, metaData}) {
 
   const [amount, setAmount] = useState(".01");
 
   const [walletSecret, setWalletSecret] = useState("123456");
+
+  const [totalSwaps, setTotalSwaps] = useState(metaData.total_swaps);
+  
+  const [posSwaps, setPosSwaps] = useState(metaData.pos_swaps);
+
+  const [errSwaps, setErrSwaps] = useState(metaData.err_swaps);
+
+  const [negSwaps, setNegSwaps] = useState(metaData.neg_swaps);
+
+  const [initBal, setInitBal] = useState(metaData.init_bal);
+
+  const [endBal, setEndBal] = useState(metaData.end_bal);
+  
+  const [totProf, setTotProf] = useState(metaData.tot_prof);
 
   return (
     <div>
@@ -117,6 +131,8 @@ function Basics ({balanceData}) {
       <h1 className="text-center pb-4 text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#fa7948] to-[#f9d573]">
         Analytics
       </h1>
+
+      <h1> fsdkflsdfs {totalSwaps}</h1>
 
         <h3>Amount of SOL per transaction: </h3>
         <input
@@ -167,9 +183,13 @@ export async function getServerSideProps(){
   const response = await fetch('http://localhost:4000/graph_data')
   const balanceData = await response.json()
 
+  const response_meta = await fetch('http://localhost:4000/transactions_meta/1')
+  const metaData = await response_meta.json()
+
   return {
     props: {
       balanceData,
+      metaData
     }
   }
 }

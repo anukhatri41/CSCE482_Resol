@@ -51,6 +51,16 @@ const axios = require('axios');
 
 
 const routeOutputV3 = async () => {
+
+    while(true) {
+      let response = await fetch('http://localhost:4000/tsx_params/1')
+      let tsx_params = await response.json()
+
+      let stop = tsx_params.stop;
+      if (stop == false) {
+        break;
+      }
+    }
   
     require('dotenv').config()
 
@@ -64,6 +74,36 @@ const routeOutputV3 = async () => {
     let iterations: number = +iter;
   
     require('dotenv').config()
+
+    await axios.put('http://localhost:4000/tsx_log/1', {
+      firstSwap: {
+        amm1: 0,
+        inputAmount1: 0,
+        inputTokenSymbol1: 0,
+        outputAmount1: 0,
+        outputTokenSymbol1: 0
+      },
+      secondSwap: {
+        amm2: 0,
+        inputAmount2: 0,
+        inputTokenSymbol2: 0,
+        outputAmount2: 0,
+        outputTokenSymbol2: 0
+      },
+      totalIn: 0,
+      totalOut: 0,
+      spread: 0,
+      recent_transaction: {
+          priorBalance: -1,
+          afterBalance: -1,
+          difference: -1,
+          txId: -1
+      }
+    }).then(resp => {
+      console.log(resp.data);
+    }).catch(error => {
+      console.log(error);
+    });
   
     // if secret key is in .env:
 
@@ -102,37 +142,39 @@ const routeOutputV3 = async () => {
     let swapsErr = 0;
 
     let stop_flag_triggered = false;
+    let beginningSOLBal = await connection.getBalance(owner.publicKey);
     let wSOLAddress = await createWSolAccount({connection, owner});
     let initSOLBalance = await connection.getBalance(owner.publicKey);
     let initwSOLBalance = await connection.getBalance(wSOLAddress);
-    let initTotalBalance = initSOLBalance + initwSOLBalance
-    let beginningSOLBal = initTotalBalance;
+    let initTotalBalance = initSOLBalance + initwSOLBalance;
 
-    // await axios.put('http://localhost:4000/tsx_log/1', {
-    //   firstSwap: {
-    //     amm1: amm1,
-    //     inputAmount1: inputAmount1,
-    //     inputTokenSymbol1: inputTokenSymbol1,
-    //     outputAmount1: inputAmount2,
-    //     outputTokenSymbol1: outputTokenSymbol1
-    //   },
-    //   secondSwap: {
-    //     amm2: amm2,
-    //     inputAmount2: inputAmount2,
-    //     inputTokenSymbol2: inputTokenSymbol2,
-    //     outputAmount2: outAm,
-    //     outputTokenSymbol2: outputTokenSymbol2
-    //   },
-    //   totalIn: inAm,
-    //   totalOut: outAm,
-    //   spread: spread
-    // }).then(resp => {
-    //   console.log(resp.data);
-    // }).catch(error => {
-    //   console.log(error);
-    // });
+    await axios.put('http://localhost:4000/transactions_meta/1', {
+      total_swaps: null,
+      pos_swaps: null,
+      err_swaps: null,
+      neg_swaps: null,
+      init_bal: beginningSOLBal/LAMPORTS_PER_SOL,
+      end_bal: null,
+      tot_prof: null
+    }).then(resp => {
+      console.log(resp.data);
+    }).catch(error => {
+      console.log(error);
+    });
 
-    while ((totSwaps < iterations) && !stop_flag_triggered) {
+    await axios.post('http://localhost:4000/graph_data', {
+          txId: null,
+          totalBalance: beginningSOLBal/LAMPORTS_PER_SOL,
+          id: 1
+        }).then(resp => {
+          console.log(resp.data);
+        }).catch(error => {
+          console.log(error);
+        });
+
+    let txid;
+
+    while (!stop_flag_triggered) {
       try {
 
         if (totSwaps != 0) {
@@ -185,7 +227,7 @@ const routeOutputV3 = async () => {
             // get transaction object from serialized transaction
             if (serializedTransaction) {
         
-              const txid = await connectionRPC.sendTransaction(serializedTransaction, signers, {
+              txid = await connectionRPC.sendTransaction(serializedTransaction, signers, {
                 skipPreflight: true
               })
               await connectionRPC.confirmTransaction(txid)
@@ -213,6 +255,41 @@ const routeOutputV3 = async () => {
 
         totalProfit += (finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL;
 
+        await axios.put('http://localhost:4000/transactions_meta/1', {
+          total_swaps: totSwaps,
+          pos_swaps: positiveSwaps,
+          err_swaps: swapsErr,
+          neg_swaps: negativeSwaps,
+          tot_prof: totalProfit
+        }).then(resp => {
+          console.log(resp.data);
+        }).catch(error => {
+          console.log(error);
+        });
+
+        await axios.patch('http://localhost:4000/tsx_log/1', {
+          recent_transaction: {
+            priorBalance: initTotalBalance,
+            afterBalance: finalTotalBalance,
+            difference: (finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL,
+            txId: txid
+          }
+        }).then(resp => {
+          console.log(resp.data);
+        }).catch(error => {
+          console.log(error);
+        });
+
+        await axios.post('http://localhost:4000/graph_data', {
+          id: (totSwaps + 1),
+          txId: txid,
+          totalBalance: finalTotalBalance
+        }).then(resp => {
+          console.log(resp.data);
+        }).catch(error => {
+          console.log(error);
+        });
+
     
       } catch(err) {
         try {
@@ -229,6 +306,40 @@ const routeOutputV3 = async () => {
           } else {
             negativeSwaps++;
           }
+          await axios.put('http://localhost:4000/transactions_meta/1', {
+            total_swaps: totSwaps,
+            pos_swaps: positiveSwaps,
+            err_swaps: swapsErr,
+            neg_swaps: negativeSwaps,
+            tot_prof: totalProfit
+          }).then(resp => {
+            console.log(resp.data);
+          }).catch(error => {
+            console.log(error);
+          });
+
+          await axios.put('http://localhost:4000/tsx_log/1', {
+          recent_transaction: {
+            priorBalance: initTotalBalance,
+            afterBalance: finalTotalBalance,
+            difference: (finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL,
+            txId: txid
+          }
+        }).then(resp => {
+          console.log(resp.data);
+        }).catch(error => {
+          console.log(error);
+        });
+
+          await axios.post('http://localhost:4000/graph_data', {
+            txId: txid,
+            totalBalance: finalTotalBalance
+          }).then(resp => {
+            console.log(resp.data);
+          }).catch(error => {
+            console.log(error);
+          });
+
         }
         catch (error) {
           console.log("error error")
@@ -253,6 +364,23 @@ const routeOutputV3 = async () => {
     console.log("Ending Balance: ",endingSOLBalance/LAMPORTS_PER_SOL);
 
     console.log("Total Profit: ", (endingSOLBalance-beginningSOLBal)/LAMPORTS_PER_SOL);
+
+    await axios.put('http://localhost:4000/transactions_meta/1', {
+      end_bal: endingSOLBalance/LAMPORTS_PER_SOL
+    }).then(resp => {
+      console.log(resp.data);
+    }).catch(error => {
+      console.log(error);
+    });
+
+    await axios.put('http://localhost:4000/graph_data', {
+          txId: null,
+          totalBalance: endingSOLBalance/LAMPORTS_PER_SOL
+        }).then(resp => {
+          console.log(resp.data);
+        }).catch(error => {
+          console.log(error);
+        });
 
     // If it gets to the end of the loop, it starts back over.
     routeOutputV3();

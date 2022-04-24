@@ -26,7 +26,7 @@ import {WalletChart} from "components/WalletChart"
 
 const axios = require('axios');
 
-const saveParams = (iter, amo, walSec) => {
+const saveParams = (amo, walSec) => {
 
   console.log("wallet secret",walSec)
   const encryptedSec = AES.encrypt(JSON.stringify(walSec), 'secret key crypto');
@@ -34,7 +34,6 @@ const saveParams = (iter, amo, walSec) => {
 
 
   axios.put('http://localhost:4000/tsx_params/1', {
-    iterations: iter,
     amount: amo,
     stop: false,
     walletSecret: encryptedSec
@@ -104,8 +103,6 @@ function Basics ({balanceData}) {
 
   const [amount, setAmount] = useState(".01");
 
-  const [iterations, setIterations] = useState("5");
-
   const [walletSecret, setWalletSecret] = useState("123456");
 
 
@@ -172,15 +169,6 @@ function Basics ({balanceData}) {
         />
 
 
-      <h3>Number of iterations (Enter 'inf' for &#8734; number of runs): </h3>
-        <input
-          type="text" 
-          value={iterations}
-          onChange={(e) => setIterations(e.target.value)}
-          style={{backgroundColor: "black", width: "20%", textAlign: "center"}}
-        />
-
-
       <h3>Wallet Secret: </h3>
         <input
           type="password" 
@@ -192,7 +180,7 @@ function Basics ({balanceData}) {
 
       <button
                 className="px-8 m-2 btn animate-pulse bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 ..."
-                onClick={() => saveParams(iterations,amount, walletSecret)}
+                onClick={() => saveParams(amount, walletSecret)}
       >
                 <span>{`${"Save Trading Parameters"}`} </span>
       </button>

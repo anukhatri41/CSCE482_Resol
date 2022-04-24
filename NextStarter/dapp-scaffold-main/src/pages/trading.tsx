@@ -30,7 +30,7 @@ class Trading2 extends React.Component<any, any> {
             totalIn: -1,
             totalOut: -1,
             spread: -1,
-            priorBalance: 1,
+            priorBalance: -1,
             afterBalance: -1,
             difference: -1,
             txId: -1

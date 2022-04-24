@@ -108,7 +108,7 @@ class Trading2 extends React.Component {
         return (
             <div>
               <Head>
-                <title>Solana Scaffold</title>
+                <title>Resol</title>
                 <meta
                   name="description"
                   content="Basic Functionality"

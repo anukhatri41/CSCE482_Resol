@@ -53,6 +53,7 @@ const axios = require('axios');
 const routeOutputV3 = async () => {
 
     while(true) {
+      exec("sleep 1")
       let response = await fetch('http://localhost:4000/tsx_params/1')
       let tsx_params = await response.json()
 

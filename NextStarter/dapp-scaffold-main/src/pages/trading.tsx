@@ -77,7 +77,7 @@ function Trading ({tsx_params}) {
   return (
     <div>
       <Head>
-        <title>Solana Scaffold</title>
+        <title>Resol</title>
         <meta
           name="description"
           content="Basic Functionality"

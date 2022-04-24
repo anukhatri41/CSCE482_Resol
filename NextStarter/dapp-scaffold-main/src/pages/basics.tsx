@@ -106,13 +106,11 @@ function Basics ({balanceData}) {
   const [walletSecret, setWalletSecret] = useState("123456");
 
 
-  var param_options = Object.keys(balanceData[0])
-
-  var endBal = []
-  for (let i = 0; i < balanceData.length ; i++) {endBal.push(balanceData[i].end_bal)}
+  var bal = []
+  for (let i = 0; i < balanceData.length ; i++) {bal.push(balanceData[i].totalBalance)}
   var labels = []
   for (let i = 1; i <= balanceData.length; i++) {labels.push(i)}
-  var differenceColor = ((balanceData[balanceData.length - 1].end_bal - balanceData[0].init_bal) > 0) ? 'rgb(99, 255, 222, 0.5)' : 'rgb(255, 99, 132, 0.5)';
+  var differenceColor = ((balanceData[balanceData.length - 1].totalBalance - balanceData[0].totalBalance) > 0) ? 'rgb(99, 255, 222, 0.5)' : 'rgb(255, 99, 132, 0.5)';
   
 
   // const data = {
@@ -147,7 +145,7 @@ function Basics ({balanceData}) {
   return (
     <div>
       <Head>
-        <title>Solana Scaffold</title>
+        <title>Resol</title>
         <meta
           name="description"
           content="Basic Functionality"
@@ -157,7 +155,7 @@ function Basics ({balanceData}) {
 
     <div className="md:hero-content flex flex-col">
       <h1 className="text-center text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
-        Basics
+        Analytics
       </h1>
 
         <h3>Amount of SOL per transaction: </h3>
@@ -214,20 +212,7 @@ function Basics ({balanceData}) {
         <div className="flex flex-col space-y-2">
           <h2 className="text-lg font-black text-gray-500">Solana</h2>
           <p className="text-sm text-gray-500">$ 42770</p>
-        </div>
-
-        <Dropdown onSelect={function(evt){console.log(evt)}}> 
-          <Dropdown.Toggle variant="success" id="dropdown-basic">
-            Parameter
-          </Dropdown.Toggle>
-
-          <Dropdown.Menu>
-            {param_options.map(item => <Dropdown.Item value = "3"> {item}</Dropdown.Item>)}
-          </Dropdown.Menu>
-        </Dropdown>
-        
-    
-
+        </div>    
 
       </div>
 
@@ -246,7 +231,7 @@ export default Basics;
 
 export async function getServerSideProps(){
   console.log("howdy");
-  const response = await fetch('http://localhost:4000/S2S')
+  const response = await fetch('http://localhost:4000/graph_data')
   const balanceData = await response.json()
 
 

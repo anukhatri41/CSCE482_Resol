@@ -33,7 +33,14 @@ class Trading2 extends React.Component<any, any> {
             priorBalance: 1,
             afterBalance: -1,
             difference: -1,
-            txId: -1
+            txId: -1,  
+            total_swaps: null,
+            pos_swaps: null,  
+            err_swaps: null,
+            neg_swaps: null,
+            init_bal: null,
+            end_bal: null,
+            tot_prof: null
          };
     }
 
@@ -47,6 +54,11 @@ class Trading2 extends React.Component<any, any> {
 
             const response_params = await fetch('http://localhost:4000/tsx_params/1')
             const tsx_params = await response_params.json()
+
+            const response_meta = await fetch('http://localhost:4000/transactions_meta/1')
+            const meta = await response_meta.json()
+
+            console.log(meta)
 
             this.setState({stop: tsx_params.stop})
 
@@ -71,6 +83,18 @@ class Trading2 extends React.Component<any, any> {
             this.setState({afterBalance: tsx_log.recent_transaction.afterBalance})
             this.setState({difference: tsx_log.recent_transaction.difference})
             this.setState({txId: tsx_log.recent_transaction.txId})
+
+            this.setState({txId: tsx_log.recent_transaction.txId}) 
+
+          
+            this.setState({total_swaps: meta.total_swaps})
+            this.setState({pos_swaps:meta.pos_swaps})
+            this.setState({err_swaps:meta.err_swaps})
+            this.setState({neg_swaps:meta.neg_swaps})
+            this.setState({init_bal:meta.init_bal})
+            this.setState({end_bal:meta.end_bal})
+            this.setState({tot_prof:meta.tot_prof})            
+
 
           } catch (error){
             await new Promise(r => setTimeout(r, 1500));
@@ -134,6 +158,8 @@ class Trading2 extends React.Component<any, any> {
               }
 
               <div>
+
+
                 <h1 className="text-center text-xl font-medium text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
                   SOL per trade: {this.state.amount}
                 </h1>
@@ -259,7 +285,7 @@ export async function getServerSideProps(){
     const tsx_params = await response.json()
 
   
-    console.log("-------TRADING222222---------");
+    console.log("-------000000---------");
   
 
     

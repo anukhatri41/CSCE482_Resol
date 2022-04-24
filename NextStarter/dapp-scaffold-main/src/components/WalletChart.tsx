@@ -36,22 +36,22 @@ interface balanceType {
     tot_prof: number
   }
   
-  interface PropType {
-    balanceData: balanceType[]
-    graph_param: string
-    totalSwaps: number
-    initBal: number
-    endBal: number
-    posSwaps: number
-    negSwaps: number
-    errSwaps: number
-    totProf: number
-  }
+//   interface PropType {
+//     balanceData: balanceType[]
+//     graph_param: string
+//     totalSwaps: number
+//     initBal: number
+//     endBal: number
+//     posSwaps: number
+//     negSwaps: number
+//     errSwaps: number
+//     totProf: number
+//   }
 
 
 //---------------------------------
 
-export const WalletChart = (props: PropType) => {
+export const WalletChart = (props: any) => {
     const [balances, setBalances] = useState(props.balanceData);
     var bal = []
     for (let i = 0; i < props.balanceData.length ; i++) {bal.push(props.balanceData[i].totalBalance)}

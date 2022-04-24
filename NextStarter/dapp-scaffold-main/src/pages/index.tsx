@@ -6,10 +6,11 @@ const Home: NextPage = (props) => {
   return (
     <div>
       <Head>
-        <title>Resol</title>
+        <title>Resol Home</title>
+        <link rel="icon" href="/favicon.ico"/>
         <meta
-          name="description"
-          content="Solana Arbitrage"
+          name="Resol"
+          content="Capstone"
         />
       </Head>
       <HomeView />

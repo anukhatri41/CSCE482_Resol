@@ -9,7 +9,6 @@ import Notifications from '../components/Notification'
 
 require('@solana/wallet-adapter-react-ui/styles.css');
 require('../styles/globals.css');
-const axios = require('axios');
 
 const App: FC<AppProps> = ({ Component, pageProps }) => {
     return (

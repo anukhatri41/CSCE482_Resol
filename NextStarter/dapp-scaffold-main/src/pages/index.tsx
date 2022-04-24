@@ -23,7 +23,7 @@ export default Home;
 
 export async function getServerSideProps(){
   console.log("howdy--------");
-  await axios.post('http://localhost:4000/graph_data', {
+  await axios.put('http://localhost:4000/graph_data/1', {
           txId: null,
           totalBalance: 0,
           id: 1

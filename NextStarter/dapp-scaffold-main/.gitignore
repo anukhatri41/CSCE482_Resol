@@ -38,3 +38,5 @@ yarn-error.log*
 
 # logs
 *.log
+
+NextStarter/dapp-scaffold-main/db.json

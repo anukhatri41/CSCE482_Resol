@@ -1,13 +1,9 @@
 import Head from "next/head";
-import React, { useState, Component } from 'react'
-// import 'bootstrap/dist/css/bootstrap.css';
-
+import React, { useState, Component, useEffect } from 'react'
 import {routeOutputV3} from '../tsx';
-
 import { Triangle } from "react-loader-spinner";
 
 const axios = require('axios');
-
 
 class Trading2 extends React.Component {
     constructor({tsx_params}) {
@@ -39,37 +35,42 @@ class Trading2 extends React.Component {
     update_vals = async () => {
 
         while( true ) {
-            const response_log = await fetch('http://localhost:4000/tsx_log/1')
-            const tsx_log = await response_log.json()
+          await new Promise(r => setTimeout(r, 1500));
+          try{ 
+              const response_log = await fetch('http://localhost:4000/tsx_log/1')
+              const tsx_log = await response_log.json()
 
-            const response_params = await fetch('http://localhost:4000/tsx_params/1')
-            const tsx_params = await response_params.json()
+              const response_params = await fetch('http://localhost:4000/tsx_params/1')
+              const tsx_params = await response_params.json()
 
-            this.setState({stop: tsx_params.stop})
+              this.setState({stop: tsx_params.stop})
 
-            this.setState({amm1: tsx_log.firstSwap.amm1})
-            this.setState({inputAmount1: tsx_log.firstSwap.inputAmount1})
-            this.setState({inputTokenSymbol1: tsx_log.firstSwap.inputTokenSymbol1})
-            this.setState({outputAmount1: tsx_log.firstSwap.outputAmount1})
-            this.setState({outputTokenSymbol1: tsx_log.firstSwap.outputTokenSymbol1})
+              this.setState({amm1: tsx_log!.firstSwap.amm1})
+              this.setState({inputAmount1: tsx_log.firstSwap.inputAmount1})
+              this.setState({inputTokenSymbol1: tsx_log.firstSwap.inputTokenSymbol1})
+              this.setState({outputAmount1: tsx_log.firstSwap.outputAmount1})
+              this.setState({outputTokenSymbol1: tsx_log.firstSwap.outputTokenSymbol1})
 
-            this.setState({amm2: tsx_log.secondSwap.amm2})
-            this.setState({inputAmount2: tsx_log.secondSwap.inputAmount2})
-            this.setState({inputTokenSymbol2: tsx_log.secondSwap.inputTokenSymbol2})
-            this.setState({outputAmount2: tsx_log.secondSwap.outputAmount2})
-            this.setState({outputTokenSymbol2: tsx_log.secondSwap.outputTokenSymbol2})
+              this.setState({amm2: tsx_log.secondSwap.amm2})
+              this.setState({inputAmount2: tsx_log.secondSwap.inputAmount2})
+              this.setState({inputTokenSymbol2: tsx_log.secondSwap.inputTokenSymbol2})
+              this.setState({outputAmount2: tsx_log.secondSwap.outputAmount2})
+              this.setState({outputTokenSymbol2: tsx_log.secondSwap.outputTokenSymbol2})
 
 
-            this.setState({totalIn: tsx_log.totalIn})
-            this.setState({totalOut: tsx_log.totalOut})
-            this.setState({spread: tsx_log.spread})
+              this.setState({totalIn: tsx_log.totalIn})
+              this.setState({totalOut: tsx_log.totalOut})
+              this.setState({spread: tsx_log.spread})
 
-            this.setState({priorBalance: tsx_log.recent_transaction.priorBalance})
-            this.setState({afterBalance: tsx_log.recent_transaction.afterBalance})
-            this.setState({difference: tsx_log.recent_transaction.difference})
-            this.setState({txId: tsx_log.recent_transaction.txId})
-
-            await new Promise(r => setTimeout(r, 1000));
+              this.setState({priorBalance: tsx_log.recent_transaction.priorBalance})
+              this.setState({afterBalance: tsx_log.recent_transaction.afterBalance})
+              this.setState({difference: tsx_log.recent_transaction.difference})
+              this.setState({txId: tsx_log.recent_transaction.txId})
+              console.log("in trading_2")
+          }
+          catch (error) {
+            await new Promise(r => setTimeout(r, 2000));
+          }
         }
 
     
@@ -92,13 +93,40 @@ class Trading2 extends React.Component {
           }).catch(error => {
             console.log(error);
           });
-        
-        // window.open("about:blank", "_self");
-        // window.close();
     };
-    
+
+
+    closeTab = async () => {
+      await axios.put('http://localhost:4000/tsx_params/1', {
+          amount: this.state.amount,
+          walletSecret: this.state.walletSecret,
+          stop: true
+        
+        }).then(resp => {
+          console.log(resp.data);
+        }).catch(error => {
+          console.log(error);
+        });
+    };
 
     render() {
+
+
+      // window.addEventListener("beforeunload", function (e) {
+      //   await axios.put('http://localhost:4000/tsx_params/1', {
+      //     amount: this.state.amount,
+      //     walletSecret: this.state.walletSecret,
+      //     stop: true
+        
+      //   }).then(resp => {
+      //     console.log(resp.data);
+      //   }).catch(error => {
+      //     console.log(error);
+      //   });
+      //   for (var i = 0; i < 500000000; i++) { }
+      //     return undefined;
+      //   });
+  
 
         return (
             <div>
@@ -113,32 +141,41 @@ class Trading2 extends React.Component {
               <div className="md:hero mx-auto p-4">
         
             <div className="md:hero-content flex flex-col">
-              <h1 className="text-center text-3xl pb-4 font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#fa7948] to-[#f9d573]">
-                Trading Currently Running
+
+              {this.state.stop
+              ?
+              <h1 style={{padding: "5px"}} className="text-center text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
+                Not Currently Trading
+              </h1>
+              :
+              <h1 style={{padding: "5px"}} className="text-center text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
+                Currently Trading
               </h1>
 
+              }
+
               <div>
-                <h1 className="text-center text-xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
+                <h1 className="text-center text-xl font-medium text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
                   SOL per trade: {this.state.amount}
                 </h1>
 
-                <h1 className="text-center text-xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
+                <h1 className="text-center text-xl font-medium text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
                   {this.state.amm1}: Route Found for {this.state.inputAmount1} {this.state.inputTokenSymbol1} -> {this.state.outputAmount1} {this.state.outputTokenSymbol1}
                 </h1>
 
-                <h1 className="text-center text-xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
+                <h1 className="text-center text-xl font-medium text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
                   {this.state.amm2}: Route Found for {this.state.inputAmount2} {this.state.inputTokenSymbol2} -> {this.state.outputAmount2} {this.state.outputTokenSymbol2}
                 </h1>
                 
-                <h1 className="text-center text-xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
+                <h1 className="text-center text-xl font-medium text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
                   Amount In: {this.state.totalIn}
                 </h1>
 
-                <h1 className="text-center text-xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
+                <h1 className="text-center text-xl font-medium text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
                   Amount Out: {this.state.totalOut}
                 </h1>
 
-                <h1 className="text-center text-xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
+                <h1 className="text-center text-xl font-medium text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
                   Spread: {this.state.spread}
                 </h1>
               </div>
@@ -148,9 +185,6 @@ class Trading2 extends React.Component {
                   <h1 className="text-center text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#F23D3D] to-[#F25C69] ">
                     No Profitable Transaction Found
                   </h1>
-
-
-
                   :
                   <div>
                     {this.state.difference >= 0
@@ -161,60 +195,50 @@ class Trading2 extends React.Component {
                         Transaction Found: 
                       </h1>
                       <div>
-                        <h1 className="text-center text-xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
+                        <h1 className="text-center text-xl font-medium text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
                           Prior Balance: {this.state.priorBalance}
                         </h1>
-                        <h1 className="text-center text-xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
+                        <h1 className="text-center text-xl font-medium text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
                           After Balance: {this.state.afterBalance}
                         </h1>
-                        <h1 className="text-center text-xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
+                        <h1 className="text-center text-xl font-medium text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
                           Difference: {this.state.difference}
                         </h1>
-                        <h1 className="text-center text-xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
+                        <h1 className="text-center text-xl font-medium text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
                           Transaction: {this.state.txId}
                         </h1>
                       </div>
                     </div>
-
                     :
-
                     <div>
                       <h1 className="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#0CE87E] to-[#01FF33]">
                         Transaction Found: 
                       </h1>
                       <div>
-                        <h1 className="text-center text-xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
+                        <h1 className="text-center text-xl font-medium text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
                           Prior Balance: {this.state.priorBalance}
                         </h1>
-                        <h1 className="text-center text-xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
+                        <h1 className="text-center text-xl font-medium text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
                           After Balance: {this.state.afterBalance}
                         </h1>
-                        <h1 className="text-center text-xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
+                        <h1 className="text-center text-xl font-medium text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
                           Difference: {this.state.difference}
                         </h1>
-                        <h1 className="text-center text-xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
+                        <h1 className="text-center text-xl font-medium text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
                           Transaction: {this.state.txId}
                         </h1>
                       </div>
                     </div>
                   }
                   </div>
-
-
-            
                 } 
-              </div>
-
-
-
-
-      
+              </div>      
               <button
                         className={`${this.state.stop ? "px-8 m-2 btn animate-pulse bg-gradient-to-r from-[#f9d573] to-[#fa7948] hover:from-[#0CC7E8] hover:to-[#0CE87E]  ..." : "px-8 m-2 btn animate-pulse bg-gradient-to-r  from-pink-500 to-yellow-500 hover:from-[#9945FF] hover:to-[#14F195] ..."}`}
                         onClick={() => this.tradingButton(this.state.amount)}
 
               >
-                        <span>{`${this.state.stop ? "Start Trading" : "Stop Trading"}`} </span>
+                <span>{`${this.state.stop ? "Start Trading" : "Stop Trading"}`} </span>
               </button>
         
               <span>
@@ -225,10 +249,13 @@ class Trading2 extends React.Component {
                 } 
                 </span>
 
-        
+  
             </div> 
-          </div>
             </div>
+            </div>
+
+
+
           );
     }
 

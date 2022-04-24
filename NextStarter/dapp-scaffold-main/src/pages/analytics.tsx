@@ -12,14 +12,10 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import StartStop  from "components/StartStop";
 
 import React, { useState, Component } from 'react'
-// import 'bootstrap/dist/css/bootstrap.css';
 
 import { AES, enc } from 'crypto-ts';
-
-//import Dropdown from 'react-bootstrap/Dropdown'
 
 import {WalletChart} from "components/WalletChart"
 

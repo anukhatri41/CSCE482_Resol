@@ -17,7 +17,6 @@ class Trading2 extends React.Component {
         super();
         this.state = {
             amount: tsx_params.amount,
-            iterations: tsx_params.iterations,
             walletSecret: tsx_params.walletSecret,
             stop: tsx_params.stop,
             amm1: -1,
@@ -87,7 +86,6 @@ class Trading2 extends React.Component {
 
     tradingButton = async () => {
         await axios.put('http://localhost:4000/tsx_params/1', {
-            iterations: this.state.iterations,
             amount: this.state.amount,
             walletSecret: this.state.walletSecret,
             stop: !this.state.stop
@@ -124,10 +122,6 @@ class Trading2 extends React.Component {
 
               <h1 className="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
                 SOL per trade: {this.state.amount}
-              </h1>
-              
-              <h1 className="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
-                Number of iterations: {this.state.iterations} 
               </h1>
 
               <h1 className="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
@@ -217,7 +211,7 @@ class Trading2 extends React.Component {
       
               <button
                         className={`${this.state.stop ? "px-8 m-2 btn animate-pulse bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:from-pink-500 hover:to-yellow-500  ..." : "px-8 m-2 btn animate-pulse bg-gradient-to-r  from-pink-500 to-yellow-500 hover:from-[#9945FF] hover:to-[#14F195] ..."}`}
-                        onClick={() => this.tradingButton(this.state.iterations, this.state.amount)}
+                        onClick={() => this.tradingButton(this.state.amount)}
 
               >
                         <span>{`${this.state.stop ? "Start Trading" : "Stop Trading"}`} </span>

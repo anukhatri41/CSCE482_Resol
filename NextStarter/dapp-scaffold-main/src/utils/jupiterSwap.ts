@@ -1,26 +1,10 @@
-import { Jupiter, RouteInfo, TOKEN_LIST_URL, MarketInfo } from "@jup-ag/core";
-import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey, Transaction, SystemProgram } from "@solana/web3.js";
+import { Jupiter, RouteInfo, TOKEN_LIST_URL } from "@jup-ag/core";
+import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey} from "@solana/web3.js";
 import fetch from "isomorphic-fetch";
 import {
   ENV,
-  INPUT_MINT_ADDRESS,
-  OUTPUT_MINT_ADDRESS,
-  SOLANA_RPC_ENDPOINT,
-  SOL_MINT_ADDRESS,
-  OXY_MINT_ADDRESS,
-  mSOL_MINT_ADDRESS,
   Token,
-  USDC_MINT_ADDRESS,
-  oneSOL_MINT_ADDRESS,
-  USDT_MINT_ADDRESS,
-  soETH_MINT_ADDRESS
 } from "../constants";
-import {
-  ASSOCIATED_TOKEN_PROGRAM_ID,
-  Token as TokenSPL,
-  TOKEN_PROGRAM_ID,
-} from "@solana/spl-token";
-import { Wallet } from "@project-serum/anchor";
 import { InstructionParser } from "./instruction-parser";
 const bn = require("bn.js")
 const axios = require('axios');
@@ -50,9 +34,9 @@ const axios = require('axios');
       
       inputTokenSymbol = inputToken.symbol;
       outputTokenSymbol = outputToken.symbol;
-      console.log(
-        `Getting routes for ${inputAmount} ${inputToken.symbol} -> ${outputToken.symbol}...`
-      );
+      // console.log(
+      //   `Getting routes for ${inputAmount} ${inputToken.symbol} -> ${outputToken.symbol}...`
+      // );
       const inputAmountInSmallestUnits = inputToken
         ? Math.round(inputAmount * 10 ** inputToken.decimals)
         : 0;
@@ -173,7 +157,7 @@ export const runUntilProfitV3 = async ({
   let NUMBER_OF_DECIMAL_PLACES = 9;
   const diffThresh = inAmount * LAMPORTS_PER_SOL;
   let spread = outAm - inAm;
-  console.log("######################################")
+  // console.log("######################################")
 
   let transactions1;
   let transactions2;
@@ -343,7 +327,7 @@ export const runUntilProfitV3 = async ({
     });
 
     if (spread > diffThresh) {
-      console.log("TGTBT");
+      // console.log("TGTBT");
       spread = -1;
     }
     console.log("######################################")

@@ -143,7 +143,7 @@ function Basics ({balanceData}) {
       </button>
 
       <div>
-        <WalletChart balanceData={balanceData}/>
+        {<WalletChart balanceData={balanceData}/> }
       </div>
 
     </div> 

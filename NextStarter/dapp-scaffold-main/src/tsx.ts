@@ -120,7 +120,7 @@ const routeOutputV3 = async () => {
       pos_swaps: null,
       err_swaps: null,
       neg_swaps: null,
-      init_bal: beginningSOLBal/LAMPORTS_PER_SOL,
+      init_bal: initTotalBalance/LAMPORTS_PER_SOL,
       end_bal: null,
       tot_prof: null
     }).then(resp => {
@@ -131,7 +131,7 @@ const routeOutputV3 = async () => {
 
     await axios.put('http://localhost:4000/graph_data/1', {
       txId: null,
-      totalBalance: beginningSOLBal/LAMPORTS_PER_SOL,
+      totalBalance: initTotalBalance/LAMPORTS_PER_SOL,
     }).then(resp => {
       console.log(resp.data);
     }).catch(error => {

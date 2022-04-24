@@ -12,14 +12,10 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import StartStop  from "components/StartStop";
 
 import React, { useState, Component } from 'react'
-// import 'bootstrap/dist/css/bootstrap.css';
 
 import { AES, enc } from 'crypto-ts';
-
-import Dropdown from 'react-bootstrap/Dropdown'
 
 import {WalletChart} from "components/WalletChart"
 
@@ -117,7 +113,7 @@ function Basics ({balanceData}) {
       <div className="md:hero mx-auto p-4">
 
     <div className="md:hero-content flex flex-col">
-      <h1 className="text-center text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
+      <h1 style={{padding: "5px"}}  className="text-center text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#9945FF] to-[#14F195]">
         Analytics
       </h1>
 

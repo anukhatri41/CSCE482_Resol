@@ -334,7 +334,7 @@ const routeOutputV3 = async () => {
 
           await axios.post('http://localhost:4000/graph_data', {
             txId: txid,
-            totalBalance: finalTotalBalance
+            totalBalance: finalTotalBalance/LAMPORTS_PER_SOL
           }).then(resp => {
             console.log(resp.data);
           }).catch(error => {

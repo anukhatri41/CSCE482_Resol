@@ -295,3 +295,8 @@ Today, we all met up and worked on our integration. We are getting really close,
 We have our algorithm working fine, making roughly 15 cents per day.
 
 We just need to finish integrating it, then pack it all into a nice package, potentially using docker.
+
+
+<h4>4/24/22</h4>
+
+Today, we wrapped up integrating our project, then we recorded our demo. We are proud of what we have. We still have some small things to wrap up in the UI, but overall our code is solid, and our backend is robust.

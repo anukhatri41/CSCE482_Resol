@@ -102,20 +102,6 @@ function Basics ({balanceData, metaData}) {
 
   const [walletSecret, setWalletSecret] = useState("123456");
 
-  const [totalSwaps, setTotalSwaps] = useState(metaData.total_swaps);
-  
-  const [posSwaps, setPosSwaps] = useState(metaData.pos_swaps);
-
-  const [errSwaps, setErrSwaps] = useState(metaData.err_swaps);
-
-  const [negSwaps, setNegSwaps] = useState(metaData.neg_swaps);
-
-  const [initBal, setInitBal] = useState(metaData.init_bal);
-
-  const [endBal, setEndBal] = useState(metaData.end_bal);
-  
-  const [totProf, setTotProf] = useState(metaData.tot_prof);
-
   return (
     <div>
       <Head>
@@ -166,7 +152,13 @@ function Basics ({balanceData, metaData}) {
       </Link>
 
       <div>
-        <WalletChart balanceData={balanceData} totalSwaps={totalSwaps} posSwaps={posSwaps} negSwaps={negSwaps} errSwaps={errSwaps} totProf={totProf} />
+
+        {balanceData.length > 0
+        ?
+        <WalletChart balanceData={balanceData} metaData={metaData} />
+        :
+        <></>
+        }
 
       </div>
 

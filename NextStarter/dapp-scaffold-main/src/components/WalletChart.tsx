@@ -52,6 +52,8 @@ interface balanceType {
 //---------------------------------
 
 export const WalletChart = (props: any) => {
+    console.log(props.metaData.tot_prof)
+    console.log(props.metaData.total_swaps)
     const [balances, setBalances] = useState(props.balanceData);
     var bal = []
     for (let i = 0; i < props.balanceData.length ; i++) {bal.push(props.balanceData[i].totalBalance)}
@@ -100,21 +102,29 @@ export const WalletChart = (props: any) => {
             </div>
                         
             <div>
+                {props.metaData.total_swaps != 0
+                ?
                 <div>
-                    Total Profit: {props.totProf}
+                <div>
+                    Total Profit: {props.metaData.tot_prof}
                 </div>
                 <div>
-                    Total Swaps: {props.totalSwaps}
+                    Total Swaps: {props.metaData.total_swaps}
                 </div>
                 <div>
-                    Positive Swaps: {props.posSwaps}
+                    Positive Swaps: {props.metaData.pos_swaps}
                 </div>
                 <div>
-                    Negative Swaps: {props.negSwaps}
+                    Negative Swaps: {props.metaData.neg_swaps}
                 </div>
                 <div>
-                    Error Swaps: {props.errSwaps}
+                    Error Swaps: {props.metaData.err_swaps}
                 </div>
+                </div>
+                :
+                <></>
+            }
+
             </div>
       </div>
     );

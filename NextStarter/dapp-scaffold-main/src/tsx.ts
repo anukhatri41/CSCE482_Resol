@@ -116,22 +116,22 @@ const routeOutputV3 = async () => {
     let initTotalBalance = initSOLBalance + initwSOLBalance;
 
     await axios.patch('http://localhost:4000/transactions_meta/1', {
-      total_swaps: null,
-      pos_swaps: null,
-      err_swaps: null,
-      neg_swaps: null,
+      total_swaps: 0,
+      pos_swaps: 0,
+      err_swaps: 0,
+      neg_swaps: 0,
       init_bal: initTotalBalance/LAMPORTS_PER_SOL,
-      end_bal: null,
-      tot_prof: null
+      end_bal: 0,
+      tot_prof: 0
     }).then(resp => {
       console.log(resp.data);
     }).catch(error => {
       console.log(error);
     });
 
-    await axios.put('http://localhost:4000/graph_data/1', {
+    await axios.post('http://localhost:4000/graph_data', {
       txId: null,
-      totalBalance: initTotalBalance/LAMPORTS_PER_SOL,
+      totalBalance: initTotalBalance/LAMPORTS_PER_SOL
     }).then(resp => {
       console.log(resp.data);
     }).catch(error => {
@@ -238,7 +238,6 @@ const routeOutputV3 = async () => {
         });
 
         await axios.post('http://localhost:4000/graph_data', {
-          id: (totSwaps + 1),
           txId: txid,
           totalBalance: finalTotalBalance/LAMPORTS_PER_SOL
         }).then(resp => {

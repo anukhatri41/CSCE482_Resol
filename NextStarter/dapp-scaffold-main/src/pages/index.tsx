@@ -40,29 +40,29 @@ export async function getServerSideProps(){
   console.log("howdy--------");
   exec("yarn run json-server --watch db.json --port 4000");
 
-  const response = await fetch('http://localhost:4000/tsx_params/1')
-  const res = await response.json();
-  var fl = res.firstLoad;
+  // const response = await fetch('http://localhost:4000/tsx_params/1')
+  // const res = await response.json();
+  // var fl = res.firstLoad;
 
-  if (fl) {
-    await axios.patch('http://localhost:4000/tsx_params/1', {
-      firstLoad: false,
-    }).then(resp => {
-      console.log(resp.data);
-    }).catch(error => {
-      console.log(error);
-    });
+//   if (fl) {
+//     await axios.patch('http://localhost:4000/tsx_params/1', {
+//       firstLoad: false,
+//     }).then(resp => {
+//       console.log(resp.data);
+//     }).catch(error => {
+//       console.log(error);
+//     });
     
-    await axios.put('http://localhost:4000/graph_data/1', {
-      txId: null,
-      totalBalance: 0,
-      id: 1
-    }).then(resp => {
-      console.log(resp.data);
-    }).catch(error => {
-      console.log(error);
-    });
-}
+//     await axios.put('http://localhost:4000/graph_data/1', {
+//       txId: null,
+//       totalBalance: 0,
+//       id: 1
+//     }).then(resp => {
+//       console.log(resp.data);
+//     }).catch(error => {
+//       console.log(error);
+//     });
+// }
 
         return {
           props: {

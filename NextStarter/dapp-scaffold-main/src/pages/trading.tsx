@@ -35,7 +35,7 @@ class Trading2 extends React.Component<any, any> {
             afterBalance: tsx_log.recent_transaction.afterBalance,
             difference: tsx_log.recent_transaction.difference,
             txId: tsx_log.recent_transaction.txID,  
-            found: false,
+            found: tsx_log.recent_transaction.found,
             tot_prof: null
          };
     }
@@ -53,8 +53,6 @@ class Trading2 extends React.Component<any, any> {
 
             const response_meta = await fetch('http://localhost:4000/transactions_meta/1')
             const meta = await response_meta.json()
-
-            console.log(meta)
 
 
             this.setState({found: tsx_log.recent_transaction.found})

@@ -217,7 +217,7 @@ const routeOutputV3 = async () => {
 
         totalProfit += (finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL;
 
-        await axios.patch('http://localhost:4000/transactions_meta/1', {
+        await axios.put('http://localhost:4000/transactions_meta/1', {
           total_swaps: totSwaps,
           pos_swaps: positiveSwaps,
           err_swaps: swapsErr,
@@ -229,8 +229,9 @@ const routeOutputV3 = async () => {
           console.log(error);
         });
 
-        await axios.patch('http://localhost:4000/tsx_log/1', {
+        await axios.put('http://localhost:4000/tsx_log/1', {
           recent_transaction: {
+            found: true,
             priorBalance: initTotalBalance/LAMPORTS_PER_SOL,
             afterBalance: finalTotalBalance/LAMPORTS_PER_SOL,
             difference: (finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL,
@@ -255,52 +256,52 @@ const routeOutputV3 = async () => {
       } catch(err) {
         try {
           await new Promise(r => setTimeout(r, 5000));
-          const finalwSOLBalance = await connection.getBalance(wSOLAddress);
-          const finalSOLBalance = await connection.getBalance(owner.publicKey)
-          const finalTotalBalance = (finalwSOLBalance+finalSOLBalance)
-          // console.log("SOL Balance After Most Recent Swap: ", (finalwSOLBalance+finalSOLBalance)/LAMPORTS_PER_SOL);
-          // console.log("Profit?: ", (finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL);
-          if ((finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL > 0) {
-            positiveSwaps++;
-          } else if ((finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL == 0) {
-            swapsErr++;
-          } else {
-            negativeSwaps++;
-          }
-          await axios.put('http://localhost:4000/transactions_meta/1', {
-            total_swaps: totSwaps,
-            pos_swaps: positiveSwaps,
-            err_swaps: swapsErr,
-            neg_swaps: negativeSwaps,
-            tot_prof: totalProfit
-          }).then(resp => {
-            console.log(resp.data);
-          }).catch(error => {
-            console.log(error);
-          });
+        //   const finalwSOLBalance = await connection.getBalance(wSOLAddress);
+        //   const finalSOLBalance = await connection.getBalance(owner.publicKey)
+        //   const finalTotalBalance = (finalwSOLBalance+finalSOLBalance)
+        //   // console.log("SOL Balance After Most Recent Swap: ", (finalwSOLBalance+finalSOLBalance)/LAMPORTS_PER_SOL);
+        //   // console.log("Profit?: ", (finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL);
+        //   if ((finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL > 0) {
+        //     positiveSwaps++;
+        //   } else if ((finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL == 0) {
+        //     swapsErr++;
+        //   } else {
+        //     negativeSwaps++;
+        //   }
+        //   await axios.put('http://localhost:4000/transactions_meta/1', {
+        //     total_swaps: totSwaps,
+        //     pos_swaps: positiveSwaps,
+        //     err_swaps: swapsErr,
+        //     neg_swaps: negativeSwaps,
+        //     tot_prof: totalProfit
+        //   }).then(resp => {
+        //     console.log(resp.data);
+        //   }).catch(error => {
+        //     console.log(error);
+        //   });
 
-          await axios.put('http://localhost:4000/tsx_log/1', {
-          recent_transaction: {
-            found: true,
-            priorBalance: initTotalBalance/LAMPORTS_PER_SOL,
-            afterBalance: finalTotalBalance/LAMPORTS_PER_SOL,
-            difference: (finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL,
-            txId: txid
-          }
-        }).then(resp => {
-          console.log(resp.data);
-        }).catch(error => {
-          console.log(error);
-        });
+        //   await axios.put('http://localhost:4000/tsx_log/1', {
+        //   recent_transaction: {
+        //     found: true,
+        //     priorBalance: initTotalBalance/LAMPORTS_PER_SOL,
+        //     afterBalance: finalTotalBalance/LAMPORTS_PER_SOL,
+        //     difference: (finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL,
+        //     txId: txid
+        //   }
+        // }).then(resp => {
+        //   console.log(resp.data);
+        // }).catch(error => {
+        //   console.log(error);
+        // });
 
-          await axios.post('http://localhost:4000/graph_data', {
-            txId: txid,
-            totalBalance: finalTotalBalance/LAMPORTS_PER_SOL
-          }).then(resp => {
-            console.log(resp.data);
-          }).catch(error => {
-            console.log(error);
-          });
+        //   await axios.post('http://localhost:4000/graph_data', {
+        //     txId: txid,
+        //     totalBalance: finalTotalBalance/LAMPORTS_PER_SOL
+        //   }).then(resp => {
+        //     console.log(resp.data);
+        //   }).catch(error => {
+        //     console.log(error);
+        //   });
 
         }
         catch (error) {
@@ -335,7 +336,7 @@ const routeOutputV3 = async () => {
       console.log(error);
     });
 
-    await axios.put('http://localhost:4000/graph_data', {
+    await axios.post('http://localhost:4000/graph_data', {
           txId: null,
           totalBalance: endingSOLBalance/LAMPORTS_PER_SOL
         }).then(resp => {

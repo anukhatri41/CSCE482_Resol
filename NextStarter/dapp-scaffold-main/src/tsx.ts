@@ -45,6 +45,11 @@ const routeOutputV3 = async () => {
     let response = await fetch('http://localhost:4000/tsx_params/1')
     let tsx_params = await response.json()
 
+    let response_logs = await fetch('http://localhost:4000/tsx_logs/1')
+    let tsx_logs = await response_logs.json()
+
+    var recent_tsx = tsx_logs.recent_transaction
+
     var iter = tsx_params.iterations;
     var amountToTrade = tsx_params.amount;
 
@@ -53,7 +58,7 @@ const routeOutputV3 = async () => {
   
     require('dotenv').config()
 
-    await axios.put('http://localhost:4000/tsx_log/1', {
+    await axios.patch('http://localhost:4000/tsx_log/1', {
       firstSwap: {
         amm1: 0,
         inputAmount1: 0,
@@ -71,12 +76,7 @@ const routeOutputV3 = async () => {
       totalIn: 0,
       totalOut: 0,
       spread: 0,
-      recent_transaction: {
-          priorBalance: -1,
-          afterBalance: -1,
-          difference: -1,
-          txId: -1
-      }
+      recent_transaction: recent_tsx
     }).then(resp => {
       console.log(resp.data);
     }).catch(error => {

@@ -154,3 +154,15 @@ https://blog.chain.link/levels-of-data-aggregation-in-chainlink-price-feeds/
 - met with TA and professor and discussed the progress we've made
 - fixed the wSOL problem I was having
 - worked with Grant to close wSOL account at end of transaction run
+
+**April 22-24, 2022**
+- this Friday, Saturday, and Sunday, I spent most of each day working with the team in Zachry
+- we worked on finishing up the product so that we could record a successful demo
+- I helped with debugging a lot of weird errors people on the team were getting, as well as adding frontend/backend features where we wanted them
+  - I helped in all areas of the product, without really a designated area of the product that was specifically "mine"
+- I also helped Anu with merging a lot of her front end changes to ensure the changes wouldn't affect anything in the backend, it was a big merge! (but a good one haha)
+- Sunday night, we recorded the demo by waiting as a team for profitable transactions, and provided moral support for Grant while he recorded the voice over
+
+**April 26, 2022**
+- started setting up the presentation slides with Anu
+

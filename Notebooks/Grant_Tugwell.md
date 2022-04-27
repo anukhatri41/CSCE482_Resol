@@ -300,3 +300,9 @@ We just need to finish integrating it, then pack it all into a nice package, pot
 <h4>4/24/22</h4>
 
 Today, we wrapped up integrating our project, then we recorded our demo. We are proud of what we have. We still have some small things to wrap up in the UI, but overall our code is solid, and our backend is robust.
+
+<h4>4/25/22</h4>
+
+Today, we showed off our demo video. We are super proud of this. We had a lot of design changes, and in the end we never ended up doing an onchain program, but we got the arbitrage to work!!!! Basically, on our 5 dollars we were risking per trade, we were able to make anywhere between 0.06 cents and 0.01 cent on a trade. The most we could ever lose was only the transaction cost.
+
+We have some small bugs that we will likely iron out. We are proud of our stuff!

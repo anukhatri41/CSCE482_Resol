@@ -306,3 +306,7 @@ Today, we wrapped up integrating our project, then we recorded our demo. We are 
 Today, we showed off our demo video. We are super proud of this. We had a lot of design changes, and in the end we never ended up doing an onchain program, but we got the arbitrage to work!!!! Basically, on our 5 dollars we were risking per trade, we were able to make anywhere between 0.06 cents and 0.01 cent on a trade. The most we could ever lose was only the transaction cost.
 
 We have some small bugs that we will likely iron out. We are proud of our stuff!
+
+<h4>4/27/22</h4>
+
+We met with Dr. Huang & Laren, and they really liked our slidedeck. They had a lot of good advice. Intially we were working off the expectation that we needed to do a presentation similar to our CDR and project proposal presentations. Instead, after we met with them, we learned we needed to make this as something that is less focused on technical stuff and more focused on what we actually did and more general. We are excited to see what they think because we are proud of our work.

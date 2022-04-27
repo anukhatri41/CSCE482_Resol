@@ -5,41 +5,37 @@ import React, { useState, Component } from 'react'
 import {routeOutputV3} from '../tsx';
 
 import { Triangle } from "react-loader-spinner";
+import { throws } from "assert";
 
 const axios = require('axios');
 
 type MyProps = {};
 type MyState = {state: {} };
 class Trading2 extends React.Component<any, any> {
-    constructor({tsx_params}: any) {
+    constructor({tsx_params, tsx_log}: any) {
         super(tsx_params);
         this.state = {
             amount: tsx_params.amount,
             walletSecret: tsx_params.walletSecret,
             stop: tsx_params.stop,
-            amm1: -1,
-            inputAmount1: -1,
-            inputTokenSymbol1: -1,
-            outputAmount1: -1,
-            outputTokenSymbol1: -1,
-            amm2: -1,
-            inputAmount2: -1,
-            inputTokenSymbol2: -1,
-            outputAmount2: -1,
-            outputTokenSymbol2: -1,
-            totalIn: -1,
-            totalOut: -1,
-            spread: -1,
-            priorBalance: -1,
-            afterBalance: -1,
-            difference: -1,
-            txId: -1,  
-            total_swaps: null,
-            pos_swaps: null,  
-            err_swaps: null,
-            neg_swaps: null,
-            init_bal: null,
-            end_bal: null,
+            amm1: tsx_log.firstSwap.amm1,
+            inputAmount1: tsx_log.firstSwap.inputAmount1,
+            inputTokenSymbol1: tsx_log.firstSwap.inputTokenSymbol1,
+            outputAmount1: tsx_log.firstSwap.outputAmount1,
+            outputTokenSymbol1: tsx_log.firstSwap.outputTokenSymbol1,
+            amm2: tsx_log.secondSwap.amm2,
+            inputAmount2: tsx_log.secondSwap.inputAmount2,
+            inputTokenSymbol2: tsx_log.secondSwap.inputTokenSymbol2,
+            outputAmount2: tsx_log.secondSwap.outputAmount2,
+            outputTokenSymbol2: tsx_log.secondSwap.outputTokenSymbol2,
+            totalIn: tsx_log.totalIn,
+            totalOut: tsx_log.totalOut,
+            spread: tsx_log.spread,
+            priorBalance: tsx_log.recent_transaction.priorBalance,
+            afterBalance: tsx_log.recent_transaction.afterBalance,
+            difference: tsx_log.recent_transaction.difference,
+            txId: tsx_log.recent_transaction.txID,  
+            found: false,
             tot_prof: null
          };
     }
@@ -59,6 +55,9 @@ class Trading2 extends React.Component<any, any> {
             const meta = await response_meta.json()
 
             console.log(meta)
+
+
+            this.setState({found: tsx_log.recent_transaction.found})
 
             this.setState({stop: tsx_params.stop})
 
@@ -86,13 +85,6 @@ class Trading2 extends React.Component<any, any> {
 
             this.setState({txId: tsx_log.recent_transaction.txId}) 
 
-          
-            this.setState({total_swaps: meta.total_swaps})
-            this.setState({pos_swaps:meta.pos_swaps})
-            this.setState({err_swaps:meta.err_swaps})
-            this.setState({neg_swaps:meta.neg_swaps})
-            this.setState({init_bal:meta.init_bal})
-            this.setState({end_bal:meta.end_bal})
             this.setState({tot_prof:meta.tot_prof})            
 
 
@@ -185,13 +177,11 @@ class Trading2 extends React.Component<any, any> {
                 </h1>
               </div>
               <div>
-                {(this.state.priorBalance == -1 || this.state.difference == 0)
+                {!this.state.found
                   ? 
                   <h1 className="text-center text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-tr from-[#F23D3D] to-[#F25C69] ">
                     No Profitable Transaction Found
                   </h1>
-
-
 
                   :
                   <div>
@@ -235,7 +225,7 @@ class Trading2 extends React.Component<any, any> {
                           Difference: {this.state.difference}
                         </h1>
                         <h1 className="text-center text-xl font-medium text-transparent bg-clip-text bg-gradient-to-tr from-[#FFFFFF] to-[#ABABAB]">
-                          Transaction: {this.state.txId}
+                          Transaction: <a href={"solscan.io/tx/"+ this.state.txId} target="_blank">{this.state.txId}</a>
                         </h1>
                       </div>
                     </div>
@@ -289,6 +279,10 @@ export async function getServerSideProps(){
     const response = await fetch('http://localhost:4000/tsx_params/1')
     const tsx_params = await response.json()
 
+    const response_log = await fetch('http://localhost:4000/tsx_log/1')
+    const tsx_log = await response_log.json()
+
+
   
     console.log("-------000000---------");
   
@@ -307,9 +301,10 @@ export async function getServerSideProps(){
     return {
       props: {
         tsx_params,
-      }
+        tsx_log
     }
   }
+}
 
 
 
@@ -339,3 +334,11 @@ export async function getServerSideProps(){
     </defs>
   </svg>
 </div> */}
+
+
+// recent_transaction: {
+//   priorBalance: -1,
+//   afterBalance: -1,
+//   difference: -1,
+//   txId: -1
+// }

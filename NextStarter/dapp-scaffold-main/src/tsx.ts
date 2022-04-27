@@ -45,6 +45,11 @@ const routeOutputV3 = async () => {
     let response = await fetch('http://localhost:4000/tsx_params/1')
     let tsx_params = await response.json()
 
+    let response_logs = await fetch('http://localhost:4000/tsx_logs/1')
+    let tsx_logs = await response_logs.json()
+
+    var recent_tsx = tsx_logs.recent_transaction
+
     var iter = tsx_params.iterations;
     var amountToTrade = tsx_params.amount;
 

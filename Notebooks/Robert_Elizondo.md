@@ -133,3 +133,16 @@ Working on start/stop button
 Meeting with Dr.Huang and Laren  
 Got transaction function to work  
 Trying to make button work becasue we are getting an FS error  
+  
+# 4/25/22  
+Meeting with group on Friday, Saturday and Sunday  
+Worked very hard to integrate all the work that we had up until that point  
+Added a alot of features and did lots of testing to ensure that everything was working correctly  
+Recorded demo video
+Demoed in class
+
+# 4/27/22  
+Meeting with Dr.Huang and Laren  
+Working on presentation  
+
+

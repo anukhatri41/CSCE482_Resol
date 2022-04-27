@@ -330,7 +330,7 @@ const routeOutputV3 = async () => {
       console.log(error);
     });
 
-    await axios.put('http://localhost:4000/graph_data', {
+    await axios.post('http://localhost:4000/graph_data', {
           txId: null,
           totalBalance: endingSOLBalance/LAMPORTS_PER_SOL
         }).then(resp => {

@@ -217,7 +217,7 @@ const routeOutputV3 = async () => {
 
         totalProfit += (finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL;
 
-        await axios.patch('http://localhost:4000/transactions_meta/1', {
+        await axios.put('http://localhost:4000/transactions_meta/1', {
           total_swaps: totSwaps,
           pos_swaps: positiveSwaps,
           err_swaps: swapsErr,
@@ -229,8 +229,9 @@ const routeOutputV3 = async () => {
           console.log(error);
         });
 
-        await axios.patch('http://localhost:4000/tsx_log/1', {
+        await axios.put('http://localhost:4000/tsx_log/1', {
           recent_transaction: {
+            found: true,
             priorBalance: initTotalBalance/LAMPORTS_PER_SOL,
             afterBalance: finalTotalBalance/LAMPORTS_PER_SOL,
             difference: (finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL,

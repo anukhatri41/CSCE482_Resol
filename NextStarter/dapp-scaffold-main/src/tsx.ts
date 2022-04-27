@@ -53,35 +53,35 @@ const routeOutputV3 = async () => {
   
     require('dotenv').config()
 
-    await axios.put('http://localhost:4000/tsx_log/1', {
-      firstSwap: {
-        amm1: 0,
-        inputAmount1: 0,
-        inputTokenSymbol1: 0,
-        outputAmount1: 0,
-        outputTokenSymbol1: 0
-      },
-      secondSwap: {
-        amm2: 0,
-        inputAmount2: 0,
-        inputTokenSymbol2: 0,
-        outputAmount2: 0,
-        outputTokenSymbol2: 0
-      },
-      totalIn: 0,
-      totalOut: 0,
-      spread: 0,
-      recent_transaction: {
-          priorBalance: -1,
-          afterBalance: -1,
-          difference: -1,
-          txId: -1
-      }
-    }).then(resp => {
-      console.log(resp.data);
-    }).catch(error => {
-      console.log(error);
-    });
+    // await axios.put('http://localhost:4000/tsx_log/1', {
+    //   firstSwap: {
+    //     amm1: 0,
+    //     inputAmount1: 0,
+    //     inputTokenSymbol1: 0,
+    //     outputAmount1: 0,
+    //     outputTokenSymbol1: 0
+    //   },
+    //   secondSwap: {
+    //     amm2: 0,
+    //     inputAmount2: 0,
+    //     inputTokenSymbol2: 0,
+    //     outputAmount2: 0,
+    //     outputTokenSymbol2: 0
+    //   },
+    //   totalIn: 0,
+    //   totalOut: 0,
+    //   spread: 0,
+    //   recent_transaction: {
+    //       priorBalance: -1,
+    //       afterBalance: -1,
+    //       difference: -1,
+    //       txId: -1
+    //   }
+    // }).then(resp => {
+    //   console.log(resp.data);
+    // }).catch(error => {
+    //   console.log(error);
+    // });
   
     // if secret key is in .env:
 
@@ -276,6 +276,7 @@ const routeOutputV3 = async () => {
 
           await axios.put('http://localhost:4000/tsx_log/1', {
           recent_transaction: {
+            found: true,
             priorBalance: initTotalBalance/LAMPORTS_PER_SOL,
             afterBalance: finalTotalBalance/LAMPORTS_PER_SOL,
             difference: (finalTotalBalance-initTotalBalance)/LAMPORTS_PER_SOL,

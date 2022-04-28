@@ -166,3 +166,9 @@ https://blog.chain.link/levels-of-data-aggregation-in-chainlink-price-feeds/
 **April 26, 2022**
 - started setting up the presentation slides with Anu
 
+**April 27, 2022**
+- met  with professor and TA to discuss what we had on presentation so far
+- worked with team to finish up presentation
+
+**April 28, 2022**
+- made final touches to some backup slides we have

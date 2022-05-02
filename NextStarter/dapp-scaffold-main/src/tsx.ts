@@ -99,10 +99,11 @@ const routeOutputV3 = async () => {
     const devnet = 'https://api.devnet.solana.com';
     const mainnet = 'https://api.mainnet-beta.solana.com';
     const serumAPI = 'https://solana-api.projectserum.com';
+    const sscDAO = 'https://ssc-dao.genesysgo.net';
   
     // 2. Initialize Orca object with mainnet connection
     const connectionRPC = new Connection(RPC);
-    const connection = new Connection(mainnet);
+    const connection = new Connection(sscDAO);
 
     let totalProfit = 0;
 

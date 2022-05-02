@@ -169,7 +169,7 @@ const routeOutputV3 = async () => {
           USDT_MINT_ADDRESS,
           ];
 
-        let transactions = await runUntilProfitV3({connection: connectionRPC, inAmount, owner, token1, token2});
+        let transactions = await runUntilProfitV3({connection, inAmount, owner, token1, token2});
         stop_flag_triggered = transactions.stop_flag_triggered;
         if (stop_flag_triggered == true) {
           continue;

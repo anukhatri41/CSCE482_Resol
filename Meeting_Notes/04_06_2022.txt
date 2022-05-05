@@ -1,0 +1,33 @@
+Meeting Notes - 04/06/2022
+
+There are consistent profits, if it fails the only loss is the transaction fee
+
+Trading Strategy
+Using Jupiter routes for SOL -> SOL
+Slippage = 0.1 %
+May be too fragile of a strategy and will not scale - probably will not be profitable
+
+Keeping metadata in a JSON with each strategy separate
+Called backtesting, use strategy on past data to see if it would work on new data
+
+Seems there's more success at night
+
+Sol -> Sol seems more successful than like Sol -> Oxy
+
+Check account before/after, where delta is > 0, and that encompasses transaction fees, etc.
+
+Add check at end, will not cost much computing
+Unsure how to add tho because already at size limit
+
+Address lookups are currently inefficient/costly
+
+Try different amounts at same time, same amount at time delay, etc. to get more data to see what works and doesn't
+
+Goal - understand how the domain of crypto/arbitrage works
+
+Don't want to rely on solely Jupiter
+- Is it possible to pick 2 AMMs and pick a pair (SOL -> USDC and vice versa), do 2 swaps in 1 transaction, and then check the delta at that point
+
+Simple strategy but add atomicity
+
+Look more into the transaction limits and adding atomicity

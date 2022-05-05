@@ -1,3 +1,7 @@
+NextStarter/dapp-scaffold-main/node_modules
+.DS_Store
+NextStarter/dapp-scaffold-main/src/.env
+NextStarter/dapp-scaffold-main/db.json
 /src/node_modules
 /src/.env
 /src/package-lock.json

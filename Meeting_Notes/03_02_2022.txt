@@ -1,0 +1,30 @@
+03_02_2022
+
+Started with Serum SDK - a lot is deprecated for Solana
+
+Must be owner to run on chain program on Solana?
+- When you deploy a smart contract
+- OWner on account level
+- Function will take many accounts, so making sure the owner of account is owner of smart contract?
+
+Raydium SDK
+SOL<->USD
+May be calling wrong function - find one not accessible only by owner, maybe general user
+makeTradeTransaction
+Documentation is ... bad
+Raydium is not open-source, so harder to find the code necessary
+Contact Raydium
+
+Make arbitrage bot that gets price and does trading - may not have to be good trading rn
+
+Maybe try Orca instead of Raydium or Mango
+
+Focus on dev net first
+
+mango-client-v3 - use as basis
+
+Need to look at Serum again, anchor project - framework that lets you write smart contracts, so use for on chain program
+
+Perpetual Future Market
+
+Most transactions on Solana are through bots

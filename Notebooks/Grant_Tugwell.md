@@ -310,3 +310,7 @@ We have some small bugs that we will likely iron out. We are proud of our stuff!
 <h4>4/27/22</h4>
 
 We met with Dr. Huang & Laren, and they really liked our slidedeck. They had a lot of good advice. Intially we were working off the expectation that we needed to do a presentation similar to our CDR and project proposal presentations. Instead, after we met with them, we learned we needed to make this as something that is less focused on technical stuff and more focused on what we actually did and more general. We are excited to see what they think because we are proud of our work.
+
+<h4>5/4/22</h4>
+
+Today, we did our final presentation, we were really happy with the way all of our stuff came together. We realize that we were unlikely to win anything because from the outside looking in, it may seem like our project didn't have as much going on, however thats because a really large portion of our project was dedicated to us doing loads of research. In the end, we are proud of our work. Thanks for a good semester.

@@ -159,8 +159,8 @@ const routeOutputV3 = async () => {
         initTotalBalance = initSOLBalance + initwSOLBalance
         // console.log("Initial SOL Balance: ", (await connection.getBalance(owner.publicKey) + (await connection.getBalance(wSOLAddress)))/LAMPORTS_PER_SOL);
         
-        let token1 = SOL_MINT_ADDRESS;
-        let token2 = [
+        let startingToken = SOL_MINT_ADDRESS;
+        let intermediates = [
           STEP_MINT_ADDRESS, 
           SHDW_MINT_ADDRESS, 
           sRLY_MINT_ADDRESS, 
@@ -170,7 +170,7 @@ const routeOutputV3 = async () => {
           USDT_MINT_ADDRESS,
           ];
 
-        let transactions = await runUntilProfitV3({connection, inAmount, owner, token1, token2});
+        let transactions = await runUntilProfitV3({connection, inAmount, owner, token1: startingToken, token2: intermediates});
         stop_flag_triggered = transactions.stop_flag_triggered;
         if (stop_flag_triggered == true) {
           continue;
@@ -180,11 +180,8 @@ const routeOutputV3 = async () => {
 
           let signers: Signer[] = [owner];
 
-          // console.log("Initial SOL Balance: ", initSOLBalance/LAMPORTS_PER_SOL);
-
           const payload = new Transaction();
 
-          // console.log(transactions.transactions1.swapTransaction.instructions);
           payload.add(transactions.transactions1.swapTransaction);
           payload.add(transactions.transactions2.swapTransaction);
 

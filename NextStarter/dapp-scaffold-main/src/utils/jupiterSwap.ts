@@ -198,18 +198,13 @@ export const runUntilProfitV3 = async ({
     let route1Found = false;
     let route2Found = false;
 
-    //console.log(routes1!.routesInfos!);
     for (var rInfo of routes1!.routesInfos!){
-      // console.log(rInfo!.marketInfos[0]!.amm!.label);
       if (rInfo!.marketInfos[0]!.amm!.label == "Orca" || rInfo!.marketInfos[0]!.amm!.label == "Raydium" || rInfo!.marketInfos[0]!.amm!.label == "Aldrin") {
         route1Found = true;
         routeInfo1 = rInfo;
 
-        // console.log(rInfo);
-
         break;
       }
-      // console.log("#############################",rInfo!.marketInfos[0]!.amm!.label);
 
     }
     if (!route1Found) {
@@ -233,8 +228,8 @@ export const runUntilProfitV3 = async ({
       jupiter,
       inputToken,
       outputToken,
-      inputAmount: (routeInfo1!.outAmountWithSlippage/DECIMAL_PLACES), // 1 unit in UI
-      slippage: slippage, // 1% slippage
+      inputAmount: (routeInfo1!.outAmountWithSlippage/DECIMAL_PLACES), // needs to be in proper units
+      slippage: slippage, 
       directOnly: true,
     });
     
@@ -327,10 +322,8 @@ export const runUntilProfitV3 = async ({
     });
 
     if (spread > diffThresh) {
-      // console.log("TGTBT");
       spread = -1;
     }
-    console.log("######################################")
     if (spread > 0) {
       return{ transactions1, transactions2, stop_flag_triggered };
     }

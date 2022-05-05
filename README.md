@@ -7,7 +7,7 @@ however a general overview is also given here.
 
 First, clone the repository.
 
-Second, navigate to dapp-scaffold-main folder (~/resol/NextStarter/dapp-scaffold-main)
+Second, in the command line of your choice, navigate to dapp-scaffold-main folder (~/resol/NextStarter/dapp-scaffold-main)
 
 Third, copy example.db.json, and paste it in the same folder example.db.json is under the name 'db.json'
 

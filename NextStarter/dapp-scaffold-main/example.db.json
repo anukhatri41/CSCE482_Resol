@@ -1,0 +1,92 @@
+{
+  "tsx_params": [
+    {
+      "amount": ".05",
+      "walletSecret": {
+        "ciphertext": {
+          "words": ,
+          "sigBytes": 96
+        },
+        "key": {
+          "words": [
+            -563816913,
+            -1190674438,
+            -768432329,
+            -1126115672,
+            1811851653,
+            1044037442,
+            -1889322580,
+            1171068866,
+            2072351878,
+            -768275351,
+            300370831,
+            -807740348
+          ],
+          "sigBytes": 32
+        },
+        "iv": {
+          "words": [
+            2072351878,
+            -768275351,
+            300370831,
+            -807740348
+          ],
+          "sigBytes": 16
+        },
+        "salt": {
+          "words": [
+            -1647398401,
+            1760252387
+          ],
+          "sigBytes": 8
+        },
+        "blockSize": 4
+      },
+      "stop": true,
+      "id": 1
+    }
+  ],
+  "tsx_log": [
+    {
+      "recent_transaction": {
+        "found": false,
+        "priorBalance": 0,
+        "afterBalance": 0,
+        "difference": 0,
+        "txId": 0
+      },
+      "id": 1,
+      "firstSwap": {
+        "amm1": 0,
+        "inputAmount1": 0,
+        "inputTokenSymbol1": 0,
+        "outputAmount1": 0,
+        "outputTokenSymbol1": 0
+      },
+      "secondSwap": {
+        "amm2": 0,
+        "inputAmount2": 0,
+        "inputTokenSymbol2": 0,
+        "outputAmount2": 0,
+        "outputTokenSymbol2": 0
+      },
+      "totalIn": 0,
+      "totalOut": 0,
+      "spread": 0
+    }
+  ],
+  "graph_data": [
+  ],
+  "transactions_meta": [
+    {
+      "total_swaps": 0,
+      "pos_swaps": 0,
+      "err_swaps": 0,
+      "neg_swaps": 0,
+      "tot_prof": 0,
+      "id": 1,
+      "init_bal": 0,
+      "end_bal": 0
+    }
+  ]
+}

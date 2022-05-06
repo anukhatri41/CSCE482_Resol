@@ -5,7 +5,7 @@ To run resol, the process is pretty simple.
 A much more in depth explanation is given in our final documentation under the user guide seciton,
 however a general overview is also given here.
 
-First, clone the repository.
+First, clone the repository. (https://github.tamu.edu/Resol/resol)
 
 Second, in the command line of your choice, navigate to dapp-scaffold-main folder (~/resol/NextStarter/dapp-scaffold-main)
 

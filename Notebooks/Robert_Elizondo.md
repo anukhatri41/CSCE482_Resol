@@ -144,5 +144,11 @@ Demoed in class
 # 4/27/22  
 Meeting with Dr.Huang and Laren  
 Working on presentation  
+  
+# 5/4/22  
+Final presentation  
+Working on final report 
+Finalizing the final deliverable
+
 
 

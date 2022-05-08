@@ -172,3 +172,25 @@ https://blog.chain.link/levels-of-data-aggregation-in-chainlink-price-feeds/
 
 **April 28, 2022**
 - made final touches to some backup slides we have
+
+**May 2, 2022**
+- met with team on Discord
+- finalized presentation slides
+- started on final report
+
+**May 3, 2022**
+- worked some more independently on final report including completing:
+  - Executive summary
+  - Project background: Evaluation of alternative solutions
+  - Final design: System description
+  - Final design: Complete module-wise specifications
+  - Implementation notes: Local Database
+  - Added some screenshots to Implementation notes: UI to start brainstorming what to write 
+
+**May 4, 2022**
+- met with team on Discord in the morning to practice presentation before our final presentation later in the day
+- we went through it twice, making comments on what to mention and changing slide ordering based on the run throughs
+- after meeting, I practiced my section again to make sure I had it down
+- presented final presentation !
+
+
